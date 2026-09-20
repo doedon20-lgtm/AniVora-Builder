@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>AniVora Builder</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+    }
+
+    header {
+      padding: 18px;
+      background: #111827;
+      border-bottom: 1px solid #334155;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    header p {
+      margin: 5px 0 0;
+      color: #94a3b8;
+      font-size: 13px;
+    }
+
+    .container {
+      padding: 15px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 130px;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #475569;
+      background: #1e293b;
+      color: white;
+      font-size: 16px;
+      resize: vertical;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 12px;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: #7c3aed;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .examples {
+      margin-top: 15px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .example {
+      width: auto;
+      margin: 0;
+      padding: 9px 12px;
+      background: #334155;
+      font-size: 13px;
+    }
+
+    .preview-box {
+      margin-top: 20px;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      min-height: 350px;
+      color: #111;
+    }
+
+    .preview-header {
+      padding: 10px 14px;
+      background: #e2e8f0;
+      color: #334155;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    #website {
+      min-height: 310px;
+      padding: 30px;
+    }
+
+    .website-title {
+      font-size: 32px;
+      margin-bottom: 15px;
+    }
+
+    .website-text {
+      font-size: 17px;
+      line-height: 1.6;
+      color: #475569;
+    }
+
+    .website-button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 20px;
+      background: #7c3aed;
+      color: white;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .status {
+      margin-top: 12px;
+      color: #94a3b8;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>🚀 AniVora Builder</h1>
+  <p>Describe a website and generate a preview.</p>
+</header>
+
+<div class="container">
+
+  <textarea
+    id="prompt"
+    placeholder="Example: Create a modern restaurant website..."
+  ></textarea>
+
+  <button onclick="generateWebsite()">
+    ✨ Generate Website
+  </button>
+
+  <div class="examples">
+    <button class="example" onclick="useExample('restaurant')">
+      🍔 Restaurant
+    </button>
+
+    <button class="example" onclick="useExample('portfolio')">
+      💼 Portfolio
+    </button>
+
+    <button class="example" onclick="useExample('fashion')">
+      👕 Fashion
+    </button>
+
+    <button class="example" onclick="useExample('fitness')">
+      🏋️ Fitness
+    </button>
+  </div>
+
+  <div class="status" id="status">
+    Ready.
+  </div>
+
+  <div class="preview-box">
+
+    <div class="preview-header">
+      LIVE PREVIEW
+    </div>
+
+    <div id="website">
+
+      <h1 class="website-title">
+        Your Website
+      </h1>
+
+      <p class="website-text">
+        Describe your website above and click Generate Website.
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+function useExample(type) {
+
+  const prompt = document.getElementById("prompt");
+
+  if (type === "restaurant") {
+    prompt.value =
+      "Create a modern restaurant website for a luxury African restaurant.";
+  }
+
+  if (type === "portfolio") {
+    prompt.value =
+      "Create a professional portfolio website for a software developer.";
+  }
+
+  if (type === "fashion") {
+    prompt.value =
+      "Create a modern fashion store website.";
+  }
+
+  if (type === "fitness") {
+    prompt.value =
+      "Create a fitness and gym website.";
+  }
+
+}
+
+
+function generateWebsite() {
+
+  const prompt =
+    document.getElementById("prompt").value.trim();
+
+  const website =
+    document.getElementById("website");
+
+  const status =
+    document.getElementById("status");
+
+
+  if (prompt === "") {
+
+    status.innerText =
+      "⚠️ Please describe the website first.";
+
+    return;
+  }
+
+
+  status.innerText =
+    "⚡ Generating website...";
+
+
+  let title =
+    "My New Website";
+
+  let description =
+    "Welcome to your new website.";
+
+  let button =
+    "Get Started";
+
+
+  const text =
+    prompt.toLowerCase();
+
+
+  if (
+    text.includes("restaurant") ||
+    text.includes("food") ||
+    text.includes("cafe")
+  ) {
+
+    title =
+      "Taste Something Amazing";
+
+    description =
+      "Discover delicious food, beautiful dining experiences and unforgettable flavors.";
+
+    button =
+      "View Menu";
+  }
+
+
+  else if (
+    text.includes("portfolio") ||
+    text.includes("developer") ||
+    text.includes("designer")
+  ) {
+
+    title =
+      "Hello, I'm a Creator";
+
+    description =
+      "Welcome to my professional portfolio. Explore my work, skills and projects.";
+
+    button =
+      "View My Work";
+  }
+
+
+  else if (
+    text.includes("fashion") ||
+    text.includes("clothing") ||
+    text.includes("store")
+  ) {
+
+    title =
+      "Modern Fashion";
+
+    description =
+      "Discover our latest collection of modern styles designed for you.";
+
+    button =
+      "Shop Now";
+  }
+
+
+  else if (
+    text.includes("fitness") ||
+    text.includes("gym") ||
+    text.includes("workout")
+  ) {
+
+    title =
+      "Become Stronger";
+
+    description =
+      "Train smarter, stay consistent and reach your fitness goals.";
+
+    button =
+      "Join Now";
+  }
+
+
+  else {
+
+    title =
+      "Welcome";
+
+    description =
+      "This website was generated by AniVora Builder from your description.";
+
+    button =
+      "Explore";
+  }
+
+
+  website.innerHTML = `
+
+    <h1 class="website-title">
+      ${title}
+    </h1>
+
+    <p class="website-text">
+      ${description}
+    </p>
+
+    <div class="website-button">
+      ${button}
+    </div>
+
+  `;
+
+
+  status.innerText =
+    "✅ Website generated successfully.";
+
+}
+
+</script>
+
+</body>
+  </html>
