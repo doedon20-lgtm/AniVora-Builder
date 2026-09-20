@@ -1,0 +1,87 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>AniVora Preview</title>  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .hero {
+      min-height: 70vh;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: linear-gradient(135deg, #eeeaff, #ffffff);
+    }
+
+    .hero h1 {
+      max-width: 800px;
+      font-size: clamp(38px, 7vw, 70px);
+      margin: 0 0 20px;
+    }
+
+    .hero p {
+      max-width: 650px;
+      color: #555;
+      line-height: 1.7;
+    }
+
+    .hero button {
+      border: 0;
+      padding: 14px 24px;
+      border-radius: 9px;
+      background: #7657ff;
+      color: white;
+      font-weight: bold;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      padding: 60px 30px;
+    }
+
+    .feature {
+      padding: 25px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+    }
+
+    .feature p {
+      color: #666;
+      line-height: 1.5;
+    }
+
+    @media(max-width:700px) {
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style></head><body><section class="hero">  <h1 id="title">
+    Your website starts here.
+  </h1>  <p id="description">
+    Describe your idea and AniVora will create a website.
+  </p>  <button>
+    Get Started
+  </button></section><section class="features">  <div class="feature">
+    <h3>Modern Design</h3>
+    <p>
+      Clean and professional layouts.
+    </p>
+  </div>  <div class="feature">
+    <h3>Responsive</h3>
+    <p>
+      Designed for phones, tablets and computers.
+    </p>
+  </div>  <div class="feature">
+    <h3>Customizable</h3>
+    <p>
+      Continue editing your website after generation.
+    </p>
+  </div></section></body>
+</html>
