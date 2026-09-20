@@ -1,0 +1,69 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>AniVora Builder Editor</title>  <link rel="stylesheet" href="css/style.css">
+</head><body><header class="topbar">  <div class="logo">
+    Ani<span>Vora</span>
+  </div>  <div class="editor-actions"><button id="desktopBtn" class="small-btn active">
+  🖥 Desktop
+</button>
+
+<button id="mobileBtn" class="small-btn">
+  📱 Mobile
+</button>
+
+<button id="exportBtn" class="small-btn">
+  ↓ Export
+</button>
+
+  </div></header><main class="builder">  <aside class="builder-sidebar"><h2>Build your website</h2>
+
+<p class="muted">
+  Describe what you want AniVora to create.
+</p>
+
+<textarea
+  id="prompt"
+  placeholder="Create a modern website for a restaurant with a hero section, menu, about section and contact information."
+></textarea>
+
+<button id="generateBtn" class="primary-btn full">
+  ✨ Generate
+</button>
+
+<div class="divider"></div>
+
+<h3>Quick ideas</h3>
+
+<button class="idea-btn" data-prompt="Create a modern restaurant website with a menu, about section and contact information.">
+  🍽 Restaurant
+</button>
+
+<button class="idea-btn" data-prompt="Create a professional portfolio website for a software developer.">
+  💻 Portfolio
+</button>
+
+<button class="idea-btn" data-prompt="Create a modern fashion brand website with products and collections.">
+  👕 Fashion
+</button>
+
+<button class="idea-btn" data-prompt="Create a fitness website with workout programs, trainers and pricing.">
+  🏋️ Fitness
+</button>
+
+  </aside>  <section class="workspace"><div class="workspace-header">
+  <strong>Live Preview</strong>
+  <span id="status">Ready</span>
+</div>
+
+<div class="preview-container">
+
+  <iframe
+    id="previewFrame"
+    title="Website Preview">
+  </iframe>
+
+</div>
+
+  </section></main><script src="js/generator.js"></script><script src="js/editor.js"></script></body>
+            </html>
