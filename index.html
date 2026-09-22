@@ -1,457 +1,373 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AniVora Builder</title>  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #0b0d12;
-      color: #ffffff;
-      min-height: 100vh;
-    }
+<title>AniVora — AI Creation Platform</title>
 
-    button,
-    textarea,
-    input {
-      font: inherit;
-    }
+<style>
 
-    .app {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+* {
+  box-sizing: border-box;
+}
 
-    /* HEADER */
+html {
+  scroll-behavior: smooth;
+}
 
-    header {
-      height: 64px;
-      padding: 0 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid #252936;
-      background: #10131a;
-    }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: white;
+}
 
-    .logo {
-      font-size: 21px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-    }
+/* NAVBAR */
 
-    .logo span {
-      color: #7c5cff;
-    }
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 6%;
+  background: #111827;
+  border-bottom: 1px solid #334155;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
 
-    .status {
-      font-size: 12px;
-      color: #9da3b4;
-    }
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+}
 
-    /* MAIN */
+.logo span {
+  color: #a855f7;
+}
 
-    main {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 380px 1fr;
-      min-height: calc(100vh - 64px);
-    }
+.nav-links {
+  display: flex;
+  gap: 25px;
+}
 
-    /* SIDEBAR */
+.nav-links a {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 14px;
+}
 
-    .sidebar {
-      border-right: 1px solid #252936;
-      background: #10131a;
-      padding: 22px;
-      overflow-y: auto;
-    }
+.nav-links a:hover {
+  color: white;
+}
 
-    .title {
-      font-size: 26px;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
+/* HERO */
 
-    .subtitle {
-      color: #9da3b4;
-      line-height: 1.5;
-      font-size: 14px;
-      margin-bottom: 24px;
-    }
+.hero {
+  min-height: 650px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 70px 20px;
+  background:
+    radial-gradient(circle at top, #312e81, transparent 45%),
+    #0f172a;
+}
 
-    label {
-      display: block;
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
+.hero-content {
+  max-width: 850px;
+}
 
-    textarea {
-      width: 100%;
-      min-height: 170px;
-      resize: vertical;
-      border: 1px solid #303543;
-      border-radius: 12px;
-      background: #181b24;
-      color: #ffffff;
-      padding: 14px;
-      outline: none;
-      line-height: 1.5;
-    }
+.badge {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 30px;
+  background: #1e293b;
+  border: 1px solid #475569;
+  color: #c4b5fd;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
 
-    textarea:focus {
-      border-color: #7c5cff;
-    }
+.hero h1 {
+  font-size: clamp(42px, 8vw, 76px);
+  line-height: 1.05;
+  margin: 0;
+}
 
-    .generate {
-      width: 100%;
-      margin-top: 12px;
-      padding: 14px;
-      border: none;
-      border-radius: 12px;
-      background: #7c5cff;
-      color: white;
-      font-weight: 800;
-      cursor: pointer;
-    }
+.hero h1 span {
+  color: #a855f7;
+}
 
-    .generate:hover {
-      opacity: 0.9;
-    }
+.hero p {
+  max-width: 650px;
+  margin: 25px auto;
+  color: #94a3b8;
+  font-size: 18px;
+  line-height: 1.7;
+}
 
-    .examples {
-      margin-top: 28px;
-    }
+/* BUTTONS */
 
-    .examples h3 {
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
 
-    .example {
-      width: 100%;
-      text-align: left;
-      padding: 12px;
-      margin-bottom: 8px;
-      border: 1px solid #2b303c;
-      border-radius: 10px;
-      background: #151821;
-      color: #dce0ea;
-      cursor: pointer;
-      font-size: 13px;
-    }
+.primary-button,
+.secondary-button {
+  display: inline-block;
+  padding: 15px 23px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.2s;
+}
 
-    .example:hover {
-      border-color: #7c5cff;
-    }
+.primary-button {
+  background: #7c3aed;
+  color: white;
+}
 
-    /* PREVIEW */
+.primary-button:hover {
+  background: #6d28d9;
+  transform: translateY(-2px);
+}
 
-    .preview-area {
-      background: #090b10;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
+.secondary-button {
+  background: #1e293b;
+  color: white;
+  border: 1px solid #475569;
+}
 
-    .toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-    }
+.secondary-button:hover {
+  background: #334155;
+}
 
-    .toolbar-left,
-    .toolbar-right {
-      display: flex;
-      gap: 8px;
-    }
+/* FEATURES */
 
-    .tool-button {
-      border: 1px solid #2d3240;
-      background: #151821;
-      color: #dce0ea;
-      padding: 9px 12px;
-      border-radius: 9px;
-      cursor: pointer;
-      font-size: 12px;
-    }
+.section {
+  padding: 80px 6%;
+}
 
-    .tool-button.active {
-      background: #7c5cff;
-      border-color: #7c5cff;
-      color: white;
-    }
+.section h2 {
+  text-align: center;
+  font-size: 35px;
+  margin-top: 0;
+}
 
-    .preview-wrapper {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      overflow: auto;
-      padding: 10px;
-    }
+.section-intro {
+  max-width: 650px;
+  margin: 0 auto 45px;
+  text-align: center;
+  color: #94a3b8;
+  line-height: 1.7;
+}
 
-    .browser {
-      width: 100%;
-      max-width: 1100px;
-      min-height: 650px;
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-    }
+.features {
+  max-width: 1100px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
 
-    .browser-bar {
-      height: 36px;
-      background: #e8e8e8;
-      display: flex;
-      align-items: center;
-      padding: 0 12px;
-      gap: 6px;
-    }
+.card {
+  padding: 28px;
+  background: #111827;
+  border: 1px solid #334155;
+  border-radius: 15px;
+}
 
-    .dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: #999;
-    }
+.card-icon {
+  font-size: 32px;
+  margin-bottom: 15px;
+}
 
-    .website {
-      min-height: 614px;
-      color: #151515;
-      overflow: hidden;
-    }
+.card h3 {
+  margin-top: 0;
+}
 
-    .hero {
-      min-height: 400px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 40px 20px;
-      background: linear-gradient(135deg, #eeeaff, #ffffff);
-    }
+.card p {
+  color: #94a3b8;
+  line-height: 1.6;
+}
 
-    .hero h1 {
-      max-width: 800px;
-      font-size: clamp(34px, 6vw, 64px);
-      line-height: 1.05;
-      margin-bottom: 18px;
-    }
+/* BUILDER CTA */
 
-    .hero p {
-      max-width: 650px;
-      font-size: 17px;
-      line-height: 1.6;
-      color: #555;
-      margin-bottom: 25px;
-    }
+.builder-section {
+  padding: 80px 20px;
+  text-align: center;
+  background: #111827;
+  border-top: 1px solid #334155;
+  border-bottom: 1px solid #334155;
+}
 
-    .hero button {
-      border: none;
-      background: #7c5cff;
-      color: white;
-      padding: 14px 22px;
-      border-radius: 9px;
-      font-weight: 700;
-    }
+.builder-box {
+  max-width: 850px;
+  margin: auto;
+}
 
-    .features {
-      padding: 50px 30px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
+.builder-box h2 {
+  font-size: 40px;
+  margin-top: 0;
+}
 
-    .feature {
-      padding: 24px;
-      border: 1px solid #e4e4e4;
-      border-radius: 12px;
-      background: #fff;
-    }
+.builder-box p {
+  color: #94a3b8;
+  line-height: 1.7;
+  font-size: 17px;
+}
 
-    .feature h3 {
-      margin-bottom: 8px;
-    }
+/* HOW IT WORKS */
 
-    .feature p {
-      color: #666;
-      line-height: 1.5;
-      font-size: 14px;
-    }
+.steps {
+  max-width: 1000px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
 
-    /* MOBILE */
+.step {
+  text-align: center;
+  padding: 25px 15px;
+}
 
-    @media (max-width: 850px) {
-      main {
-        grid-template-columns: 1fr;
-      }
+.step-number {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto auto 15px;
+  border-radius: 50%;
+  background: #7c3aed;
+  font-weight: bold;
+}
 
-      .sidebar {
-        border-right: none;
-        border-bottom: 1px solid #252936;
-      }
+.step p {
+  color: #94a3b8;
+  line-height: 1.5;
+}
 
-      .preview-area {
-        min-height: 700px;
-      }
+/* FOOTER */
 
-      .features {
-        grid-template-columns: 1fr;
-      }
+.footer {
+  padding: 35px 20px;
+  text-align: center;
+  background: #020617;
+  color: #64748b;
+  border-top: 1px solid #1e293b;
+}
 
-      .browser {
-        min-width: 700px;
-      }
-    }
-  </style></head><body><div class="app">  <header>
-    <div class="logo">
-      Ani<span>Vora</span> Builder
-    </div><div class="status">
-  Prototype • Local Mode
-</div>
+.footer strong {
+  color: #a855f7;
+}
 
-  </header>  <main><aside class="sidebar">
+/* MOBILE */
 
-  <div class="title">Build anything.</div>
+@media (max-width: 750px) {
 
-  <div class="subtitle">
-    Describe the website you want and AniVora will generate a starting design.
+  .navbar {
+    padding: 16px 20px;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .hero {
+    min-height: 600px;
+  }
+
+  .hero p {
+    font-size: 16px;
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+  }
+
+  .steps {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .builder-box h2 {
+    font-size: 32px;
+  }
+
+}
+
+@media (max-width: 450px) {
+
+  .steps {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+  <div class="logo">
+    Ani<span>Vora</span>
   </div>
 
-  <label for="prompt">Describe your website</label>
-
-  <textarea id="prompt"
-    placeholder="Example: Create a modern website for a luxury barber shop with services, pricing, gallery and contact section."></textarea>
-
-  <button class="generate" onclick="generateWebsite()">
-    ✨ Generate Website
-  </button>
-
-  <div class="examples">
-
-    <h3>Try an example</h3>
-
-    <button class="example" onclick="useExample('Create a modern restaurant website with a beautiful hero section, menu, about section and contact information.')">
-      🍽️ Restaurant
-    </button>
-
-    <button class="example" onclick="useExample('Create a professional portfolio website for a software developer with projects, skills and contact information.')">
-      💻 Developer Portfolio
-    </button>
-
-    <button class="example" onclick="useExample('Create a modern fashion brand website with products, collections, about section and newsletter signup.')">
-      👕 Fashion Brand
-    </button>
-
-    <button class="example" onclick="useExample('Create a modern fitness website with workout programs, trainers, pricing and contact information.')">
-      🏋️ Fitness
-    </button>
-
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#how">How It Works</a>
+    <a href="/anivora.html">Builder</a>
   </div>
 
-</aside>
+</nav>
 
-<section class="preview-area">
 
-  <div class="toolbar">
+<!-- HERO -->
 
-    <div class="toolbar-left">
+<section class="hero">
 
-      <button
-        class="tool-button active"
-        id="desktopBtn"
-        onclick="setDevice('desktop')">
-        🖥 Desktop
-      </button>
+  <div class="hero-content">
 
-      <button
-        class="tool-button"
-        id="mobileBtn"
-        onclick="setDevice('mobile')">
-        📱 Mobile
-      </button>
-
+    <div class="badge">
+      🚀 Welcome to AniVora
     </div>
 
-    <div class="toolbar-right">
+    <h1>
+      Create with AI.<br>
+      <span>Build Anything.</span>
+    </h1>
 
-      <button class="tool-button" onclick="resetPreview()">
-        Reset
-      </button>
+    <p>
+      AniVora is an AI-powered creation platform designed
+      to help you turn your ideas into real digital products.
+    </p>
 
-      <button class="tool-button" onclick="downloadWebsite()">
-        ↓ Export
-      </button>
+    <div class="buttons">
 
-    </div>
+      <a
+        href="/anivora.html"
+        class="primary-button"
+      >
+        🚀 Open AniVora Builder
+      </a>
 
-  </div>
-
-  <div class="preview-wrapper">
-
-    <div class="browser" id="browser">
-
-      <div class="browser-bar">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-      </div>
-
-      <div class="website" id="website">
-
-        <section class="hero">
-
-          <h1>Your website starts here.</h1>
-
-          <p>
-            Describe your idea on the left and AniVora Builder
-            will create a website concept for you.
-          </p>
-
-          <button>Get Started</button>
-
-        </section>
-
-        <section class="features">
-
-          <div class="feature">
-            <h3>Fast</h3>
-            <p>
-              Turn an idea into a website concept in seconds.
-            </p>
-          </div>
-
-          <div class="feature">
-            <h3>Beautiful</h3>
-            <p>
-              Generate modern layouts designed for different devices.
-            </p>
-          </div>
-
-          <div class="feature">
-            <h3>Editable</h3>
-            <p>
-              Customize your website and refine the generated result.
-            </p>
-          </div>
-
-        </section>
-
-      </div>
+      <a
+        href="#features"
+        class="secondary-button"
+      >
+        Explore AniVora
+      </a>
 
     </div>
 
@@ -459,246 +375,220 @@
 
 </section>
 
-  </main></div><script>
 
-  const promptInput = document.getElementById("prompt");
-  const website = document.getElementById("website");
-  const browser = document.getElementById("browser");
+<!-- FEATURES -->
 
-  function useExample(text) {
-    promptInput.value = text;
-    generateWebsite();
-  }
+<section
+  class="section"
+  id="features"
+>
 
-  function generateWebsite() {
+  <h2>
+    What You Can Create
+  </h2>
 
-    const prompt = promptInput.value.trim();
+  <p class="section-intro">
+    AniVora is being built as a powerful AI creation
+    platform where ideas can become websites, applications
+    and other digital experiences.
+  </p>
 
-    if (!prompt) {
-      alert("Describe the website you want first.");
-      return;
-    }
 
-    const lower = prompt.toLowerCase();
+  <div class="features">
 
-    let title = "Your New Website";
-    let description = "A modern website generated from your idea.";
+    <div class="card">
 
-    if (lower.includes("restaurant")) {
-      title = "Taste Something Amazing";
-      description = "Discover delicious food, beautiful experiences and a menu created for you.";
-    }
+      <div class="card-icon">
+        🌐
+      </div>
 
-    else if (lower.includes("portfolio") || lower.includes("developer")) {
-      title = "Build. Create. Inspire.";
-      description = "A professional portfolio showcasing projects, skills and experience.";
-    }
+      <h3>
+        AI Website Builder
+      </h3>
 
-    else if (lower.includes("fashion")) {
-      title = "Define Your Style";
-      description = "Discover a modern collection created for people who want to stand out.";
-    }
+      <p>
+        Describe the website you want and use AniVora
+        Builder to turn your idea into a website.
+      </p>
 
-    else if (lower.includes("fitness")) {
-      title = "Become Your Strongest Self";
-      description = "Training programs, expert coaching and everything you need to reach your goals.";
-    }
+    </div>
 
-    else if (lower.includes("barber")) {
-      title = "Look Sharp. Feel Confident.";
-      description = "Professional grooming, modern styles and an experience designed around you.";
-    }
 
-    website.innerHTML = `
+    <div class="card">
 
-      <section class="hero">
+      <div class="card-icon">
+        🎨
+      </div>
 
-        <h1>${title}</h1>
+      <h3>
+        AI Creation
+      </h3>
 
-        <p>${description}</p>
+      <p>
+        Create and experiment with different digital
+        experiences from simple ideas.
+      </p>
 
-        <button>Get Started</button>
+    </div>
 
-      </section>
 
-      <section class="features">
+    <div class="card">
 
-        <div class="feature">
-          <h3>Modern Design</h3>
-          <p>
-            A clean and professional layout generated from your description.
-          </p>
-        </div>
+      <div class="card-icon">
+        ⚡
+      </div>
 
-        <div class="feature">
-          <h3>Responsive</h3>
-          <p>
-            Designed to work across desktop, tablet and mobile screens.
-          </p>
-        </div>
+      <h3>
+        Build Faster
+      </h3>
 
-        <div class="feature">
-          <h3>Easy to Customize</h3>
-          <p>
-            Continue editing your website after generation.
-          </p>
-        </div>
+      <p>
+        Move from an idea to a working prototype
+        without starting everything from scratch.
+      </p>
 
-      </section>
+    </div>
 
-    `;
+  </div>
 
-  }
+</section>
 
-  function setDevice(device) {
 
-    const desktopBtn = document.getElementById("desktopBtn");
-    const mobileBtn = document.getElementById("mobileBtn");
+<!-- BUILDER -->
 
-    if (device === "mobile") {
+<section class="builder-section">
 
-      browser.style.maxWidth = "390px";
-      browser.style.minWidth = "390px";
+  <div class="builder-box">
 
-      mobileBtn.classList.add("active");
-      desktopBtn.classList.remove("active");
+    <h2>
+      Build Your Website With AniVora
+    </h2>
 
-    } else {
+    <p>
+      Describe what you want to build, generate your
+      website, edit it, and preview the result.
+    </p>
 
-      browser.style.maxWidth = "1100px";
-      browser.style.minWidth = "0";
+    <div class="buttons">
 
-      desktopBtn.classList.add("active");
-      mobileBtn.classList.remove("active");
+      <a
+        href="/anivora.html"
+        class="primary-button"
+      >
+        ✨ Start Building
+      </a>
 
-    }
+    </div>
 
-  }
+  </div>
 
-  function resetPreview() {
+</section>
 
-    promptInput.value = "";
 
-    website.innerHTML = `
+<!-- HOW IT WORKS -->
 
-      <section class="hero">
+<section
+  class="section"
+  id="how"
+>
 
-        <h1>Your website starts here.</h1>
+  <h2>
+    How AniVora Builder Works
+  </h2>
 
-        <p>
-          Describe your idea on the left and AniVora Builder
-          will create a website concept for you.
-        </p>
+  <p class="section-intro">
+    A simple workflow for turning your idea into
+    a website.
+  </p>
 
-        <button>Get Started</button>
 
-      </section>
+  <div class="steps">
 
-      <section class="features">
+    <div class="step">
 
-        <div class="feature">
-          <h3>Fast</h3>
-          <p>
-            Turn an idea into a website concept in seconds.
-          </p>
-        </div>
+      <div class="step-number">
+        1
+      </div>
 
-        <div class="feature">
-          <h3>Beautiful</h3>
-          <p>
-            Generate modern layouts designed for different devices.
-          </p>
-        </div>
+      <h3>
+        Describe
+      </h3>
 
-        <div class="feature">
-          <h3>Editable</h3>
-          <p>
-            Customize your website and refine the generated result.
-          </p>
-        </div>
+      <p>
+        Tell AniVora what you want to build.
+      </p>
 
-      </section>
+    </div>
 
-    `;
 
-  }
+    <div class="step">
 
-  function downloadWebsite() {
+      <div class="step-number">
+        2
+      </div>
 
-    const html = `
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AniVora Website</title>
-<style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-}
-.hero {
-  min-height: 70vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 30px;
-  background: linear-gradient(135deg,#eeeaff,#ffffff);
-}
-.hero h1 {
-  font-size: 50px;
-}
-.hero p {
-  max-width: 650px;
-  line-height: 1.6;
-}
-.hero button {
-  padding: 14px 22px;
-  border: none;
-  border-radius: 8px;
-  background: #7c5cff;
-  color: white;
-}
-.features {
-  padding: 50px 30px;
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 20px;
-}
-.feature {
-  padding: 25px;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-}
-@media(max-width:700px) {
-  .features {
-    grid-template-columns: 1fr;
-  }
-}
-</style></head>
-<body>
-${website.innerHTML}
+      <h3>
+        Generate
+      </h3>
+
+      <p>
+        Let AniVora create the website.
+      </p>
+
+    </div>
+
+
+    <div class="step">
+
+      <div class="step-number">
+        3
+      </div>
+
+      <h3>
+        Edit
+      </h3>
+
+      <p>
+        Change the content, colors and sections.
+      </p>
+
+    </div>
+
+
+    <div class="step">
+
+      <div class="step-number">
+        4
+      </div>
+
+      <h3>
+        Preview
+      </h3>
+
+      <p>
+        See how your website looks on different screens.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- FOOTER -->
+
+<footer class="footer">
+
+  <p>
+    <strong>AniVora</strong> — AI Creation Platform
+  </p>
+
+  <p>
+    © 2026 AniVora. All rights reserved.
+  </p>
+
+</footer>
+
 </body>
-</html>
-`;const blob = new Blob([html], {
-  type: "text/html"
-});
-
-const url = URL.createObjectURL(blob);
-
-const link = document.createElement("a");
-link.href = url;
-link.download = "anivora-website.html";
-
-document.body.appendChild(link);
-link.click();
-link.remove();
-
-URL.revokeObjectURL(url);
-
-}
-
-</script></body>
   </html>
