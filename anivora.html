@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>AniVora Builder</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #111827;
+    }
+
+    header {
+      background: #111827;
+      color: white;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    header h1 {
+      font-size: 21px;
+    }
+
+    header span {
+      font-size: 13px;
+      color: #a5b4fc;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .builder-grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.06);
+      margin-bottom: 18px;
+    }
+
+    .panel h2 {
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+
+    .panel h3 {
+      font-size: 15px;
+      margin: 18px 0 10px;
+    }
+
+    textarea,
+    input {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+
+    textarea:focus,
+    input:focus {
+      border-color: #6366f1;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: bold;
+      margin: 12px 0 6px;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 11px 14px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .primary {
+      width: 100%;
+      background: #6366f1;
+      color: white;
+      margin-top: 12px;
+    }
+
+    .primary:hover {
+      background: #4f46e5;
+    }
+
+    .examples {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .example {
+      background: #eef2ff;
+      color: #3730a3;
+    }
+
+    .example:hover {
+      background: #e0e7ff;
+    }
+
+    .status {
+      margin-top: 12px;
+      padding: 10px;
+      border-radius: 8px;
+      background: #f3f4f6;
+      font-size: 13px;
+    }
+
+    .editor-group {
+      border-top: 1px solid #e5e7eb;
+      padding-top: 12px;
+      margin-top: 14px;
+    }
+
+    .section-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .section-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      padding: 9px 10px;
+      border-radius: 9px;
+      font-size: 13px;
+    }
+
+    .section-row button {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 6px 9px;
+    }
+
+    .section-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .section-buttons button {
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .preview-panel {
+      min-width: 0;
+    }
+
+    .preview-toolbar {
+      background: white;
+      border-radius: 14px;
+      padding: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.05);
+    }
+
+    .preview-toolbar button {
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .preview-toolbar button.active {
+      background: #111827;
+      color: white;
+    }
+
+    .preview-frame {
+      background: #d1d5db;
+      min-height: 700px;
+      padding: 20px;
+      border-radius: 16px;
+      overflow: auto;
+    }
+
+    #website {
+      background: white;
+      min-height: 650px;
+      width: 100%;
+      margin: auto;
+      overflow: hidden;
+      border-radius: 10px;
+    }
+
+    #website.mobile {
+      max-width: 390px;
+    }
+
+    #website.desktop {
+      max-width: 1100px;
+    }
+
+    .empty-preview {
+      min-height: 650px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 30px;
+      color: #6b7280;
+    }
+
+    .empty-preview strong {
+      display: block;
+      color: #111827;
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .color-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    #mainColor {
+      height: 44px;
+      padding: 3px;
+      width: 70px;
+      cursor: pointer;
+    }
+
+    .reset {
+      background: #fee2e2 !important;
+      color: #991b1b !important;
+    }
+
+    @media (max-width: 850px) {
+      .builder-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .preview-frame {
+        min-height: 500px;
+        padding: 10px;
+      }
+
+      #website,
+      #website.desktop {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>⚡ AniVora Builder</h1>
+  <span>AI Website Builder</span>
+</header>
+
+<div class="container">
+
+  <div class="builder-grid">
+
+    <!-- LEFT PANEL -->
+    <div>
+
+      <!-- AI GENERATOR -->
+      <div class="panel">
+
+        <h2>✨ Create with AniVora AI</h2>
+
+        <textarea
+          id="prompt"
+          placeholder="Describe the website you want to build..."
+        ></textarea>
+
+        <button
+          id="generateButton"
+          class="primary"
+          onclick="generateWebsite()"
+        >
+          ✨ Generate Website
+        </button>
+
+        <div class="examples">
+          <button class="example" onclick="useExample('restaurant')">
+            🍽️ Restaurant
+          </button>
+
+          <button class="example" onclick="useExample('portfolio')">
+            💼 Portfolio
+          </button>
+
+          <button class="example" onclick="useExample('fashion')">
+            👗 Fashion
+          </button>
+
+          <button class="example" onclick="useExample('fitness')">
+            🏋️ Fitness
+          </button>
+
+          <button class="example" onclick="useExample('saas')">
+            🚀 SaaS
+          </button>
+
+          <button class="example" onclick="useExample('school')">
+            🎓 School
+          </button>
+        </div>
+
+        <div id="status" class="status">
+          Ready to build.
+        </div>
+
+      </div>
+
+
+      <!-- EDIT WEBSITE -->
+      <div class="panel">
+
+        <h2>🎨 Edit Website</h2>
+
+        <label for="websiteName">
+          Website Name
+        </label>
+
+        <input
+          id="websiteName"
+          type="text"
+          placeholder="Website name"
+        >
+
+        <label for="headline">
+          Headline
+        </label>
+
+        <input
+          id="headline"
+          type="text"
+          placeholder="Main headline"
+        >
+
+        <label for="description">
+          Description
+        </label>
+
+        <textarea
+          id="description"
+          style="min-height:90px"
+          placeholder="Website description"
+        ></textarea>
+
+        <label for="buttonText">
+          Button Text
+        </label>
+
+        <input
+          id="buttonText"
+          type="text"
+          placeholder="Get Started"
+        >
+
+        <label>
+          Main Color
+        </label>
+
+        <div class="color-row">
+
+          <input
+            id="mainColor"
+            type="color"
+            value="#6366f1"
+          >
+
+          <span id="colorValue">
+            #6366f1
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- SECTION MANAGER -->
+      <div class="panel">
+
+        <h2>🧩 Section Manager</h2>
+
+        <div id="sectionList" class="section-list"></div>
+
+        <div class="section-buttons">
+
+          <button onclick="addSection('about')">
+            + About
+          </button>
+
+          <button onclick="addSection('features')">
+            + Features
+          </button>
+
+          <button onclick="addSection('services')">
+            + Services
+          </button>
+
+          <button onclick="addSection('testimonials')">
+            + Testimonials
+          </button>
+
+          <button onclick="addSection('pricing')">
+            + Pricing
+          </button>
+
+          <button onclick="addSection('contact')">
+            + Contact
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- RIGHT PANEL -->
+    <div class="preview-panel">
+
+      <div class="preview-toolbar">
+
+        <button
+          id="desktopButton"
+          class="active"
+          onclick="setDesktop()"
+        >
+          🖥️ Desktop
+        </button>
+
+        <button
+          id="mobileButton"
+          onclick="setMobile()"
+        >
+          📱 Mobile
+        </button>
+
+        <button onclick="updateWebsite()">
+          🔄 Update Preview
+        </button>
+
+        <button
+          class="reset"
+          onclick="resetWebsite()"
+        >
+          ♻️ Reset
+        </button>
+
+      </div>
+
+
+      <div class="preview-frame">
+
+        <div id="website" class="desktop">
+
+          <div class="empty-preview">
+
+            <div>
+
+              <strong>
+                Your website will appear here
+              </strong>
+
+              Describe your website on the left and click
+              <b>Generate Website</b>.
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  /*
+   * AniVora Builder
+   * AI website generation
+   */
+
+  let sections = [
+    "hero",
+    "features",
+    "pricing"
+  ];
+
+
+  /*
+   * Example prompts
+   */
+
+  function useExample(type) {
+
+    const prompts = {
+
+      restaurant:
+        "Create a modern Nigerian restaurant website called Taste Haven. Include a beautiful food menu, popular dishes, restaurant story, opening hours, location, customer reviews, reservation section and WhatsApp ordering button.",
+
+      portfolio:
+        "Create a modern personal portfolio website for a professional designer. Include an introduction, selected projects, skills, experience, testimonials and contact section.",
+
+      fashion:
+        "Create a premium fashion brand website with a stylish product showcase, collections, brand story, featured products, newsletter signup and contact section.",
+
+      fitness:
+        "Create a modern fitness and personal training website with workout programs, trainers, pricing, testimonials, transformation section and contact information.",
+
+      saas:
+        "Create a modern SaaS landing page for an AI productivity application. Include product benefits, features, pricing, testimonials, FAQ and a strong call to action.",
+
+      school:
+        "Create a modern school website with a welcome section, about the school, academic programs, admissions information, facilities, news, testimonials and contact information."
+
+    };
+
+    document.getElementById("prompt").value =
+      prompts[type] || "";
+
+  }
+
+
+  /*
+   * REAL AI WEBSITE GENERATION
+   */
+
+  async function generateWebsite() {
+
+    const prompt =
+      document.getElementById("prompt").value.trim();
+
+    const status =
+      document.getElementById("status");
+
+    const button =
+      document.getElementById("generateButton");
+
+
+    if (!prompt) {
+
+      status.innerText =
+        "⚠️ Describe your website first.";
+
+      return;
+    }
+
+
+    button.disabled = true;
+
+    button.innerText =
+      "⏳ Building your website...";
+
+    status.innerText =
+      "🤖 AniVora AI is creating your website...";
+
+
+    try {
+
+      const response =
+        await fetch("/api/generate", {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+            prompt: prompt
+          })
+
+        });
+
+
+      const data =
+        await response.json();
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.error ||
+          "AniVora AI could not generate the website."
+        );
+
+      }
+
+
+      if (!data.website) {
+
+        throw new Error(
+          "No website was returned by AniVora AI."
+        );
+
+      }
+
+
+      const website =
+        data.website;
+
+
+      /*
+       * Update editor values
+       */
+
+      if (website.name) {
+
+        document.getElementById(
+          "websiteName"
+        ).value = website.name;
+
+      }
+
+
+      if (website.headline) {
+
+        document.getElementById(
+          "headline"
+        ).value = website.headline;
+
+      }
+
+
+      if (website.description) {
+
+        document.getElementById(
+          "description"
+        ).value = website.description;
+
+      }
+
+
+      if (website.button) {
+
+        document.getElementById(
+          "buttonText"
+        ).value = website.button;
+
+      }
+
+
+      if (website.color) {
+
+        document.getElementById(
+          "mainColor"
+        ).value = website.color;
+
+        document.getElementById(
+          "colorValue"
+        ).innerText = website.color;
+
+      }
+
+
+      /*
+       * Put AI-generated HTML into preview
+       */
+
+      const preview =
+        document.getElementById("website");
+
+
+      if (!preview) {
+
+        throw new Error(
+          "Website preview area was not found."
+        );
+
+      }
+
+
+      if (!website.html) {
+
+        throw new Error(
+          "AniVora AI returned no website HTML."
+        );
+
+      }
+
+
+      preview.innerHTML =
+        website.html;
+
+
+      status.innerText =
+        "✅ Website generated successfully!";
+
+
+      preview.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+
+    } catch (error) {
+
+      console.error(
+        "AniVora AI error:",
+        error
+      );
+
+
+      status.innerText =
+        "❌ Website generation failed.";
+
+
+      alert(
+        "AniVora could not generate the website.\n\n" +
+        error.message
+      );
+
+
+    } finally {
+
+      button.disabled = false;
+
+      button.innerText =
+        "✨ Generate Website";
+
+    }
+
+  }
+
+
+  /*
+   * SECTION MANAGER
+   */
+
+  function addSection(section) {
+
+    if (sections.includes(section)) {
+
+      return;
+
+    }
+
+    sections.push(section);
+
+    updateSectionList();
+
+  }
+
+
+  function removeSection(section) {
+
+    sections =
+      sections.filter(
+        item => item !== section
+      );
+
+    updateSectionList();
+
+  }
+
+
+  function updateSectionList() {
+
+    const list =
+      document.getElementById(
+        "sectionList"
+      );
+
+
+    list.innerHTML = "";
+
+
+    sections.forEach(section => {
+
+      const row =
+        document.createElement("div");
+
+      row.className =
+        "section-row";
+
+
+      const name =
+        section.charAt(0).toUpperCase() +
+        section.slice(1);
+
+
+      row.innerHTML = `
+        <span>${name}</span>
+
+        ${
+          section !== "hero"
+            ? `<button onclick="removeSection('${section}')">
+                 Remove
+               </button>`
+            : ""
+        }
+      `;
+
+
+      list.appendChild(row);
+
+    });
+
+  }
+
+
+  /*
+   * Update preview using editor controls
+   *
+   * For an AI-generated site, this performs
+   * a light update without replacing the
+   * entire AI design.
+   */
+
+  function updateWebsite() {
+
+    const preview =
+      document.getElementById("website");
+
+    const color =
+      document.getElementById("mainColor").value;
+
+
+    document.getElementById(
+      "colorValue"
+    ).innerText = color;
+
+
+    /*
+     * Apply the selected color to
+     * common elements in the generated site.
+     */
+
+    const elements =
+      preview.querySelectorAll(
+        "[data-anivora-color]"
+      );
+
+
+    elements.forEach(element => {
+
+      element.style.background =
+        color;
+
+    });
+
+
+    statusMessage(
+      "✅ Preview updated."
+    );
+
+  }
+
+
+  function statusMessage(message) {
+
+    document.getElementById(
+      "status"
+    ).innerText = message;
+
+  }
+
+
+  /*
+   * Desktop preview
+   */
+
+  function setDesktop() {
+
+    const website =
+      document.getElementById(
+        "website"
+      );
+
+
+    website.classList.remove(
+      "mobile"
+    );
+
+
+    website.classList.add(
+      "desktop"
+    );
+
+
+    document.getElementById(
+      "desktopButton"
+    ).classList.add("active");
+
+
+    document.getElementById(
+      "mobileButton"
+    ).classList.remove("active");
+
+  }
+
+
+  /*
+   * Mobile preview
+   */
+
+  function setMobile() {
+
+    const website =
+      document.getElementById(
+        "website"
+      );
+
+
+    website.classList.remove(
+      "desktop"
+    );
+
+
+    website.classList.add(
+      "mobile"
+    );
+
+
+    document.getElementById(
+      "mobileButton"
+    ).classList.add("active");
+
+
+    document.getElementById(
+      "desktopButton"
+    ).classList.remove("active");
+
+  }
+
+
+  /*
+   * Reset
+   */
+
+  function resetWebsite() {
+
+    sections = [
+      "hero",
+      "features",
+      "pricing"
+    ];
+
+
+    document.getElementById(
+      "websiteName"
+    ).value = "";
+
+
+    document.getElementById(
+      "headline"
+    ).value = "";
+
+
+    document.getElementById(
+      "description"
+    ).value = "";
+
+
+    document.getElementById(
+      "buttonText"
+    ).value = "";
+
+
+    document.getElementById(
+      "mainColor"
+    ).value = "#6366f1";
+
+
+    document.getElementById(
+      "colorValue"
+    ).innerText = "#6366f1";
+
+
+    document.getElementById(
+      "prompt"
+    ).value = "";
+
+
+    document.getElementById(
+      "website"
+    ).innerHTML = `
+
+      <div class="empty-preview">
+
+        <div>
+
+          <strong>
+            Your website will appear here
+          </strong>
+
+          Describe your website on the left and click
+          <b>Generate Website</b>.
+
+        </div>
+
+      </div>
+
+    `;
+
+
+    document.getElementById(
+      "status"
+    ).innerText =
+      "Ready to build.";
+
+
+    setDesktop();
+
+    updateSectionList();
+
+  }
+
+
+  /*
+   * Color picker
+   */
+
+  document.getElementById(
+    "mainColor"
+  ).addEventListener(
+    "input",
+    function() {
+
+      document.getElementById(
+        "colorValue"
+      ).innerText =
+        this.value;
+
+    }
+  );
+
+
+  /*
+   * Initial setup
+   */
+
+  updateSectionList();
+
+</script>
+
+</body>
+  </html>
