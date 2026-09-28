@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-  // Only allow POST requests
   if (req.method !== "POST") {
     return res.status(405).json({
       success: false,
@@ -10,7 +9,6 @@ export default async function handler(req, res) {
   try {
     const { prompt } = req.body || {};
 
-    // Validate prompt
     if (!prompt || typeof prompt !== "string" || !prompt.trim()) {
       return res.status(400).json({
         success: false,
@@ -18,7 +16,6 @@ export default async function handler(req, res) {
       });
     }
 
-    // Get OpenAI API key
     const apiKey = process.env.OPENAI_API_KEY;
 
     if (!apiKey) {
@@ -28,7 +25,6 @@ export default async function handler(req, res) {
       });
     }
 
-    // Ask OpenAI to generate the website
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
 
@@ -104,15 +100,12 @@ Only include sections that make sense for the user's request.
             role: "user",
             content: prompt.trim()
           }
-        ],
-
-        temperature: 0.7
+        ]
       })
     });
 
     const data = await response.json();
 
-    // OpenAI request failed
     if (!response.ok) {
       console.error("OpenAI API error:", data);
 
@@ -124,14 +117,12 @@ Only include sections that make sense for the user's request.
       });
     }
 
-    // Get output text
     let output = "";
 
     if (typeof data.output_text === "string") {
       output = data.output_text;
     }
 
-    // Fallback: extract text from the Responses API output
     if (!output && Array.isArray(data.output)) {
       for (const item of data.output) {
         if (Array.isArray(item.content)) {
@@ -149,10 +140,16 @@ Only include sections that make sense for the user's request.
 
     output = output.trim();
 
-    console.log("AniVora OpenAI output length:", output.length);
+    console.log(
+      "AniVora OpenAI output length:",
+      output.length
+    );
 
     if (!output) {
-      console.error("OpenAI returned no text:", data);
+      console.error(
+        "OpenAI returned no text:",
+        data
+      );
 
       return res.status(500).json({
         success: false,
@@ -167,36 +164,41 @@ Only include sections that make sense for the user's request.
       .replace(/\s*```$/i, "")
       .trim();
 
-    // Parse generated JSON
     let website;
 
     try {
       website = JSON.parse(output);
     } catch (error) {
-      console.error("AniVora JSON parse error:", output);
+      console.error(
+        "AniVora JSON parse error:",
+        output
+      );
 
       return res.status(500).json({
         success: false,
-        error: "AniVora AI returned invalid website data.",
+        error:
+          "AniVora AI returned invalid website data.",
         raw: output.substring(0, 1000)
       });
     }
 
-    // Make sure the required fields exist
     if (
       !website ||
       typeof website !== "object" ||
       typeof website.html !== "string"
     ) {
-      console.error("Invalid website object:", website);
+      console.error(
+        "Invalid website object:",
+        website
+      );
 
       return res.status(500).json({
         success: false,
-        error: "AniVora AI did not return a valid website."
+        error:
+          "AniVora AI did not return a valid website."
       });
     }
 
-    // Fill missing optional fields safely
     website.name =
       typeof website.name === "string"
         ? website.name
@@ -222,14 +224,16 @@ Only include sections that make sense for the user's request.
         ? website.color
         : "#6C63FF";
 
-    // Return exactly what the frontend expects
     return res.status(200).json({
       success: true,
-      website: website
+      website
     });
 
   } catch (error) {
-    console.error("AniVora backend error:", error);
+    console.error(
+      "AniVora backend error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
@@ -238,4 +242,4 @@ Only include sections that make sense for the user's request.
         "AniVora AI generation failed."
     });
   }
-}
+      }
