@@ -1,0 +1,1563 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<title>AniVora Builder — Build Something Extraordinary</title>
+
+<style>
+:root {
+  --purple: #7257ff;
+  --purple-dark: #563ce0;
+  --ink: #191727;
+  --muted: #77758a;
+  --line: #e9e7f1;
+  --soft: #f8f7fc;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: Inter, Arial, sans-serif;
+  color: var(--ink);
+  background: white;
+}
+
+button, input, textarea, select { font: inherit; }
+button { cursor: pointer; }
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+
+button:focus-visible, a:focus-visible, input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #aa9cff;
+  outline-offset: 3px;
+}
+
+.topbar {
+  height: 68px;
+  padding: 0 5%;
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #ffffffed;
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid var(--line);
+}
+
+.logo {
+  font-size: 23px;
+  font-weight: 900;
+  letter-spacing: -1.4px;
+  white-space: nowrap;
+}
+
+.logo span { color: var(--purple); }
+
+.navlinks {
+  display: flex;
+  gap: 22px;
+  margin-left: 15px;
+  font-size: 12px;
+  color: #68647a;
+}
+
+.navlinks a:hover { color: var(--purple); }
+
+.top-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.btn {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 11px 15px;
+  background: white;
+  color: var(--ink);
+  font-weight: 750;
+  font-size: 12px;
+  transition: .2s;
+}
+
+.btn:hover { background: #f0edff; }
+
+.btn.primary {
+  color: white;
+  background: var(--purple);
+  border-color: var(--purple);
+}
+
+.btn.primary:hover { background: var(--purple-dark); }
+
+.hero {
+  padding: 80px 5% 60px;
+  text-align: center;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 0%, #e9e2ff 0%, transparent 65%),
+    linear-gradient(180deg, #faf9ff, white);
+}
+
+.eyebrow {
+  display: inline-block;
+  padding: 9px 14px;
+  background: #eeeaff;
+  color: #6348ed;
+  border: 1px solid #ded6ff;
+  border-radius: 40px;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 1px;
+}
+
+.hero h1 {
+  max-width: 950px;
+  margin: 25px auto 18px;
+  font-size: clamp(42px, 7vw, 79px);
+  line-height: 1;
+  letter-spacing: -4px;
+}
+
+.gradient-text {
+  color: var(--purple);
+  background: linear-gradient(100deg, #7257ff, #b15af2, #ed70b3);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-copy {
+  max-width: 640px;
+  margin: auto;
+  color: var(--muted);
+  line-height: 1.9;
+  font-size: 14px;
+}
+
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 27px 0 0;
+}
+
+.hero-actions .btn { padding: 14px 20px; }
+
+.hero-note {
+  margin-top: 14px;
+  font-size: 10px;
+  color: #918ca3;
+}
+
+.hero-preview {
+  max-width: 1000px;
+  margin: 48px auto 0;
+  background: white;
+  border: 1px solid #e5e0f3;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px #38205d1c;
+  animation: previewFloat 6s ease-in-out infinite;
+}
+
+.browser-bar {
+  height: 39px;
+  background: #faf9fe;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+}
+
+.browser-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ddd8ea;
+}
+
+.browser-address {
+  margin: auto;
+  padding: 5px 30px;
+  border-radius: 6px;
+  background: #f0edf8;
+  color: #8d879f;
+  font-size: 10px;
+}
+
+.preview-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  text-align: left;
+}
+
+.preview-copy { padding: 45px 8%; }
+
+.preview-copy h2 {
+  font-size: clamp(28px, 4vw, 45px);
+  line-height: 1.08;
+  letter-spacing: -2px;
+  margin: 17px 0;
+}
+
+.preview-copy p {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.9;
+}
+
+.preview-photo {
+  min-height: 300px;
+  overflow: hidden;
+}
+
+.preview-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.section {
+  padding: 80px 6%;
+  background: white;
+}
+
+.section.soft { background: var(--soft); }
+
+.section-heading {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 40px;
+}
+
+.kicker {
+  color: var(--purple);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.section-heading h2 {
+  font-size: clamp(30px, 4vw, 47px);
+  line-height: 1.12;
+  letter-spacing: -2px;
+  margin: 14px 0;
+}
+
+.section-heading p {
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--muted);
+}
+
+/* MOVING IMAGE GALLERY */
+
+.motion-gallery {
+  padding: 65px 0;
+  overflow: hidden;
+  background: #171329;
+  color: white;
+}
+
+.motion-gallery .section-heading { padding: 0 5%; }
+
+.motion-gallery .section-heading p { color: #b8b2ce; }
+
+.motion-gallery .section-heading h2 { color: white; }
+
+.motion-gallery .kicker { color: #b9aaff; }
+
+.motion-row {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  margin: 18px 0;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 5%,
+    black 95%,
+    transparent
+  );
+}
+
+.motion-track {
+  display: flex;
+  flex-shrink: 0;
+  gap: 16px;
+  padding-right: 16px;
+  width: max-content;
+  animation: moveLeft 42s linear infinite;
+}
+
+.motion-row.reverse .motion-track {
+  animation-name: moveRight;
+  animation-duration: 48s;
+}
+
+.motion-row:hover .motion-track { animation-play-state: paused; }
+
+.motion-card {
+  position: relative;
+  flex: 0 0 275px;
+  width: 275px;
+  height: 180px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #33294f;
+}
+
+.motion-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .5s;
+}
+
+.motion-card:hover img { transform: scale(1.08); }
+
+.motion-caption {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 35px 15px 14px;
+  background: linear-gradient(transparent, #100d22e8);
+}
+
+.motion-caption strong {
+  font-size: 14px;
+  display: block;
+}
+
+.motion-caption span {
+  display: block;
+  margin-top: 5px;
+  color: #ddd7f3;
+  font-size: 10px;
+}
+
+@keyframes moveLeft {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes moveRight {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  max-width: 1180px;
+  margin: auto;
+}
+
+.project-card {
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform .25s, box-shadow .25s;
+}
+
+.project-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 45px #27164b12;
+}
+
+.project-photo {
+  height: 230px;
+  overflow: hidden;
+  background: #eeeaf8;
+  position: relative;
+}
+
+.project-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .5s;
+}
+
+.project-card:hover .project-photo img { transform: scale(1.05); }
+
+.project-tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #ffffffed;
+  color: #51456e;
+  border-radius: 30px;
+  padding: 7px 10px;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.project-info { padding: 20px; }
+
+.project-info h3 { margin: 0 0 10px; font-size: 18px; }
+
+.project-info p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.text-link {
+  color: var(--purple);
+  font-size: 12px;
+  font-weight: 800;
+  border: 0;
+  background: transparent;
+  padding: 5px 0;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  max-width: 1150px;
+  margin: auto;
+}
+
+.feature-card {
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: white;
+}
+
+.feature-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  background: #efebff;
+  color: var(--purple);
+  border-radius: 12px;
+  font-size: 21px;
+}
+
+.feature-card h3 { font-size: 16px; margin: 18px 0 9px; }
+
+.feature-card p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 45px;
+  align-items: center;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.split-image {
+  height: 390px;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.split-image img { width: 100%; height: 100%; object-fit: cover; }
+
+.split-copy h2 {
+  font-size: clamp(31px, 4vw, 46px);
+  letter-spacing: -2px;
+  line-height: 1.1;
+}
+
+.split-copy p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.9;
+}
+
+.check-list { list-style: none; padding: 0; }
+
+.check-list li {
+  font-size: 13px;
+  margin: 14px 0;
+}
+
+.check-list li::before {
+  content: "✓";
+  color: var(--purple);
+  font-weight: 900;
+  margin-right: 10px;
+}
+
+.photo-gallery {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  gap: 14px;
+  max-width: 1150px;
+  margin: auto;
+}
+
+.photo-gallery img {
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.photo-gallery img:first-child { height: 270px; }
+
+.cta {
+  background: linear-gradient(120deg, #21173e, #4933a6, #7257ff);
+  padding: 75px 6%;
+  text-align: center;
+  color: white;
+}
+
+.cta h2 {
+  max-width: 700px;
+  margin: 0 auto 16px;
+  font-size: clamp(32px, 5vw, 53px);
+  letter-spacing: -2px;
+}
+
+.cta p { font-size: 13px; color: #e4dfff; line-height: 1.8; }
+
+footer { background: #171329; color: white; padding: 35px 6%; }
+
+.footer-bottom {
+  color: #aaa5c3;
+  font-size: 11px;
+  border-top: 1px solid #37314e;
+  padding-top: 20px;
+  margin-top: 20px;
+}
+
+/* VISUAL EDITOR */
+
+.editor-section {
+  padding: 35px 4%;
+  background: #f3f2f8;
+  border-top: 1px solid var(--line);
+}
+
+.editor-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.editor-header h2 { font-size: 21px; margin: 7px 0; }
+
+.editor-layout {
+  display: grid;
+  grid-template-columns: 185px minmax(0, 1fr) 240px;
+  gap: 12px;
+}
+
+.panel {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+  min-width: 0;
+}
+
+.panel h3 { font-size: 13px; margin: 3px 0 15px; }
+
+.layer {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 9px;
+  margin-bottom: 6px;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.layer.active { background: #f0edff; border-color: var(--purple); }
+
+.canvas-wrap {
+  min-width: 0;
+  overflow: auto;
+  padding: 12px;
+  background: #e7e6ef;
+  border-radius: 12px;
+}
+
+.edit-canvas {
+  width: 100%;
+  min-height: 360px;
+  margin: auto;
+  background: white;
+  overflow: hidden;
+}
+
+.edit-canvas.tablet { width: 768px; max-width: none; }
+.edit-canvas.mobile { width: 375px; max-width: none; }
+
+.edit-canvas [data-editable] { cursor: pointer; }
+
+.edit-canvas [data-editable]:hover {
+  outline: 2px dashed #a493ff;
+  outline-offset: 2px;
+}
+
+.edit-canvas [data-editable].selected {
+  outline: 2px solid var(--purple);
+  outline-offset: 2px;
+}
+
+.edit-canvas .editor-hero {
+  padding: 35px 6%;
+  background: #f8f6ff;
+  text-align: center;
+}
+
+.edit-canvas .editor-hero h1 {
+  font-size: 34px;
+  letter-spacing: -1.5px;
+}
+
+.edit-canvas .editor-image {
+  height: 180px;
+  overflow: hidden;
+}
+
+.edit-canvas .editor-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.edit-canvas .editor-content { padding: 25px 5%; }
+
+.edit-canvas .editor-content h2 { font-size: 23px; }
+
+.edit-canvas .editor-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.edit-canvas .editor-card img {
+  height: 100px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.edit-canvas .editor-card p {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.field { margin-bottom: 13px; }
+
+.field label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.field input, .field textarea, .field select {
+  width: 100%;
+  padding: 9px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: white;
+  color: var(--ink);
+}
+
+.field input[type=color] { height: 37px; padding: 3px; }
+
+.field input[type=range] { padding: 0; }
+
+.small-note { font-size: 10px; color: var(--muted); line-height: 1.7; }
+
+.status { min-height: 18px; font-size: 11px; color: #21845d; margin-top: 9px; }
+
+@media(max-width:1000px) {
+  .editor-layout { grid-template-columns: 160px minmax(0, 1fr); }
+  .properties-panel { grid-column: 1 / -1; }
+  .navlinks { gap: 12px; }
+}
+
+@media(max-width:700px) {
+  .topbar { height: 58px; padding: 0 10px; gap: 8px; }
+  .logo { font-size: 18px; }
+  .navlinks { display: none; }
+  .top-actions { gap: 4px; }
+  .top-actions .btn { padding: 8px; font-size: 10px; }
+  .hero { padding: 55px 5% 40px; }
+  .hero h1 { letter-spacing: -2px; }
+  .hero-preview { margin-top: 32px; }
+  .preview-content { grid-template-columns: 1fr; }
+  .preview-copy { padding: 28px 7%; }
+  .preview-photo { min-height: 220px; }
+  .section { padding: 55px 5%; }
+  .motion-gallery { padding: 48px 0; }
+  .motion-card { flex-basis: 230px; width: 230px; height: 155px; }
+  .project-grid, .feature-grid { grid-template-columns: 1fr; }
+  .project-photo { height: 230px; }
+  .split { grid-template-columns: 1fr; gap: 22px; }
+  .split-image { height: 260px; }
+  .photo-gallery { grid-template-columns: 1fr 1fr; }
+  .photo-gallery img, .photo-gallery img:first-child { height: 140px; }
+  .photo-gallery img:first-child { grid-column: span 2; }
+  .editor-section { padding: 22px 3%; }
+  .editor-layout { grid-template-columns: 1fr; }
+  .properties-panel { grid-column: auto; }
+  .edit-canvas .editor-cards { grid-template-columns: 1fr; }
+}
+
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after {
+    animation: none !important;
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <a href="#home" class="logo">AniVora<span>.</span></a>
+
+  <nav class="navlinks">
+    <a href="#gallery">Gallery</a>
+    <a href="#showcases">Showcases</a>
+    <a href="#features">Features</a>
+    <a href="#editor">Editor</a>
+  </nav>
+
+  <div class="top-actions">
+    <button class="btn" id="topSave">Save</button>
+    <button class="btn primary" id="topEditor">Build a website</button>
+  </div>
+</header>
+
+<main id="home">
+
+<section class="hero">
+  <span class="eyebrow">✦ YOUR NEXT CREATIVE PROJECT STARTS HERE</span>
+
+  <h1>Build something <span class="gradient-text">extraordinary.</span></h1>
+
+  <p class="hero-copy">
+    Turn your ideas into beautiful online experiences. Explore inspiring
+    designs, customize your layout, and create a website that feels like yours.
+  </p>
+
+  <div class="hero-actions">
+    <a href="#editor" class="btn primary">Start creating ↗</a>
+    <a href="#showcases" class="btn">Explore designs</a>
+  </div>
+
+  <p class="hero-note">Your ideas. Your style. Your next website.</p>
+
+  <div class="hero-preview">
+    <div class="browser-bar">
+      <span class="browser-dot"></span>
+      <span class="browser-dot"></span>
+      <span class="browser-dot"></span>
+      <span class="browser-address">your-creative-project.com</span>
+    </div>
+
+    <div class="preview-content">
+      <div class="preview-copy">
+        <span class="kicker">A NEW WAY TO CREATE</span>
+        <h2>Bring your next big idea to life.</h2>
+        <p>
+          Design an online presence that tells your story, shares your work,
+          and gives your idea a place to grow.
+        </p>
+        <a href="#editor" class="btn primary">Explore your possibilities ↗</a>
+      </div>
+
+      <div class="preview-photo">
+        <img
+          src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=85"
+          alt="Bright modern creative workspace">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TWO IMAGE ROWS MOVING IN OPPOSITE DIRECTIONS -->
+
+<section class="motion-gallery" id="gallery">
+  <div class="section-heading">
+    <span class="kicker">A world of inspiration</span>
+    <h2>Ideas never stand still.</h2>
+    <p>Discover different looks, moods, spaces, and creative directions.</p>
+  </div>
+
+  <div class="motion-row" aria-label="Images moving from right to left">
+    <div class="motion-track">
+      <article class="motion-card">
+        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=700&q=80" alt="Restaurant design" loading="lazy">
+        <div class="motion-caption"><strong>Hospitality</strong><span>Warm, welcoming experiences</span></div>
+      </article>
+      <article class="motion-card">
+        <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=700&q=80" alt="Modern workspace" loading="lazy">
+        <div class="motion-caption"><strong>Modern business</strong><span>Professional and clean</span></div>
+      </article>
+      <article class="motion-card">
+        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=700&q=80" alt="Analytics dashboard" loading="lazy">
+        <div class="motion-caption"><strong>Technology</strong><span>Ideas for the digital world</span></div>
+      </article>
+      <article class="motion-card">
+        <img src="https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&w=700&q=80" alt="Minimal interior design" loading="lazy">
+        <div class="motion-caption"><strong>Minimal design</strong><span>Less clutter, more clarity</span></div>
+      </article>
+      <article class="motion-card">
+        <img src="https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=700&q=80" alt="Creative design materials" loading="lazy">
+        <div class="motion-caption"><strong>Creative studio</strong><span>Make room for imagination</span></div>
+      </article>
+    </div>
+  </div>
+
+  <div class="motion-row reverse" aria-label="Images moving from left to right">
+    <div class="motion-track">
+      <article class="motion-card">
+        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=700&q=80" alt="Office design" loading="lazy">
+        <div class="motion-caption"><strong>Workspaces</strong><span>Designed for big ideas</span></div>
+      </article>
+      <article class="motion-card">
+        <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=700&q=80" alt="Interior design inspiration" loading="lazy">
+        <div class="motion-caption"><strong>Interior design</strong><span>Find your visual direction</span></div>
+      </article>
+      <article class="motion-card">
+        <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=700&q=80" alt="Contemporary office" loading="lazy">
+        <div class="motion-caption"><strong>Modern living</strong><span>Fresh visual inspiration</span></div>
+      </article>
+      <article class="motion-card">
+        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=700&q=80" alt="Technology and teamwork" loading="lazy">
+        <div class="motion-caption"><strong>Digital products</strong><span>Make technology feel human</span></div>
+      </article>
+      <article class="motion-card">
+        <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=700&q=80" alt="Creative workspace" loading="lazy">
+        <div class="motion-caption"><strong>Creative spaces</strong><span>Start with inspiration</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="showcases">
+  <div class="section-heading">
+    <span class="kicker">Made for different ideas</span>
+    <h2>What will you create next?</h2>
+    <p>Explore website concepts for businesses, technology, and creative projects.</p>
+  </div>
+
+  <div class="project-grid">
+    <article class="project-card">
+      <div class="project-photo">
+        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=900&q=85" alt="Restaurant interior" loading="lazy">
+        <span class="project-tag">Restaurant</span>
+      </div>
+      <div class="project-info">
+        <h3>Taste Haven</h3>
+        <p>A welcoming restaurant concept with atmospheric photography and a memorable brand.</p>
+        <button class="text-link choose-design" data-design="restaurant">Use this inspiration ↗</button>
+      </div>
+    </article>
+
+    <article class="project-card">
+      <div class="project-photo">
+        <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=85" alt="Professional office" loading="lazy">
+        <span class="project-tag">Business</span>
+      </div>
+      <div class="project-info">
+        <h3>Northstar Studio</h3>
+        <p>A polished business concept with a professional appearance and clear messaging.</p>
+        <button class="text-link choose-design" data-design="business">Use this inspiration ↗</button>
+      </div>
+    </article>
+
+    <article class="project-card">
+      <div class="project-photo">
+        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=900&q=85" alt="Analytics dashboard" loading="lazy">
+        <span class="project-tag">Technology</span>
+      </div>
+      <div class="project-info">
+        <h3>Nova Analytics</h3>
+        <p>A modern digital product concept with bold visuals and a focused layout.</p>
+        <button class="text-link choose-design" data-design="technology">Use this inspiration ↗</button>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="section soft" id="features">
+  <div class="section-heading">
+    <span class="kicker">Your creative workspace</span>
+    <h2>More control. More possibilities.</h2>
+    <p>Tools to experiment with your design, organize your ideas, and shape your website.</p>
+  </div>
+
+  <div class="feature-grid">
+    <article class="feature-card"><div class="feature-icon">◈</div><h3>Visual editing</h3><p>Select an element and customize its text, colors, size, and spacing.</p></article>
+    <article class="feature-card"><div class="feature-icon">▣</div><h3>Responsive preview</h3><p>Switch between desktop, tablet, and mobile canvas sizes.</p></article>
+    <article class="feature-card"><div class="feature-icon">↶</div><h3>Undo and redo</h3><p>Reverse or restore recent editing changes.</p></article>
+    <article class="feature-card"><div class="feature-icon">⇩</div><h3>Export HTML</h3><p>Download a copy of your edited website markup.</p></article>
+    <article class="feature-card"><div class="feature-icon">▤</div><h3>Save locally</h3><p>Save and reopen the project in the same browser.</p></article>
+    <article class="feature-card"><div class="feature-icon">✦</div><h3>Design inspiration</h3><p>Start from a concept and personalize it for your own project.</p></article>
+  </div>
+</section>
+
+<section class="section">
+  <div class="split">
+    <div class="split-image">
+      <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1100&q=85" loading="lazy" alt="Bright contemporary workspace">
+    </div>
+    <div class="split-copy">
+      <span class="kicker">Made for creators</span>
+      <h2>From your first idea to the final detail.</h2>
+      <p>Experiment with the look and feel of a website, make it your own, and export your work when you're ready.</p>
+      <ul class="check-list">
+        <li>Edit headings and text</li>
+        <li>Customize backgrounds and colors</li>
+        <li>Change spacing and font size</li>
+        <li>Preview different screen widths</li>
+        <li>Save your project in your browser</li>
+      </ul>
+      <a href="#editor" class="btn primary">Open visual editor ↗</a>
+    </div>
+  </div>
+</section>
+
+<section class="section soft">
+  <div class="section-heading">
+    <span class="kicker">Visual inspiration</span>
+    <h2>Find your next direction.</h2>
+    <p>Mix and match ideas until you find the right look for your project.</p>
+  </div>
+
+  <div class="photo-gallery">
+    <img src="https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&w=1000&q=85" alt="Minimal interior" loading="lazy">
+    <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=85" alt="Contemporary workspace" loading="lazy">
+    <img src="https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=800&q=85" alt="Design inspiration" loading="lazy">
+  </div>
+</section>
+
+<section class="cta">
+  <h2>Your next website starts with an idea.</h2>
+  <p>Open the editor, explore the controls, and begin shaping your design.</p>
+  <a href="#editor" class="btn">Start building ↓</a>
+</section>
+
+</main>
+
+<footer>
+  <a class="logo" href="#home">AniVora<span>.</span></a>
+  <p style="color:#aaa5c3;font-size:12px;line-height:1.8">A creative starting point for your next website.</p>
+  <div class="footer-bottom">© 2026 AniVora Builder</div>
+</footer>
+
+<!-- WORKING LOCAL VISUAL EDITOR -->
+
+<section class="editor-section" id="editor">
+  <div class="editor-header">
+    <div>
+      <span class="kicker">Interactive workspace</span>
+      <h2>AniVora Visual Editor</h2>
+    </div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap">
+      <button class="btn" id="undo">↶ Undo</button>
+      <button class="btn" id="redo">↷ Redo</button>
+      <button class="btn" id="save">Save project</button>
+      <button class="btn primary" id="export">Export HTML</button>
+    </div>
+  </div>
+
+  <p class="small-note">Select an element in the preview. Change its properties in the right panel. Your changes affect the preview directly.</p>
+
+  <div class="editor-header" style="margin-top:18px">
+    <strong style="font-size:12px">Canvas size</strong>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="btn device" data-device="desktop">Desktop</button>
+      <button class="btn device" data-device="tablet">Tablet</button>
+      <button class="btn device" data-device="mobile">Mobile</button>
+    </div>
+  </div>
+
+  <div class="editor-layout">
+    <aside class="panel">
+      <h3>Website layers</h3>
+      <div id="layers"></div>
+      <hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
+      <h3>Add content</h3>
+      <button class="btn add-element" data-add="text" style="width:100%;margin-bottom:7px">＋ Text block</button>
+      <button class="btn add-element" data-add="button" style="width:100%;margin-bottom:7px">＋ Button</button>
+      <button class="btn add-element" data-add="section" style="width:100%">＋ Section</button>
+      <p class="small-note">Choose a layer to edit its properties.</p>
+    </aside>
+
+    <div class="canvas-wrap">
+      <div class="edit-canvas" id="editCanvas">
+        <header data-editable data-id="ed-nav" data-name="Navigation" style="padding:15px 5%;display:flex;justify-content:space-between;align-items:center">
+          <strong data-editable data-id="ed-logo" data-name="Logo">AniVora<span style="color:#7257ff">.</span></strong>
+          <span data-editable data-id="ed-navlinks" data-name="Navigation links" style="font-size:11px">Home　 Features　 Contact</span>
+        </header>
+
+        <section class="editor-hero" data-editable data-id="ed-hero" data-name="Hero section">
+          <span class="eyebrow" data-editable data-id="ed-badge" data-name="Badge">YOUR NEXT BIG IDEA</span>
+          <h1 data-editable data-id="ed-heading" data-name="Main heading">Create something remarkable.</h1>
+          <p data-editable data-id="ed-description" data-name="Description" style="font-size:12px;line-height:1.8;color:#77758a">A beautiful website starts with your idea. Customize this page to make it yours.</p>
+          <button class="btn primary" data-editable data-id="ed-button" data-name="Main button">Get started</button>
+          <div class="editor-image" data-editable data-id="ed-image" data-name="Hero image" style="margin-top:25px">
+            <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1000&q=80" alt="Workspace preview">
+          </div>
+        </section>
+
+        <section class="editor-content" data-editable data-id="ed-section" data-name="Content section">
+          <h2 data-editable data-id="ed-section-heading" data-name="Section heading">Ideas worth sharing.</h2>
+          <div class="editor-cards">
+            <article class="editor-card">
+              <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80" alt="Restaurant design">
+              <h3 data-editable data-id="ed-card-one" data-name="First card title">Beautiful experiences</h3>
+              <p>Tell your story through visual design.</p>
+            </article>
+            <article class="editor-card">
+              <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80" alt="Technology design">
+              <h3 data-editable data-id="ed-card-two" data-name="Second card title">Fresh thinking</h3>
+              <p>Build a presence that feels like you.</p>
+            </article>
+          </div>
+        </section>
+
+        <footer data-editable data-id="ed-footer" data-name="Footer" style="padding:20px;background:#171329;color:white;font-size:11px;text-align:center">© 2026 Your Brand. Made with AniVora Builder.</footer>
+      </div>
+    </div>
+
+    <aside class="panel">
+      <h3 id="propertyTitle">Element properties</h3>
+      <div id="properties"><p class="small-note">Select an element to begin editing.</p></div>
+      <hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
+      <h3>Quick edit</h3>
+      <textarea id="quickEdit" placeholder="Example: Change heading to Welcome to my website" style="width:100%;min-height:85px;border:1px solid var(--line);border-radius:8px;padding:9px"></textarea>
+      <button class="btn primary" id="applyQuickEdit" style="width:100%;margin-top:8px">Apply command</button>
+      <p class="small-note">This supports simple local commands, not real AI generation.</p>
+      <div class="status" id="status" aria-live="polite"></div>
+    </aside>
+  </div>
+</section>
+
+<script>
+(function () {
+  "use strict";
+
+  const $ = selector => document.querySelector(selector);
+  const $$ = selector => Array.from(document.querySelectorAll(selector));
+
+  const canvas = $("#editCanvas");
+  const layers = $("#layers");
+  const properties = $("#properties");
+  const status = $("#status");
+
+  let selected = null;
+  let history = [];
+  let future = [];
+  let restoring = false;
+
+  function say(message) {
+    status.textContent = message;
+  }
+
+  function snapshot() {
+    return canvas.innerHTML;
+  }
+
+  function record() {
+    if (restoring) return;
+    const current = snapshot();
+
+    if (history[history.length - 1] !== current) {
+      history.push(current);
+      if (history.length > 40) history.shift();
+    }
+
+    future = [];
+    updateHistoryButtons();
+  }
+
+  function updateHistoryButtons() {
+    $("#undo").disabled = history.length < 2;
+    $("#redo").disabled = future.length === 0;
+  }
+
+  function allLayers() {
+    return Array.from(canvas.querySelectorAll("[data-id]"));
+  }
+
+  function clearSelection() {
+    canvas.querySelectorAll(".selected").forEach(el => {
+      el.classList.remove("selected");
+    });
+  }
+
+  function choose(el) {
+    if (!el || !canvas.contains(el)) return;
+
+    selected = el;
+    clearSelection();
+    el.classList.add("selected");
+    renderLayers();
+    renderProperties();
+  }
+
+  function renderLayers() {
+    layers.innerHTML = "";
+
+    allLayers().forEach(el => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "layer" + (el === selected ? " active" : "");
+      button.textContent = el.dataset.name || el.tagName.toLowerCase();
+      button.addEventListener("click", () => choose(el));
+      layers.appendChild(button);
+    });
+  }
+
+  function field(label, control) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "field";
+
+    const caption = document.createElement("label");
+    caption.textContent = label;
+
+    wrapper.append(caption, control);
+    return wrapper;
+  }
+
+  function input(type, value) {
+    const el = document.createElement("input");
+    el.type = type;
+    el.value = value;
+    return el;
+  }
+
+  function colorHex(value) {
+    const nums = (value || "").match(/\d+/g);
+    if (!nums || nums.length < 3) return "#ffffff";
+
+    return "#" + nums.slice(0, 3)
+      .map(n => Number(n).toString(16).padStart(2, "0"))
+      .join("");
+  }
+
+  function renderProperties() {
+    properties.innerHTML = "";
+
+    if (!selected) {
+      $("#propertyTitle").textContent = "Element properties";
+      properties.innerHTML =
+        '<p class="small-note">Select an element in the canvas or layers list.</p>';
+      return;
+    }
+
+    const el = selected;
+    $("#propertyTitle").textContent = el.dataset.name || "Element";
+
+    const isImage = el.tagName === "IMG";
+    const canEditText = !isImage && !el.querySelector("img") &&
+      el.children.length === 0;
+
+    if (canEditText) {
+      const textInput = document.createElement("textarea");
+      textInput.value = el.innerText;
+
+      textInput.addEventListener("change", () => {
+        record();
+        el.textContent = textInput.value;
+        say("Text updated.");
+        renderLayers();
+      });
+
+      properties.appendChild(field("Text content", textInput));
+    }
+
+    const bg = input("color", colorHex(getComputedStyle(el).backgroundColor));
+    bg.addEventListener("input", () => {
+      el.style.backgroundColor = bg.value;
+    });
+    bg.addEventListener("change", () => {
+      record();
+      say("Background color updated.");
+    });
+    properties.appendChild(field("Background color", bg));
+
+    const fg = input("color", colorHex(getComputedStyle(el).color));
+    fg.addEventListener("input", () => {
+      el.style.color = fg.value;
+    });
+    fg.addEventListener("change", () => {
+      record();
+      say("Text color updated.");
+    });
+    properties.appendChild(field("Text color", fg));
+
+    const fontSize = input("range", parseInt(getComputedStyle(el).fontSize, 10) || 16);
+    fontSize.min = 10;
+    fontSize.max = 76;
+
+    fontSize.addEventListener("input", () => {
+      el.style.fontSize = fontSize.value + "px";
+    });
+    fontSize.addEventListener("change", () => {
+      record();
+      say("Font size updated.");
+    });
+    properties.appendChild(field("Font size", fontSize));
+
+    const spacing = input("range", parseInt(getComputedStyle(el).paddingTop, 10) || 0);
+    spacing.min = 0;
+    spacing.max = 90;
+
+    spacing.addEventListener("input", () => {
+      el.style.padding = spacing.value + "px";
+    });
+    spacing.addEventListener("change", () => {
+      record();
+      say("Spacing updated.");
+    });
+    properties.appendChild(field("Spacing", spacing));
+
+    if (isImage) {
+      const imageURL = input("url", el.getAttribute("src") || "");
+
+      imageURL.addEventListener("change", () => {
+        record();
+        el.src = imageURL.value;
+        say("Image URL updated.");
+      });
+
+      properties.appendChild(field("Image URL", imageURL));
+    }
+
+    const bold = document.createElement("button");
+    bold.type = "button";
+    bold.className = "btn";
+    bold.textContent = "Toggle bold";
+    bold.addEventListener("click", () => {
+      record();
+      el.style.fontWeight =
+        getComputedStyle(el).fontWeight === "700" ? "400" : "700";
+      renderProperties();
+    });
+    properties.appendChild(bold);
+
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.className = "btn";
+    remove.style.marginTop = "8px";
+    remove.textContent = "Delete element";
+
+    remove.addEventListener("click", () => {
+      record();
+      el.remove();
+      selected = null;
+      renderLayers();
+      renderProperties();
+      say("Element deleted.");
+    });
+
+    if (el.dataset.id.startsWith("custom-")) {
+      properties.appendChild(remove);
+    }
+  }
+
+  canvas.addEventListener("click", event => {
+    const el = event.target.closest("[data-editable], [data-id]");
+
+    if (!el || !canvas.contains(el)) return;
+
+    event.preventDefault();
+    choose(el);
+  });
+
+  $$(".device").forEach(button => {
+    button.addEventListener("click", () => {
+      canvas.classList.remove("tablet", "mobile");
+
+      if (button.dataset.device !== "desktop") {
+        canvas.classList.add(button.dataset.device);
+      }
+
+      $$(".device").forEach(other => {
+        other.classList.toggle("primary", other === button);
+      });
+    });
+  });
+
+  $$(".add-element").forEach(button => {
+    button.addEventListener("click", () => {
+      record();
+
+      const type = button.dataset.add;
+      const el = document.createElement(
+        type === "button" ? "button" :
+        type === "section" ? "section" : "p"
+      );
+
+      const id = "custom-" + Date.now();
+
+      el.dataset.id = id;
+      el.dataset.editable = "";
+      el.dataset.name =
+        type === "button" ? "New button" :
+        type === "section" ? "New section" : "Text block";
+
+      if (type === "button") {
+        el.className = "btn primary";
+        el.textContent = "Your button";
+      } else if (type === "section") {
+        el.style.cssText =
+          "padding:30px;text-align:center;background:#f8f7fc";
+        el.innerHTML = "<h2>New section</h2><p>Add your content here.</p>";
+      } else {
+        el.textContent = "Click to edit this text.";
+        el.style.padding = "12px";
+      }
+
+      canvas.appendChild(el);
+      choose(el);
+      say("New element added.");
+    });
+  });
+
+  function saveProject() {
+    try {
+      const data = {
+        html: canvas.innerHTML,
+        savedAt: new Date().toISOString()
+      };
+
+      localStorage.setItem("anivora-builder-project", JSON.stringify(data));
+      say("Project saved in this browser.");
+    } catch (error) {
+      say("Unable to save. Browser storage may be unavailable.");
+    }
+  }
+
+  function loadProject() {
+    try {
+      const raw = localStorage.getItem("anivora-builder-project");
+      if (!raw) return;
+
+      const data = JSON.parse(raw);
+
+      if (data && typeof data.html === "string") {
+        canvas.innerHTML = data.html;
+      }
+    } catch (error) {
+      say("Could not load the saved project.");
+    }
+  }
+
+  function exportProject() {
+    const clone = canvas.cloneNode(true);
+
+    clone.querySelectorAll(".selected").forEach(el => {
+      el.classList.remove("selected");
+    });
+
+    clone.querySelectorAll("[data-editable]").forEach(el => {
+      el.removeAttribute("data-editable");
+    });
+
+    const css = Array.from(document.styleSheets).map(sheet => {
+      try {
+        return Array.from(sheet.cssRules).map(rule => rule.cssText).join("\n");
+      } catch (error) {
+        return "";
+      }
+    }).join("\n");
+
+    const output =
+      "<!doctype html>\n<html lang=\"en\"><head>" +
+      "<meta charset=\"utf-8\">" +
+      "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">" +
+      "<title>My AniVora Website</title>" +
+      "<style>" + css + "</style></head><body>" +
+      clone.outerHTML + "</body></html>";
+
+    const blob = new Blob([output], { type: "text/html;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "my-anivora-website.html";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    say("HTML file exported.");
+  }
+
+  $("#save").addEventListener("click", saveProject);
+  $("#topSave").addEventListener("click", saveProject);
+  $("#export").addEventListener("click", exportProject);
+
+  $("#topEditor").addEventListener("click", () => {
+    $("#editor").scrollIntoView({ behavior: "smooth" });
+  });
+
+  $("#undo").addEventListener("click", () => {
+    if (history.length < 2) return;
+
+    restoring = true;
+    future.push(history.pop());
+    canvas.innerHTML = history[history.length - 1];
+    selected = null;
+    restoring = false;
+
+    renderLayers();
+    renderProperties();
+    updateHistoryButtons();
+    say("Undo complete.");
+  });
+
+  $("#redo").addEventListener("click", () => {
+    if (!future.length) return;
+
+    restoring = true;
+    const next = future.pop();
+    history.push(next);
+    canvas.innerHTML = next;
+    selected = null;
+    restoring = false;
+
+    renderLayers();
+    renderProperties();
+    updateHistoryButtons();
+    say("Redo complete.");
+  });
+
+  $("#applyQuickEdit").addEventListener("click", () => {
+    const command = $("#quickEdit").value.trim();
+
+    if (!command) {
+      say("Enter a command first.");
+      return;
+    }
+
+    const headingMatch = command.match(
+      /(?:change|set|replace)\s+(?:the\s+)?(?:main\s+)?heading\s+to\s+["“]?(.+?)["”]?$/i
+    );
+
+    if (headingMatch) {
+      const heading = canvas.querySelector('[data-id="ed-heading"]');
+
+      if (heading) {
+        record();
+        heading.textContent = headingMatch[1].replace(/["”]$/, "");
+        choose(heading);
+        say("Heading updated.");
+        return;
+      }
+    }
+
+    const colorMatch = command.match(
+      /(?:make|change)\s+(?:the\s+)?background\s+(?:to\s+)?(purple|blue|white|black|pink|green|orange|red)/i
+    );
+
+    if (colorMatch) {
+      const colors = {
+        purple: "#7257ff",
+        blue: "#2563eb",
+        white: "#ffffff",
+        black: "#191727",
+        pink: "#f9a8d4",
+        green: "#16a34a",
+        orange: "#f97316",
+        red: "#dc2626"
+      };
+
+      record();
+      canvas.style.backgroundColor = colors[colorMatch[1].toLowerCase()];
+      say("Canvas background updated.");
+      return;
+    }
+
+    say('Try: "Change heading to Welcome to my website" or "Make background purple".');
+  });
+
+  $$(".choose-design").forEach(button => {
+    button.addEventListener("click", () => {
+      const designs = {
+        restaurant: {
+          heading: "A taste of something extraordinary.",
+          color: "#a4482c"
+        },
+        business: {
+          heading: "A better way to bring ideas to life.",
+          color: "#273e52"
+        },
+        technology: {
+          heading: "Make smarter moves with better insights.",
+          color: "#7257ff"
+        }
+      };
+
+      const design = designs[button.dataset.design];
+      const heading = canvas.querySelector('[data-id="ed-heading"]');
+
+      record();
+      heading.textContent = design.heading;
+      heading.style.color = design.color;
+      choose(heading);
+
+      $("#editor").scrollIntoView({ behavior: "smooth" });
+      say("Design inspiration applied. You can keep editing.");
+    });
+  });
+
+  // Duplicate each row's images so the animation loops continuously.
+  document.querySelectorAll(".motion-track").forEach(track => {
+    const originals = Array.from(track.children);
+
+    originals.forEach(card => {
+      const copy = card.cloneNode(true);
+      copy.setAttribute("aria-hidden", "true");
+      copy.querySelectorAll("img").forEach(img => {
+        img.alt = "";
+      });
+      track.appendChild(copy);
+    });
+  });
+
+  loadProject();
+  history = [canvas.innerHTML];
+  renderLayers();
+  renderProperties();
+  updateHistoryButtons();
+})();
+</script>
+
+</body>
+</html>
