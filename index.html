@@ -1,0 +1,507 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101019">
+<title>AniVora Builder — Create Your Website</title>
+<style>
+:root {
+  --bg:#0c0c13;
+  --sidebar:#11111b;
+  --panel:#171722;
+  --panel2:#20202d;
+  --line:#2b2b3b;
+  --text:#f8f7ff;
+  --muted:#a4a3b7;
+  --purple:#9878ff;
+  --purple2:#7049ed;
+  --green:#55d6a0;
+  --radius:18px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--purple);outline-offset:2px}
+button:disabled{opacity:.5;cursor:not-allowed}
+.app{display:flex;min-height:100vh}
+.sidebar{width:248px;background:var(--sidebar);border-right:1px solid var(--line);padding:25px 17px;display:flex;flex-direction:column;flex-shrink:0}
+.brand{display:flex;align-items:center;gap:11px;padding:0 8px 32px}
+.brand-icon{height:39px;width:39px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(135deg,#b6a1ff,#7049ed);color:white;font-size:22px;font-weight:900;box-shadow:0 5px 25px #8b6cff35}
+.brand-name{font-size:19px;font-weight:800;letter-spacing:-.7px}
+.brand-name span{color:var(--purple)}
+.brand-sub{font-size:10px;color:var(--muted);margin-top:3px}
+.nav-label{font-size:10px;color:#77778f;letter-spacing:1.6px;font-weight:800;padding:13px 12px 9px}
+.nav-item{width:100%;border:0;background:transparent;color:#a9a8bc;padding:12px 13px;border-radius:12px;display:flex;align-items:center;gap:12px;text-align:left;margin:2px 0;transition:.2s}
+.nav-item .ico{width:19px;text-align:center;font-size:17px}
+.nav-item:hover,.nav-item.active{background:#252139;color:white}
+.nav-item.active{box-shadow:inset 3px 0 var(--purple)}
+.nav-item.active .ico{color:#b8a5ff}
+.nav-count{margin-left:auto;font-size:11px;background:#353047;padding:3px 7px;border-radius:6px}
+.sidebar-bottom{margin-top:auto}
+.usage-card{border:1px solid var(--line);border-radius:15px;padding:15px;background:linear-gradient(145deg,#201b37,#151520)}
+.usage-title{font-weight:750;font-size:12px;margin-bottom:7px}
+.usage-card p{font-size:11px;color:var(--muted);line-height:1.6}
+.progress{height:5px;background:#343044;border-radius:9px;overflow:hidden}
+.progress div{height:100%;width:15%;background:linear-gradient(90deg,#9676ff,#c4a9ff);border-radius:9px}
+.usage-foot{font-size:10px;color:#aaa5c3;margin-top:8px}
+.profile{display:flex;align-items:center;gap:10px;padding:20px 5px 0}
+.avatar{width:35px;height:35px;display:grid;place-items:center;border-radius:12px;background:#382b60;color:#d7caff;font-weight:800}
+.profile-name{font-size:12px;font-weight:700}
+.profile-email{font-size:10px;color:var(--muted);margin-top:4px}
+.main{min-width:0;flex:1}
+.topbar{height:76px;padding:0 34px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:15px;background:#0c0c13eF;position:sticky;top:0;z-index:5;backdrop-filter:blur(16px)}
+.breadcrumb{color:var(--muted);font-size:12px}
+.breadcrumb strong{color:white}
+.top-actions{display:flex;align-items:center;gap:10px}
+.icon-btn,.btn{border:1px solid var(--line);border-radius:11px;background:var(--panel);color:var(--text);padding:10px 14px;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.2s;white-space:nowrap}
+.icon-btn:hover,.btn:hover{border-color:#65548d;background:#252136}
+.btn-primary{background:linear-gradient(135deg,#9b7bff,#7149ed);border-color:transparent;color:white;font-weight:750;box-shadow:0 6px 22px #805bfa25}
+.btn-primary:hover{background:linear-gradient(135deg,#ad94ff,#805cf4)}
+.btn-small{padding:7px 10px;font-size:12px}
+.content{max-width:1500px;margin:auto;padding:34px}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:28px}
+.eyebrow{color:#b7a5ff;text-transform:uppercase;letter-spacing:2px;font-size:10px;font-weight:800;margin-bottom:12px}
+h1{font-size:clamp(28px,3vw,39px);letter-spacing:-1.7px;margin:0;font-weight:850}
+.page-head p{color:var(--muted);margin:10px 0 0;line-height:1.7;font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:34px}
+.stat{background:linear-gradient(145deg,#191925,#13131d);border:1px solid var(--line);padding:19px;border-radius:17px;position:relative;overflow:hidden}
+.stat:after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;background:#9a7bff0a;right:-35px;top:-40px}
+.stat-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px}
+.stat-icon{height:34px;width:34px;border-radius:11px;display:grid;place-items:center;background:#30264c;color:#c5b4ff;font-size:17px}
+.stat-value{font-size:29px;font-weight:850;letter-spacing:-1px;margin-top:14px}
+.stat-note{font-size:11px;color:var(--muted);margin-top:6px}
+.stat-note em{font-style:normal;color:var(--green)}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:17px}
+.section-head h2{font-size:18px;letter-spacing:-.4px;margin:0}
+.section-head p{font-size:12px;color:var(--muted);margin:6px 0 0}
+.toolbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:19px}
+.search-wrap{position:relative;flex:1;min-width:180px}
+.search-wrap span{position:absolute;left:13px;top:11px;color:var(--muted)}
+.search{width:100%;padding:11px 13px 11px 37px;border:1px solid var(--line);border-radius:11px;background:#15151f;color:white;outline:none}
+.search:focus{border-color:var(--purple)}
+.select{padding:11px 12px;background:#15151f;color:#d8d7e6;border:1px solid var(--line);border-radius:11px}
+.view-toggle{display:flex;padding:3px;border:1px solid var(--line);border-radius:10px;background:#15151f}
+.view-toggle button{border:0;border-radius:7px;background:transparent;color:var(--muted);padding:7px 10px}
+.view-toggle button.active{background:#39304f;color:white}
+.projects{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:19px}
+.project-card{border:1px solid var(--line);background:#15151f;border-radius:17px;overflow:hidden;transition:transform .2s,border-color .2s;min-width:0}
+.project-card:hover{transform:translateY(-4px);border-color:#51456d}
+.project-cover{height:183px;position:relative;overflow:hidden;background:#242037;cursor:pointer}
+.project-cover iframe{width:1280px;height:800px;transform:scale(.235);transform-origin:top left;border:0;pointer-events:none;background:white}
+.cover-overlay{position:absolute;inset:0;background:linear-gradient(180deg,#09091105 45%,#09091188);pointer-events:none}
+.cover-label{position:absolute;left:13px;top:13px;padding:6px 9px;border-radius:7px;background:#11111bdc;border:1px solid #ffffff20;font-size:10px;color:#e6e0ff}
+.project-more{position:absolute;right:11px;top:10px}
+.project-more button{width:32px;height:32px;border:1px solid #ffffff30;background:#11111bdc;color:white;border-radius:9px}
+.project-body{padding:16px}
+.project-title-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.project-title{font-size:14px;font-weight:750;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.status{font-size:10px;border-radius:6px;padding:5px 7px;white-space:nowrap;background:#252d2b;color:#7de1b3}
+.status.draft{background:#332c22;color:#e6c58d}
+.project-desc{font-size:11px;color:var(--muted);margin-top:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.project-footer{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);margin-top:15px;padding-top:13px;gap:8px}
+.project-date{font-size:10px;color:#8e8da3}
+.project-actions{display:flex;gap:7px}
+.project-actions button{font-size:11px;border:1px solid var(--line);background:#20202c;color:#dedbea;padding:7px 10px;border-radius:8px}
+.project-actions button:hover{border-color:var(--purple)}
+.projects.list{grid-template-columns:1fr}
+.projects.list .project-card{display:grid;grid-template-columns:180px 1fr}
+.projects.list .project-cover{height:145px}
+.projects.list .project-body{display:flex;flex-direction:column;justify-content:center}
+.empty{padding:55px 20px;text-align:center;border:1px dashed #39364d;border-radius:17px;color:var(--muted);grid-column:1/-1}
+.empty .empty-icon{font-size:35px;margin-bottom:12px}
+.empty h3{color:white;font-size:18px}
+.empty p{line-height:1.7}
+.templates{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.template{padding:0;border:1px solid var(--line);background:#181823;color:white;border-radius:13px;text-align:left;overflow:hidden;transition:.2s}
+.template:hover,.template.selected{border-color:var(--purple);background:#211c32}
+.template-art{height:80px;padding:13px;display:flex;gap:5px;flex-direction:column;justify-content:center;overflow:hidden}
+.template-art span{display:block;border-radius:4px;background:#ffffffcc;height:5px;width:60%}
+.template-art span:first-child{height:10px;width:45%}
+.template-art span:last-child{width:30%;background:#b19aff}
+.template-info{padding:11px 12px}
+.template-info strong{font-size:12px}
+.template-info p{margin:5px 0 0;font-size:10px;color:var(--muted)}
+.modal-backdrop{display:none;position:fixed;inset:0;background:#05050ad9;z-index:20;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(7px)}
+.modal-backdrop.show{display:flex}
+.modal{width:min(570px,100%);max-height:92vh;overflow:auto;border:1px solid #38344b;border-radius:20px;background:#14141f;box-shadow:0 30px 100px #0009}
+.modal-head{display:flex;align-items:flex-start;justify-content:space-between;padding:23px 23px 16px}
+.modal-head h2{margin:0;font-size:21px;letter-spacing:-.6px}
+.modal-head p{color:var(--muted);font-size:12px;line-height:1.6;margin:8px 0 0}
+.close-btn{border:1px solid var(--line);background:#222230;color:white;border-radius:9px;width:33px;height:33px}
+.modal-content{padding:0 23px 23px}
+.field{margin:17px 0}
+.field label{display:block;font-size:12px;font-weight:700;margin-bottom:9px}
+.field input,.field textarea,.field select{width:100%;background:#0f0f18;color:white;border:1px solid #343447;border-radius:10px;padding:12px;outline:none}
+.field textarea{min-height:85px;resize:vertical;line-height:1.6}
+.field input:focus,.field textarea:focus{border-color:var(--purple)}
+.hint{font-size:10px;color:var(--muted);line-height:1.6;margin-top:7px}
+.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:23px}
+.editor{display:none;position:fixed;inset:0;z-index:30;background:var(--bg);flex-direction:column}
+.editor.show{display:flex}
+.editor-top{height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 19px;border-bottom:1px solid var(--line);gap:12px}
+.editor-brand{display:flex;align-items:center;gap:10px;font-weight:750;min-width:0}
+.editor-title{background:transparent;color:white;border:1px solid transparent;border-radius:7px;padding:7px;max-width:190px}
+.editor-title:focus{border-color:var(--line);outline:none}
+.editor-tools{display:flex;align-items:center;gap:7px}
+.editor-layout{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:0;flex:1}
+.editor-panel{overflow-y:auto;background:#12121c;border-right:1px solid var(--line);padding:20px}
+.panel-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:4px;background:#20202c;border-radius:10px;margin-bottom:22px}
+.panel-tabs button{padding:9px 4px;border:0;border-radius:7px;background:transparent;color:var(--muted);font-size:11px}
+.panel-tabs button.active{background:#3b3055;color:white}
+.panel-section{margin-bottom:22px}
+.panel-section h3{font-size:13px;margin:0 0 13px}
+.panel-section label{display:block;color:#c2c0d1;font-size:11px;margin:13px 0 7px}
+.panel-section input,.panel-section textarea,.panel-section select{width:100%;background:#1b1b28;border:1px solid #343447;color:white;padding:10px;border-radius:8px}
+.panel-section textarea{min-height:75px;resize:vertical}
+.color-row{display:flex;align-items:center;gap:10px}
+.color-row input[type=color]{width:44px;height:36px;padding:3px}
+.color-row span{font-size:11px;color:var(--muted)}
+.editor-preview{min-width:0;display:flex;flex-direction:column;background:#20202b}
+.preview-bar{height:48px;display:flex;align-items:center;justify-content:center;gap:8px;border-bottom:1px solid var(--line);background:#171721}
+.preview-pill{border:0;border-radius:8px;background:transparent;color:var(--muted);padding:7px 12px;font-size:11px}
+.preview-pill.active{background:#373149;color:white}
+.preview-frame-wrap{flex:1;min-height:0;display:flex;justify-content:center;align-items:stretch;padding:18px;overflow:auto}
+.preview-frame{width:100%;height:100%;min-height:420px;background:white;border:0;border-radius:9px;box-shadow:0 10px 45px #0003}
+.preview-frame.mobile{width:390px;max-width:100%;flex:none;height:740px;min-height:500px;border:7px solid #2c2c3a;border-radius:27px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);background:#242435;border:1px solid #47415e;color:white;padding:13px 18px;border-radius:12px;z-index:100;opacity:0;pointer-events:none;transition:.25s;box-shadow:0 10px 40px #0005;max-width:90vw}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.mobile-menu{display:none}
+@media(min-width:1500px){.projects{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:1100px){.sidebar{width:220px}.content{padding:25px}.projects{grid-template-columns:repeat(2,minmax(0,1fr))}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){
+ .sidebar{display:none}.topbar{height:63px;padding:0 14px}.content{padding:24px 15px}.page-head{align-items:flex-start;flex-direction:column}.page-head>.btn{width:100%}
+ .projects{grid-template-columns:1fr}.stats{gap:10px}.stat{padding:14px}.stat-value{font-size:25px}.stat-top{font-size:11px}
+ .section-head{align-items:flex-start}.toolbar .search-wrap{flex-basis:100%}.toolbar .select{flex:1;min-width:0}
+ .projects.list .project-card{display:block}.projects.list .project-cover{height:170px}
+ .editor-top{height:58px;padding:0 9px}.editor-brand{gap:5px}.editor-title{max-width:100px}.editor-tools{gap:4px}.editor-tools .btn{padding:8px;font-size:11px}
+ .editor-layout{grid-template-columns:1fr;grid-template-rows:minmax(230px,40vh) minmax(0,1fr)}
+ .editor-panel{border-right:0;border-bottom:1px solid var(--line);padding:13px;overflow:auto}
+ .panel-tabs{margin-bottom:13px}.panel-section{margin-bottom:12px}.panel-section label{margin:8px 0 6px}
+ .preview-frame-wrap{padding:9px}.preview-frame{min-height:350px}.preview-frame.mobile{height:520px;min-height:400px}
+}
+@media(max-width:390px){h1{font-size:27px}.stats{grid-template-columns:1fr 1fr}.stat-value{font-size:23px}.stat-icon{height:29px;width:29px}.top-actions .btn{padding:9px}.project-cover{height:160px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="brand-icon">A</div><div><div class="brand-name">AniVora<span>.</span></div><div class="brand-sub">BUILDER STUDIO</div></div></div>
+  <div class="nav-label">WORKSPACE</div>
+  <button class="nav-item active" data-nav="dashboard"><span class="ico">⌂</span> Dashboard</button>
+  <button class="nav-item" data-nav="projects"><span class="ico">▦</span> My websites <span class="nav-count" id="navCount">0</span></button>
+  <button class="nav-item" data-nav="templates"><span class="ico">▧</span> Templates</button>
+  <div class="nav-label">CREATE</div>
+  <button class="nav-item" id="sidebarCreate"><span class="ico">✦</span> Create a website</button>
+  <div class="nav-label">ACCOUNT</div>
+  <button class="nav-item" id="helpButton"><span class="ico">ⓘ</span> Help & tips</button>
+  <div class="sidebar-bottom">
+    <div class="usage-card"><div class="usage-title">✦ Your creative space</div><p>Design, customize and export your website from one workspace.</p><div class="progress"><div></div></div><div class="usage-foot">Local demo · Browser storage</div></div>
+    <div class="profile"><div class="avatar">A</div><div><div class="profile-name">AniVora Creator</div><div class="profile-email">Personal workspace</div></div></div>
+  </div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+  <div class="breadcrumb">Workspace <span style="color:#68677c"> / </span> <strong id="breadcrumbTitle">Dashboard</strong></div>
+  <div class="top-actions"><button class="icon-btn" id="exportBackup" title="Export project backup">⇩ <span class="hide-small">Backup</span></button><button class="btn btn-primary" id="topCreate">＋ New website</button></div>
+</header>
+
+<div class="content">
+  <section class="page-head">
+    <div><div class="eyebrow">YOUR IDEAS, BUILT BEAUTIFULLY</div><h1 id="welcomeTitle">Build something amazing.</h1><p>Turn your ideas into beautiful websites. Start with a template, make it yours, and preview your creation.</p></div>
+    <button class="btn btn-primary" id="heroCreate">✦ Create your website <span>→</span></button>
+  </section>
+
+  <section class="stats">
+    <div class="stat"><div class="stat-top">Total websites <span class="stat-icon">▦</span></div><div class="stat-value" id="statTotal">0</div><div class="stat-note">Your creative projects</div></div>
+    <div class="stat"><div class="stat-top">Published status <span class="stat-icon">↗</span></div><div class="stat-value" id="statPublished">0</div><div class="stat-note">Marked as published locally</div></div>
+    <div class="stat"><div class="stat-top">Drafts <span class="stat-icon">✎</span></div><div class="stat-value" id="statDrafts">0</div><div class="stat-note">Still in progress</div></div>
+    <div class="stat"><div class="stat-top">Templates <span class="stat-icon">✧</span></div><div class="stat-value">4</div><div class="stat-note">Starting points for your ideas</div></div>
+  </section>
+
+  <section id="projectsSection">
+    <div class="section-head"><div><h2 id="projectsHeading">Your websites</h2><p>All your projects, organized in one place.</p></div><button class="btn btn-small" id="sectionCreate">＋ New project</button></div>
+    <div class="toolbar">
+      <div class="search-wrap"><span>⌕</span><input class="search" id="searchInput" placeholder="Search your websites..." aria-label="Search websites"></div>
+      <select class="select" id="statusFilter" aria-label="Filter status"><option value="all">All statuses</option><option value="draft">Drafts</option><option value="published">Published status</option></select>
+      <select class="select" id="sortSelect" aria-label="Sort projects"><option value="recent">Recently updated</option><option value="oldest">Oldest first</option><option value="az">Name A–Z</option></select>
+      <div class="view-toggle"><button class="active" id="gridView" aria-label="Grid view">▦</button><button id="listView" aria-label="List view">☰</button></div>
+    </div>
+    <div class="projects" id="projectsGrid"></div>
+  </section>
+
+  <section id="templatesSection" style="display:none">
+    <div class="section-head"><div><h2>Choose your starting point</h2><p>Pick a design direction, then customize your website.</p></div></div>
+    <div class="projects" id="templateGallery"></div>
+  </section>
+</div>
+</main>
+</div>
+
+<div class="modal-backdrop" id="createModal">
+ <div class="modal">
+  <div class="modal-head"><div><h2>Create your website ✦</h2><p>Start with a name and a design direction. You can customize the content in the editor.</p></div><button class="close-btn" data-close="createModal">✕</button></div>
+  <div class="modal-content">
+   <form id="createForm">
+    <div class="field"><label for="siteName">Website name</label><input id="siteName" required maxlength="70" placeholder="e.g. Taste Haven Restaurant"></div>
+    <div class="field"><label for="siteDescription">What is your website about?</label><textarea id="siteDescription" maxlength="500" placeholder="Describe your business, audience or idea..."></textarea><div class="hint">This demo uses your description to personalize a starter template. AI generation is not connected yet.</div></div>
+    <div class="field"><label>Choose a design</label><div class="templates" id="templateChoices"></div></div>
+    <div class="modal-actions"><button type="button" class="btn" data-close="createModal">Cancel</button><button class="btn btn-primary" type="submit">Create website →</button></div>
+   </form>
+  </div>
+ </div>
+</div>
+
+<div class="editor" id="editor">
+ <header class="editor-top">
+  <div class="editor-brand"><button class="icon-btn btn-small" id="closeEditor">←</button><div class="brand-icon" style="width:30px;height:30px;border-radius:9px;font-size:17px">A</div><input class="editor-title" id="editorTitle" aria-label="Website name" maxlength="70"></div>
+  <div class="editor-tools"><button class="btn btn-small" id="previewRefresh">↻ <span class="hide-small">Refresh</span></button><button class="btn btn-small" id="exportHtml">⇩ <span class="hide-small">Export</span></button><button class="btn btn-primary btn-small" id="saveProject">Save</button></div>
+ </header>
+ <div class="editor-layout">
+  <aside class="editor-panel">
+   <div class="panel-tabs"><button class="active" data-tab="content">✎ Content</button><button data-tab="design">◈ Design</button><button data-tab="sections">▤ Sections</button></div>
+   <div id="panelContent">
+    <div class="panel-section"><h3>Hero section</h3><label for="editHeadline">Main headline</label><textarea id="editHeadline" maxlength="140"></textarea><label for="editSubheadline">Supporting text</label><textarea id="editSubheadline" maxlength="400"></textarea><label for="editButton">Button text</label><input id="editButton" maxlength="40"></div>
+    <div class="panel-section"><h3>About your website</h3><label for="editAboutTitle">Section heading</label><input id="editAboutTitle" maxlength="100"><label for="editAbout">Description</label><textarea id="editAbout" maxlength="700"></textarea></div>
+   </div>
+   <div id="panelDesign" style="display:none">
+    <div class="panel-section"><h3>Colors & appearance</h3><label for="editTheme">Design style</label><select id="editTheme"><option value="modern">Modern</option><option value="business">Business</option><option value="creative">Creative</option><option value="minimal">Minimal</option></select><label>Primary color</label><div class="color-row"><input type="color" id="editColor" value="#7657f6"><span>Choose your brand color</span></div><label for="editFont">Typography</label><select id="editFont"><option value="modern">Modern sans-serif</option><option value="classic">Classic serif</option></select></div>
+   </div>
+   <div id="panelSections" style="display:none">
+    <div class="panel-section"><h3>Website sections</h3><p style="font-size:11px;color:var(--muted);line-height:1.7">Toggle sections on or off. Your preview updates when you save or refresh.</p><label><input type="checkbox" id="showAbout" checked style="width:auto;margin-right:7px"> About section</label><label><input type="checkbox" id="showFeatures" checked style="width:auto;margin-right:7px"> Features section</label><label><input type="checkbox" id="showContact" checked style="width:auto;margin-right:7px"> Contact section</label></div>
+    <div class="panel-section"><h3>Quick tips</h3><p style="font-size:11px;color:var(--muted);line-height:1.8">Keep headlines clear, explain what makes your website useful, and use one strong call to action.</p></div>
+   </div>
+  </aside>
+  <section class="editor-preview">
+   <div class="preview-bar"><span style="font-size:11px;color:var(--muted)">PREVIEW</span><button class="preview-pill active" data-preview="desktop">▰ Desktop</button><button class="preview-pill" data-preview="mobile">▯ Mobile</button></div>
+   <div class="preview-frame-wrap"><iframe id="previewFrame" class="preview-frame" title="Website live preview" sandbox="allow-scripts"></iframe></div>
+  </section>
+ </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const STORAGE_KEY="anivora_builder_projects_v2";
+const templates={
+ modern:{label:"Modern",desc:"Bold layouts and contemporary colors",color:"#7657f6",headline:"Bring your next big idea to life.",subheadline:"A better way to share what you do with the world. Beautiful design, thoughtful details, and an experience your visitors will remember.",button:"Get started",aboutTitle:"Made for your next chapter",about:"We believe great ideas deserve a beautiful home on the internet. Our goal is to make every interaction clear, useful, and memorable.",font:"modern"},
+ business:{label:"Business",desc:"Professional and trustworthy",color:"#2864d7",headline:"Helping your business move forward.",subheadline:"Practical solutions, personal service, and a team focused on helping you reach your goals.",button:"Work with us",aboutTitle:"A partner you can count on",about:"We combine experience, attention to detail, and a commitment to doing things right. Every project starts with listening and ends with a solution built around you.",font:"modern"},
+ creative:{label:"Creative",desc:"Expressive layouts for bold ideas",color:"#e66c4b",headline:"Ideas deserve to be seen.",subheadline:"We turn imagination into experiences that inspire, connect, and make people look twice.",button:"Explore our work",aboutTitle:"A little different by design",about:"Curiosity drives everything we do. We experiment, explore new perspectives, and bring ambitious ideas to life through thoughtful creative work.",font:"modern"},
+ minimal:{label:"Minimal",desc:"Clean, calm, and focused",color:"#383838",headline:"Less noise. More meaning.",subheadline:"A thoughtful approach to doing things well. Simple by design, intentional in every detail.",button:"Discover more",aboutTitle:"The value of simplicity",about:"We focus on what matters most. Clear communication, careful decisions, and useful experiences make the difference.",font:"classic"}
+};
+let projects=[],currentId=null,selectedTemplate="modern",currentView="grid",previewMode="desktop",toastTimer;
+function uid(){return "av_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,8)}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function safeColor(c){return /^#[0-9a-fA-F]{6}$/.test(c)?c:"#7657f6"}
+function dateLabel(d){try{return new Date(d).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})}catch(e){return "Recently"}}
+function toast(msg){const el=$("toast");el.textContent=msg;el.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("show"),2600)}
+function loadProjects(){try{const raw=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");projects=Array.isArray(raw)?raw.filter(p=>p&&p.id&&p.site):[]}catch(e){projects=[]}}
+function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(projects));return true}catch(e){toast("Browser storage is full. Export a backup and remove some projects.");return false}}
+function starter(name,description,template){
+ const t=templates[template]||templates.modern;
+ const desc=description.trim();
+ return {id:uid(),name:name.trim(),description:desc||t.desc,template,status:"draft",createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),site:{headline:desc?name.trim()+": "+t.headline:name.trim()+" — "+t.headline,subheadline:desc||t.subheadline,button:t.button,aboutTitle:t.aboutTitle,about:desc||t.about,color:t.color,font:t.font,showAbout:true,showFeatures:true,showContact:true}};
+}
+function makeWebsite(p){
+ const s=p.site,t=templates[p.template]||templates.modern,c=safeColor(s.color),font=s.font==="classic"?"Georgia,serif":"Arial,Helvetica,sans-serif";
+ const features=[
+  ["Thoughtful design","A clean, welcoming experience built around your visitors."],
+  ["Made for your goals","Clear information that helps people take the next step."],
+  ["Ready to grow","A flexible starting point for your next big idea."]
+ ];
+ const featureHtml=features.map((f,i)=>`<article class="feature"><div class="feature-icon">${["✧","↗","◇"][i]}</div><h3>${f[0]}</h3><p>${f[1]}</p></article>`).join("");
+ const headline=esc(s.headline),sub=esc(s.subheadline),aboutTitle=esc(s.aboutTitle),about=esc(s.about),button=esc(s.button);
+ return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(p.name)}</title><style>
+ *{box-sizing:border-box}body{margin:0;font-family:${font};color:#22232b;background:#fff;line-height:1.6}a{color:inherit;text-decoration:none}.nav{height:76px;padding:0 7%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #eee}.logo{font-size:20px;font-weight:800;letter-spacing:-.7px}.logo b{color:${c}}.nav-link{font-size:13px;color:#555;margin-left:23px}.hero{padding:100px 8% 90px;text-align:center;background:linear-gradient(145deg,#f8f6ff,#fff 65%);position:relative;overflow:hidden}.hero:before{content:"";position:absolute;width:330px;height:330px;border-radius:50%;background:${c}13;right:-130px;top:-150px}.hero:after{content:"";position:absolute;width:240px;height:240px;border-radius:50%;background:${c}0d;left:-120px;bottom:-120px}.eyebrow{position:relative;color:${c};font-size:11px;letter-spacing:2px;font-weight:800;text-transform:uppercase}.hero h1{position:relative;max-width:850px;margin:22px auto;font-size:clamp(38px,6.7vw,76px);line-height:1.06;letter-spacing:-3px;font-weight:800}.hero p{position:relative;max-width:610px;margin:0 auto 30px;color:#686875;font-size:17px;line-height:1.8}.cta{position:relative;display:inline-flex;background:${c};color:white;padding:14px 23px;border-radius:9px;font-size:13px;font-weight:700;box-shadow:0 8px 25px ${c}35}.trust{padding:22px;text-align:center;border-bottom:1px solid #eee;color:#858591;font-size:11px;letter-spacing:1px}.section{padding:80px 8%;max-width:1200px;margin:auto}.section-head{text-align:center;max-width:650px;margin:0 auto 42px}.section h2{font-size:clamp(28px,4vw,43px);letter-spacing:-1.5px;line-height:1.2;margin:12px 0}.section-head p,.about p{color:#777784;line-height:1.8}.features{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.feature{padding:25px;border:1px solid #eee;border-radius:15px;background:white}.feature-icon{height:43px;width:43px;border-radius:12px;background:${c}14;color:${c};display:grid;place-items:center;font-size:23px}.feature h3{font-size:17px;margin:20px 0 8px}.feature p{font-size:13px;color:#777784;line-height:1.8}.about{background:#f8f8fb;padding:70px 8%;text-align:center}.about-inner{max-width:760px;margin:auto}.about p{font-size:15px}.contact{text-align:center;padding:70px 20px}.contact p{color:#777784}.footer{padding:25px 8%;border-top:1px solid #eee;color:#858591;font-size:11px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+ @media(max-width:650px){.nav{height:65px;padding:0 5%}.nav-link{margin-left:12px;font-size:11px}.hero{padding:75px 6%}.hero h1{letter-spacing:-1.8px}.hero p{font-size:15px}.section{padding:60px 6%}.features{grid-template-columns:1fr}.feature{padding:21px}.footer{padding:22px 6%}}
+ </style></head><body>
+ <nav class="nav"><a class="logo" href="#">${esc(p.name.split(/\s+/).slice(0,2).join(" "))}<b>.</b></a><div><a class="nav-link" href="#about">About</a><a class="nav-link" href="#features">What we do</a><a class="nav-link" href="#contact">Contact</a></div></nav>
+ <section class="hero"><div class="eyebrow">${esc(t.label)} · Welcome</div><h1>${headline}</h1><p>${sub}</p><a class="cta" href="#contact">${button} &nbsp;→</a></section>
+ <div class="trust">THOUGHTFULLY MADE · DESIGNED AROUND YOU · BUILT FOR WHAT'S NEXT</div>
+ ${s.showFeatures?`<section class="section" id="features"><div class="section-head"><div class="eyebrow">WHY CHOOSE US</div><h2>Everything starts with a good idea.</h2><p>A considered approach, designed to make your next step easier.</p></div><div class="features">${featureHtml}</div></section>`:""}
+ ${s.showAbout?`<section class="about" id="about"><div class="about-inner"><div class="eyebrow">OUR STORY</div><h2>${aboutTitle}</h2><p>${about}</p></div></section>`:""}
+ ${s.showContact?`<section class="contact" id="contact"><div class="eyebrow">LET'S CONNECT</div><h2>Ready to take the next step?</h2><p>We would love to hear about your ideas and what you're working on.</p><a class="cta" href="mailto:hello@example.com">${button} →</a></section>`:""}
+ <footer class="footer"><span>© ${new Date().getFullYear()} ${esc(p.name)}. All rights reserved.</span><span>Designed with care.</span></footer>
+ </body></html>`;
+}
+function coverDocument(p){return makeWebsite(p).replace(/<script[\s\S]*?<\/script>/gi,"")}
+function renderStats(){
+ $("statTotal").textContent=projects.length;
+ $("statPublished").textContent=projects.filter(p=>p.status==="published").length;
+ $("statDrafts").textContent=projects.filter(p=>p.status!=="published").length;
+ $("navCount").textContent=projects.length;
+}
+function renderProjects(){
+ renderStats();
+ const query=$("searchInput").value.trim().toLowerCase(),filter=$("statusFilter").value,sort=$("sortSelect").value;
+ let list=projects.filter(p=>(p.name+" "+p.description).toLowerCase().includes(query)&&(filter==="all"||p.status===filter));
+ list.sort((a,b)=>sort==="az"?a.name.localeCompare(b.name):sort==="oldest"?new Date(a.createdAt)-new Date(b.createdAt):new Date(b.updatedAt)-new Date(a.updatedAt));
+ const grid=$("projectsGrid");grid.className="projects"+(currentView==="list"?" list":"");
+ if(!list.length){grid.innerHTML=`<div class="empty"><div class="empty-icon">${query?"⌕":"✦"}</div><h3>${query?"No matching websites":"Your next big idea starts here"}</h3><p>${query?"Try another search or change your filters.":"Create your first website and start customizing your own design."}</p><button class="btn btn-primary" id="emptyCreate">＋ Create a website</button></div>`;$("emptyCreate").onclick=openCreate;return}
+ grid.innerHTML=list.map(p=>`<article class="project-card" data-id="${esc(p.id)}"><div class="project-cover" data-action="edit" data-id="${esc(p.id)}"><iframe title="Preview of ${esc(p.name)}" sandbox="" loading="lazy" srcdoc="${esc(coverDocument(p))}"></iframe><div class="cover-overlay"></div><span class="cover-label">${esc((templates[p.template]||templates.modern).label)} design</span><div class="project-more"><button data-action="menu" data-id="${esc(p.id)}" aria-label="Project options">···</button></div></div><div class="project-body"><div class="project-title-row"><div class="project-title" title="${esc(p.name)}">${esc(p.name)}</div><span class="status ${p.status==="draft"?"draft":""}">${p.status==="published"?"Published status":"Draft"}</span></div><div class="project-desc">${esc(p.description||"Website project")}</div><div class="project-footer"><span class="project-date">Edited ${dateLabel(p.updatedAt)}</span><div class="project-actions"><button data-action="duplicate" data-id="${esc(p.id)}">Duplicate</button><button data-action="edit" data-id="${esc(p.id)}">Edit ↗</button></div></div></div></article>`).join("");
+}
+function renderTemplateGallery(){
+ const gallery=$("templateGallery");gallery.innerHTML=Object.entries(templates).map(([key,t])=>`<article class="project-card"><div class="project-cover" style="background:linear-gradient(135deg,${t.color}32,#191925);display:grid;place-items:center"><div style="width:70%;padding:22px;background:#ffffffed;border-radius:9px;color:#24232d"><div style="height:9px;width:38%;background:${t.color};border-radius:4px;margin-bottom:12px"></div><div style="height:12px;width:80%;background:#d9d7e1;border-radius:4px;margin-bottom:6px"></div><div style="height:12px;width:62%;background:#d9d7e1;border-radius:4px;margin-bottom:15px"></div><div style="height:20px;width:35%;background:${t.color};border-radius:5px"></div></div></div><div class="project-body"><div class="project-title">${t.label}</div><div class="project-desc">${t.desc}</div><div class="project-footer"><span class="project-date">Starter template</span><button class="btn btn-small btn-primary" data-use-template="${key}">Use template →</button></div></div></article>`).join("");
+}
+function openCreate(template){selectedTemplate=template||"modern";$("createForm").reset();renderTemplateChoices();$("createModal").classList.add("show");setTimeout(()=>$("siteName").focus(),80)}
+function renderTemplateChoices(){
+ $("templateChoices").innerHTML=Object.entries(templates).map(([key,t])=>`<button type="button" class="template ${selectedTemplate===key?"selected":""}" data-template="${key}"><div class="template-art" style="background:linear-gradient(135deg,${t.color}45,#242034)"><span></span><span></span><span></span></div><div class="template-info"><strong>${t.label}</strong><p>${t.desc}</p></div></button>`).join("");
+}
+function createProject(name,description,template){
+ const p=starter(name,description,template);projects.unshift(p);if(!persist())return;
+ renderProjects();openEditor(p.id);toast("Website created. Make it yours!");
+}
+function getCurrent(){return projects.find(p=>p.id===currentId)}
+function openEditor(id){
+ const p=projects.find(x=>x.id===id);if(!p)return;
+ currentId=id;
+ $("editorTitle").value=p.name;
+ $("editHeadline").value=p.site.headline;
+ $("editSubheadline").value=p.site.subheadline;
+ $("editButton").value=p.site.button;
+ $("editAboutTitle").value=p.site.aboutTitle;
+ $("editAbout").value=p.site.about;
+ $("editTheme").value=p.template;
+ $("editColor").value=safeColor(p.site.color);
+ $("editFont").value=p.site.font||"modern";
+ $("showAbout").checked=p.site.showAbout!==false;
+ $("showFeatures").checked=p.site.showFeatures!==false;
+ $("showContact").checked=p.site.showContact!==false;
+ document.querySelectorAll("[data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab==="content"));
+ showPanel("content");previewMode="desktop";
+ document.querySelectorAll("[data-preview]").forEach(b=>b.classList.toggle("active",b.dataset.preview==="desktop"));
+ $("previewFrame").classList.remove("mobile");
+ $("editor").classList.add("show");document.body.style.overflow="hidden";refreshPreview();
+}
+function collectEditor(){
+ const p=getCurrent();if(!p)return;
+ p.name=$("editorTitle").value.trim()||"Untitled website";
+ p.site.headline=$("editHeadline").value.trim()||"Your next big idea starts here.";
+ p.site.subheadline=$("editSubheadline").value.trim();
+ p.site.button=$("editButton").value.trim()||"Get started";
+ p.site.aboutTitle=$("editAboutTitle").value.trim()||"About us";
+ p.site.about=$("editAbout").value.trim();
+ p.template=$("editTheme").value;
+ p.site.color=safeColor($("editColor").value);
+ p.site.font=$("editFont").value;
+ p.site.showAbout=$("showAbout").checked;
+ p.site.showFeatures=$("showFeatures").checked;
+ p.site.showContact=$("showContact").checked;
+ p.description=p.site.subheadline||p.description;
+ p.updatedAt=new Date().toISOString();
+ return p;
+}
+function refreshPreview(){
+ const p=collectEditor();if(!p)return;
+ $("previewFrame").srcdoc=makeWebsite(p);
+ $("editorTitle").value=p.name;
+}
+function saveCurrent(showMessage=true){
+ const p=collectEditor();if(!p)return;
+ const ok=persist();renderProjects();
+ if(showMessage&&ok)toast("Your changes are saved in this browser.");
+}
+function closeEditor(save=true){
+ if(save)saveCurrent(false);
+ $("editor").classList.remove("show");document.body.style.overflow="";
+ currentId=null;
+}
+function showPanel(tab){
+ $("panelContent").style.display=tab==="content"?"block":"none";
+ $("panelDesign").style.display=tab==="design"?"block":"none";
+ $("panelSections").style.display=tab==="sections"?"block":"none";
+ document.querySelectorAll("[data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+}
+function downloadFile(filename,content,type){
+ const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download=filename;a.style.display="none";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function filename(name){return (name||"anivora-website").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,60)||"anivora-website"}
+function exportCurrent(){
+ const p=collectEditor();if(!p)return;
+ downloadFile(filename(p.name)+".html",makeWebsite(p),"text/html;charset=utf-8");
+ toast("HTML file exported. You can open it in a browser.");
+}
+function duplicateProject(id){
+ const p=projects.find(x=>x.id===id);if(!p)return;
+ const copy=JSON.parse(JSON.stringify(p));copy.id=uid();copy.name=p.name+" Copy";copy.status="draft";copy.createdAt=new Date().toISOString();copy.updatedAt=copy.createdAt;
+ projects.unshift(copy);persist();renderProjects();toast("Project duplicated.");
+}
+function deleteProject(id){
+ const p=projects.find(x=>x.id===id);if(!p)return;
+ if(!confirm("Delete \""+p.name+"\"? This removes the project from this browser."))return;
+ projects=projects.filter(x=>x.id!==id);persist();renderProjects();toast("Project deleted.");
+}
+function renameProject(id){
+ const p=projects.find(x=>x.id===id);if(!p)return;
+ const name=prompt("Enter a new website name:",p.name);if(name===null)return;
+ if(!name.trim()){toast("Website name cannot be empty.");return}
+ p.name=name.trim().slice(0,70);p.updatedAt=new Date().toISOString();persist();renderProjects();toast("Website renamed.");
+}
+function projectMenu(id){
+ const choice=prompt("Project options:\n1 — Rename\n2 — Duplicate\n3 — Mark published status\n4 — Mark as draft\n5 — Delete\n\nEnter a number:");
+ if(choice==="1")renameProject(id);
+ else if(choice==="2")duplicateProject(id);
+ else if(choice==="3"||choice==="4"){
+  const p=projects.find(x=>x.id===id);if(!p)return;
+  p.status=choice==="3"?"published":"draft";p.updatedAt=new Date().toISOString();persist();renderProjects();
+  toast(p.status==="published"?"Marked as published locally. This does not publish it online.":"Project marked as draft.");
+ }else if(choice==="5")deleteProject(id);
+}
+function showPage(page){
+ const isTemplates=page==="templates";
+ $("projectsSection").style.display=isTemplates?"none":"block";
+ $("templatesSection").style.display=isTemplates?"block":"none";
+ $("breadcrumbTitle").textContent=isTemplates?"Templates":page==="projects"?"My websites":"Dashboard";
+ $("projectsHeading").textContent=page==="projects"?"All websites":"Your websites";
+ document.querySelectorAll("[data-nav]").forEach(b=>b.classList.toggle("active",b.dataset.nav===page||(page==="dashboard"&&b.dataset.nav==="dashboard")));
+ if(page==="projects")$("searchInput").focus();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+$("createForm").addEventListener("submit",e=>{
+ e.preventDefault();const name=$("siteName").value.trim();if(!name){$("siteName").focus();return}
+ createProject(name,$("siteDescription").value,selectedTemplate);
+ $("createModal").classList.remove("show");
+});
+document.addEventListener("click",e=>{
+ const close=e.target.closest("[data-close]");if(close){$(close.dataset.close).classList.remove("show");return}
+ const template=e.target.closest("[data-template]");if(template){selectedTemplate=template.dataset.template;renderTemplateChoices();return}
+ const use=e.target.closest("[data-use-template]");if(use){openCreate(use.dataset.useTemplate);$("templatesSection").style.display="none";$("projectsSection").style.display="block";return}
+ const nav=e.target.closest("[data-nav]");if(nav){showPage(nav.dataset.nav);return}
+ const action=e.target.closest("[data-action]");if(action){const id=action.dataset.id;if(action.dataset.action==="edit")openEditor(id);if(action.dataset.action==="duplicate")duplicateProject(id);if(action.dataset.action==="menu")projectMenu(id);return}
+ const tab=e.target.closest("[data-tab]");if(tab){showPanel(tab.dataset.tab);return}
+ const preview=e.target.closest("[data-preview]");if(preview){previewMode=preview.dataset.preview;$("previewFrame").classList.toggle("mobile",previewMode==="mobile");document.querySelectorAll("[data-preview]").forEach(b=>b.classList.toggle("active",b===preview));return}
+});
+["topCreate","heroCreate","sectionCreate","sidebarCreate"].forEach(id=>$(id).addEventListener("click",()=>openCreate()));
+$("closeEditor").addEventListener("click",()=>closeEditor(true));
+$("saveProject").addEventListener("click",()=>saveCurrent(true));
+$("previewRefresh").addEventListener("click",()=>{refreshPreview();toast("Preview refreshed.")});
+$("exportHtml").addEventListener("click",exportCurrent);
+["editHeadline","editSubheadline","editButton","editAboutTitle","editAbout","editTheme","editColor","editFont","showAbout","showFeatures","showContact","editorTitle"].forEach(id=>{
+ $(id).addEventListener("input",()=>{const p=getCurrent();if(!p)return;refreshPreview()});
+ $(id).addEventListener("change",()=>{const p=getCurrent();if(!p)return;refreshPreview()});
+});
+$("searchInput").addEventListener("input",renderProjects);
+$("statusFilter").addEventListener("change",renderProjects);
+$("sortSelect").addEventListener("change",renderProjects);
+$("gridView").addEventListener("click",()=>{currentView="grid";$("gridView").classList.add("active");$("listView").classList.remove("active");renderProjects()});
+$("listView").addEventListener("click",()=>{currentView="list";$("listView").classList.add("active");$("gridView").classList.remove("active");renderProjects()});
+$("exportBackup").addEventListener("click",()=>{
+ downloadFile("anivora-builder-backup.json",JSON.stringify({app:"AniVora Builder",version:2,exportedAt:new Date().toISOString(),projects},null,2),"application/json");
+ toast("Project backup downloaded.");
+});
+$("helpButton").addEventListener("click",()=>alert("AniVora Builder demo tips\n\n1. Create a website and choose a template.\n2. Edit text and colors in the editor.\n3. Switch between desktop and mobile previews.\n4. Save your project in this browser.\n5. Export the website as an HTML file.\n\nImportant: AI generation, accounts, cloud sync and real online deployment are not connected in this version."));
+$("templateGallery").addEventListener("click",e=>{const b=e.target.closest("[data-use-template]");if(b){openCreate(b.dataset.useTemplate)}});
+$("createModal").addEventListener("click",e=>{if(e.target===$("createModal"))$("createModal").classList.remove("show")});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){$("createModal").classList.remove("show");if($("editor").classList.contains("show"))closeEditor(true)}});
+window.addEventListener("beforeunload",()=>{if(currentId)saveCurrent(false)});
+loadProjects();renderProjects();renderTemplateGallery();
+})();
+</script>
+</body>
+</html>
