@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AniVora Builder — AI Website & Motion Studio</title>
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #050b13;
+  --panel: #091522;
+  --panel2: #0c1b2b;
+  --line: #1b3045;
+  --text: #edf5ff;
+  --muted: #8fa7c2;
+  --cyan: #13d7d0;
+  --purple: #8856ff;
+  --green: #55ec83;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.5 Inter, system-ui, Arial, sans-serif;
+}
+button, input, textarea, select { font: inherit; }
+button {
+  color: var(--text);
+  background: #112238;
+  border: 1px solid var(--line);
+  padding: 9px 13px;
+  border-radius: 9px;
+  cursor: pointer;
+}
+button:hover { border-color: var(--cyan); }
+button:disabled { opacity: .5; cursor: wait; }
+.primary {
+  background: linear-gradient(110deg, #08bfc8, #8151f7);
+  border: 0;
+  font-weight: 750;
+}
+input, textarea, select {
+  width: 100%;
+  color: var(--text);
+  background: #07121f;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 11px;
+  outline: none;
+}
+input:focus, textarea:focus, select:focus { border-color: var(--cyan); }
+textarea { resize: vertical; }
+.topbar {
+  min-height: 65px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--line);
+  background: #07111d;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.brand { font-size: 20px; font-weight: 850; white-space: nowrap; }
+.brand span { color: var(--cyan); }
+.top-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.layout {
+  display: grid;
+  grid-template-columns: 175px minmax(0, 1fr);
+  min-height: calc(100vh - 65px);
+}
+.sidebar {
+  padding: 15px 10px;
+  border-right: 1px solid var(--line);
+  background: #07111d;
+}
+.nav {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 7px;
+  background: transparent;
+  border-color: transparent;
+}
+.nav.active {
+  background: #10283a;
+  border-color: #174354;
+  color: var(--cyan);
+}
+.main { min-width: 0; padding: 14px; }
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(225px, .78fr) minmax(300px, 1fr) minmax(340px, 1.35fr);
+  gap: 12px;
+}
+.panel {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+  overflow: hidden;
+}
+.panel-head {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.panel-head h2, .panel-head h3 { margin: 0; font-size: 14px; }
+.panel-body { padding: 13px; }
+.muted { color: var(--muted); }
+.small { font-size: 12px; }
+.field-label { display: block; margin: 12px 0 6px; color: var(--muted); }
+.prompt { min-height: 175px; }
+.full { width: 100%; margin-top: 10px; }
+.quick { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.quick button { font-size: 12px; padding: 7px 9px; }
+.tabs { display: flex; gap: 4px; }
+.tab { border: 0; background: transparent; }
+.tab.active { color: var(--cyan); border-bottom: 2px solid var(--cyan); }
+.code-area {
+  width: 100%;
+  height: 445px;
+  border: 0;
+  border-radius: 0;
+  resize: vertical;
+  font: 12px/1.7 "SFMono-Regular", Consolas, monospace;
+  white-space: pre;
+  tab-size: 2;
+}
+.statusbar {
+  border-top: 1px solid var(--line);
+  padding: 8px 12px;
+  font-size: 11px;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+}
+.preview-tools { display: flex; gap: 5px; }
+.preview-tools button { padding: 5px 8px; }
+.preview-wrap {
+  height: 445px;
+  background: white;
+  overflow: hidden;
+}
+#preview { width: 100%; height: 100%; border: 0; background: white; }
+.live { color: var(--green); font-size: 12px; }
+.studio {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: 210px minmax(220px, 1fr) minmax(230px, .65fr) minmax(220px, .65fr);
+  gap: 12px;
+  padding: 13px;
+}
+.studio-menu { border-right: 1px solid var(--line); padding-right: 12px; }
+.studio-menu button { width: 100%; text-align: left; margin: 3px 0; }
+.studio-menu button.active { color: #c7b6ff; background: #1b2143; }
+.scene {
+  min-height: 260px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background:
+    radial-gradient(ellipse at center, #123b4d 0, #071523 48%, #030911 100%);
+  display: grid;
+  place-items: center;
+  perspective: 700px;
+}
+.grid-floor {
+  position: absolute;
+  inset: 48% -30% -40%;
+  background-image:
+    linear-gradient(#17495b77 1px, transparent 1px),
+    linear-gradient(90deg, #17495b77 1px, transparent 1px);
+  background-size: 28px 28px;
+  transform: rotateX(58deg);
+}
+.orb {
+  width: 135px;
+  height: 135px;
+  border-radius: 50%;
+  position: relative;
+  z-index: 1;
+  background:
+    radial-gradient(circle at 32% 25%, #8bffbd, #159e92 25%, #10506b 53%, #050b20 78%);
+  box-shadow: 0 0 30px #12e4d966, inset -18px -12px 35px #000b2d;
+  transition: transform .2s, border-radius .2s, background .2s;
+}
+.orbit {
+  width: 205px;
+  height: 68px;
+  border: 2px solid #40fff0;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 2;
+  transform: rotate(-25deg);
+  box-shadow: 0 0 12px #24d8ff66;
+  pointer-events: none;
+}
+.scene-label { position: absolute; left: 12px; top: 10px; z-index: 2; color: #a5eaf2; font-size: 11px; }
+.controls label { display: block; margin: 10px 0 5px; color: var(--muted); font-size: 12px; }
+.controls input[type="range"] { padding: 0; accent-color: var(--cyan); }
+.checkrow { display: flex; align-items: center; gap: 8px; margin: 10px 0; }
+.checkrow input { width: auto; }
+.notice {
+  border: 1px solid #23455b;
+  background: #0b1b2b;
+  border-radius: 9px;
+  padding: 10px;
+  margin-top: 10px;
+  overflow-wrap: anywhere;
+}
+.hidden { display: none !important; }
+.project-list { display: grid; gap: 8px; margin-top: 10px; }
+.project-item { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+footer { padding: 18px 4px; text-align: center; color: var(--muted); font-size: 11px; }
+@media (max-width: 1150px) {
+  .workspace { grid-template-columns: minmax(230px, .8fr) minmax(280px, 1fr); }
+  .preview-panel { grid-column: 1 / -1; }
+  .preview-wrap { height: 480px; }
+  .studio { grid-template-columns: 170px minmax(220px, 1fr); }
+}
+@media (max-width: 700px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar {
+    display: flex; overflow-x: auto; gap: 4px;
+    padding: 8px; border-right: 0; border-bottom: 1px solid var(--line);
+  }
+  .nav { width: auto; white-space: nowrap; margin: 0; font-size: 12px; }
+  .main { padding: 8px; }
+  .topbar { align-items: flex-start; flex-wrap: wrap; }
+  .brand { font-size: 17px; }
+  .top-actions button { padding: 7px 9px; font-size: 12px; }
+  .workspace { grid-template-columns: 1fr; }
+  .preview-panel { grid-column: auto; }
+  .code-area { height: 320px; }
+  .preview-wrap { height: 390px; }
+  .studio { grid-template-columns: 1fr; }
+  .studio-menu { border-right: 0; border-bottom: 1px solid var(--line); padding: 0 0 10px; }
+  .studio-menu button { width: auto; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span>▲</span> AniVora Builder <span class="muted small">/ AI Studio</span></div>
+  <div class="top-actions">
+    <button id="projectsBtn">Projects</button>
+    <button id="saveBtn">Save</button>
+    <button id="exportBtn" class="primary">Export HTML</button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <button class="nav active" data-section="builder">✦ AI Generator</button>
+    <button class="nav" data-section="editor">⌘ Website Editor</button>
+    <button class="nav" data-section="studio">◇ 3D Motion Studio</button>
+    <button class="nav" data-section="projects">▤ My Projects</button>
+    <button class="nav" data-section="settings">⚙ Settings</button>
+  </aside>
+
+  <main class="main">
+    <div class="workspace" id="builder">
+      <section class="panel">
+        <div class="panel-head"><h2>✦ AI Website Generator</h2></div>
+        <div class="panel-body">
+          <p class="muted">Describe your idea. Generate a website, edit the code, and preview the result.</p>
+          <label class="field-label" for="prompt">What do you want to build?</label>
+          <textarea id="prompt" class="prompt" maxlength="3000" placeholder="Create a modern restaurant website with a hero section, menu, about section, testimonials and contact form..."></textarea>
+          <div class="small muted"><span id="count">0</span>/3000 characters</div>
+          <button id="generateBtn" class="primary full">✦ Generate Website</button>
+          <div id="message" class="notice small hidden" role="status"></div>
+          <p class="field-label">Quick prompts</p>
+          <div class="quick">
+            <button data-prompt="Create a professional business website with services, about, testimonials and contact sections.">Business</button>
+            <button data-prompt="Create a modern personal portfolio with projects, skills, biography and contact details.">Portfolio</button>
+            <button data-prompt="Create a stylish ecommerce storefront with product cards, prices and shopping buttons.">E-commerce</button>
+            <button data-prompt="Create a modern blog homepage with featured articles and categories.">Blog</button>
+            <button data-prompt="Create a premium restaurant website with menu, gallery and reservations.">Restaurant</button>
+          </div>
+          <p class="small muted">API connection is configured under Settings. Never put a private API key in this HTML.</p>
+        </div>
+      </section>
+
+      <section class="panel" id="editor">
+        <div class="panel-head">
+          <div class="tabs">
+            <button class="tab active" data-tab="html">HTML</button>
+            <button class="tab" data-tab="css">CSS</button>
+            <button class="tab" data-tab="js">JavaScript</button>
+          </div>
+          <button id="refreshBtn" title="Update preview">↻ Preview</button>
+        </div>
+        <textarea id="codeEditor" class="code-area" spellcheck="false" aria-label="Code editor"></textarea>
+        <div class="statusbar">
+          <span id="activeLanguage">HTML</span>
+          <span id="codeStatus">Ready</span>
+          <button id="copyCodeBtn">Copy code</button>
+        </div>
+      </section>
+
+      <section class="panel preview-panel">
+        <div class="panel-head">
+          <h2>▣ Live Preview</h2>
+          <div class="preview-tools">
+            <button data-width="100%" title="Desktop">▰</button>
+            <button data-width="768px" title="Tablet">▯</button>
+            <button data-width="390px" title="Mobile">▯</button>
+          </div>
+          <span class="live">● Local preview</span>
+        </div>
+        <div class="preview-wrap">
+          <iframe id="preview" title="Generated website preview" sandbox="allow-scripts allow-forms"></iframe>
+        </div>
+        <div class="statusbar">
+          <span>Preview runs locally in this workspace</span>
+          <button id="openPreviewBtn">Refresh</button>
+        </div>
+      </section>
+    </div>
+
+    <section class="panel studio" id="studio">
+      <div class="studio-menu">
+        <h3>◇ 3D Motion Studio</h3>
+        <p class="muted small">Starter scene and motion controls</p>
+        <button class="active" data-object="orb">◉ Orb</button>
+        <button data-object="ring">◎ Ring</button>
+        <button data-object="cube">◇ Cube</button>
+        <button data-object="pulse">✧ Pulse</button>
+        <div class="notice small">This is a lightweight CSS 3D starter scene. Full mesh editing, cameras, materials and video rendering require a dedicated 3D engine.</div>
+      </div>
+      <div class="scene" id="scene">
+        <div class="scene-label">SCENE VIEW · PREVIEW</div>
+        <div class="grid-floor"></div>
+        <div class="orb" id="object"></div>
+        <div class="orbit" id="orbit"></div>
+      </div>
+      <div class="controls">
+        <h3>Animation Controls</h3>
+        <button id="playBtn" class="primary">▶ Play animation</button>
+        <label for="rotation">Rotation</label>
+        <input id="rotation" type="range" min="0" max="360" value="25">
+        <label for="scale">Object scale</label>
+        <input id="scale" type="range" min="50" max="160" value="100">
+        <label for="speed">Animation speed</label>
+        <input id="speed" type="range" min="1" max="10" value="4">
+        <label for="glow">Glow intensity</label>
+        <input id="glow" type="range" min="0" max="50" value="20">
+        <p class="small muted" id="motionStatus">Animation paused</p>
+      </div>
+      <div class="controls">
+        <h3>Scene Settings</h3>
+        <label for="sceneColor">Object color</label>
+        <select id="sceneColor">
+          <option value="cyan">Ocean cyan</option>
+          <option value="green">Emerald green</option>
+          <option value="purple">Violet</option>
+          <option value="gold">Solar gold</option>
+        </select>
+        <label for="environment">Environment</label>
+        <select id="environment">
+          <option value="space">Deep space</option>
+          <option value="ocean">Ocean</option>
+          <option value="sunset">Sunset</option>
+        </select>
+        <label class="checkrow"><input id="showOrbit" type="checkbox" checked> Show orbit ring</label>
+        <label class="checkrow"><input id="showGrid" type="checkbox" checked> Show floor grid</label>
+        <button id="exportSceneBtn" class="primary full">Export Scene Settings</button>
+        <p class="small muted">Exports the current scene settings as JSON. It does not render a video file.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="projects" style="margin-top:14px">
+      <div class="panel-head">
+        <h2>▤ My Projects</h2>
+        <button id="newProjectBtn">+ New project</button>
+      </div>
+      <div class="panel-body">
+        <p class="muted">Projects are saved in this browser using local storage. They are not synced across devices.</p>
+        <div id="projectList" class="project-list"></div>
+      </div>
+    </section>
+
+    <section class="panel" id="settings" style="margin-top:14px">
+      <div class="panel-head"><h2>⚙ API Settings</h2></div>
+      <div class="panel-body">
+        <p class="muted">Set the base URL of your AniVora API. The app will call its OpenAI-compatible chat-completions route.</p>
+        <label class="field-label" for="apiBase">AniVora API base URL</label>
+        <input id="apiBase" type="url" placeholder="https://your-anivora-api.example.com">
+        <label class="field-label" for="apiPath">Generation route</label>
+        <input id="apiPath" value="/v1/chat/completions">
+        <label class="field-label" for="modelName">Model name</label>
+        <input id="modelName" value="anivora-text">
+        <button id="saveSettingsBtn" class="primary">Save settings</button>
+        <button id="testApiBtn">Test API</button>
+        <div id="apiMessage" class="notice small">Not tested yet.</div>
+        <p class="small muted">Do not enter an admin secret or private server key here. Configure authentication securely on your backend. Your API must allow browser requests from your deployed website (CORS).</p>
+      </div>
+    </section>
+    <footer>AniVora Builder · Create, edit, preview and export.</footer>
+  </main>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const $ = id => document.getElementById(id);
+  const STORAGE_KEY = "anivora-builder-projects-v1";
+  const SETTINGS_KEY = "anivora-builder-settings-v1";
+
+  const starterHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GreenFuture — A Better Tomorrow</title>
+</head>
+<body>
+<header class="nav">
+  <a class="logo" href="#">🌿 GreenFuture</a>
+  <nav><a href="#about">About</a><a href="#services">Solutions</a><a href="#contact">Contact</a></nav>
+</header>
+<main>
+  <section class="hero">
+    <div class="hero-copy">
+      <span class="eyebrow">A BETTER TOMORROW STARTS TODAY</span>
+      <h1>A cleaner planet starts with <span>better choices.</span></h1>
+      <p>Small actions. Cleaner energy. Stronger communities. Join us in building a greener future.</p>
+      <a class="cta" href="#services">Explore our mission ↗</a>
+    </div>
+    <div class="planet" aria-label="Decorative green planet">🌍</div>
+  </section>
+  <section class="section" id="about">
+    <p class="eyebrow">OUR PURPOSE</p><h2>Progress that respects our planet.</h2>
+    <p>We help people and businesses take meaningful steps toward a more sustainable future.</p>
+  </section>
+  <section class="cards" id="services">
+    <article><div class="symbol">☀️</div><h3>Clean energy</h3><p>Discover smarter ways to power everyday life.</p></article>
+    <article><div class="symbol">🌱</div><h3>Greener living</h3><p>Make sustainable habits simple and achievable.</p></article>
+    <article><div class="symbol">♻️</div><h3>Lasting impact</h3><p>Turn individual choices into collective progress.</p></article>
+  </section>
+  <section class="section contact" id="contact">
+    <p class="eyebrow">TAKE THE NEXT STEP</p><h2>Let's build a greener future.</h2>
+    <a class="cta" href="mailto:hello@example.com">Get in touch ↗</a>
+  </section>
+</main>
+<footer>© 2026 GreenFuture. Made for a better tomorrow.</footer>
+</body>
+</html>`;
+
+  const starterCSS = `:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Inter, system-ui, Arial, sans-serif; color: #17291f; background: #f7fbf5; }
+a { color: inherit; text-decoration: none; }
+.nav { height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 7%; background: #fff; }
+.logo { font-size: 19px; font-weight: 800; }
+nav { display: flex; gap: 22px; font-size: 13px; }
+.hero { min-height: 390px; padding: 65px 8%; display: flex; align-items: center; justify-content: space-between; gap: 30px; background: linear-gradient(120deg,#e4f6e4,#f4fae8); overflow: hidden; }
+.hero-copy { max-width: 550px; }
+.eyebrow { font-size: 11px; letter-spacing: 2px; color: #27834b; font-weight: 800; }
+h1 { font-size: clamp(36px,5vw,62px); line-height: 1.04; margin: 15px 0; letter-spacing: -2px; }
+h1 span { color: #2d9858; }
+p { line-height: 1.7; color: #657568; }
+.cta { display: inline-block; margin-top: 12px; padding: 13px 19px; border-radius: 30px; background: #248a4d; color: white; font-weight: 700; font-size: 13px; }
+.planet { font-size: clamp(95px,18vw,180px); filter: drop-shadow(0 18px 24px #2a955c33); animation: float 5s ease-in-out infinite; }
+@keyframes float { 50% { transform: translateY(-12px) rotate(5deg); } }
+.section { text-align: center; max-width: 720px; margin: auto; padding: 55px 20px 35px; }
+h2 { font-size: clamp(25px,4vw,38px); margin: 10px 0; letter-spacing: -1px; }
+.cards { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; padding: 15px 7% 55px; }
+.cards article { background: #fff; border: 1px solid #e2eee1; border-radius: 16px; padding: 23px; box-shadow: 0 10px 25px #163e1410; }
+.cards h3 { margin-bottom: 6px; }
+.cards p { font-size: 13px; }
+.symbol { font-size: 30px; }
+.contact { border-radius: 18px; margin-bottom: 45px; background: #e8f6e6; }
+footer { text-align: center; padding: 22px; color: #6d8171; font-size: 12px; }
+@media(max-width:650px) { .nav { padding: 0 5%; } nav { gap: 10px; } .hero { padding: 48px 7%; } .planet { font-size: 80px; } .cards { grid-template-columns: 1fr; padding: 10px 6% 35px; } }`;
+
+  const starterJS = `document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', event => {
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) {
+      event.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});`;
+
+  let currentTab = "html";
+  let projectName = "GreenFuture";
+  let playing = false;
+  let animationFrame = null;
+  let angle = 25;
+
+  const code = { html: starterHTML, css: starterCSS, js: starterJS };
+
+  function setMessage(message, isError = false) {
+    const box = $("message");
+    box.textContent = message;
+    box.classList.remove("hidden");
+    box.style.borderColor = isError ? "#b94b5c" : "#23455b";
+  }
+
+  function showApiMessage(message, isError = false) {
+    $("apiMessage").textContent = message;
+    $("apiMessage").style.borderColor = isError ? "#b94b5c" : "#23455b";
+  }
+
+  function loadEditor() {
+    $("codeEditor").value = code[currentTab];
+    $("activeLanguage").textContent = currentTab.toUpperCase();
+    document.querySelectorAll("[data-tab]").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.tab === currentTab);
+    });
+  }
+
+  function readEditor() {
+    code[currentTab] = $("codeEditor").value;
+  }
+
+  function buildDocument() {
+    const html = code.html;
+    const css = code.css.replace(/<\/style/gi, "<\\/style");
+    const js = code.js.replace(/<\/script/gi, "<\\/script");
+    const style = `<style>${css}</style>`;
+    const script = `<script>${js}<\/script>`;
+
+    let result = html;
+    if (/<\/head>/i.test(result)) {
+      result = result.replace(/<\/head>/i, style + "\n</head>");
+    } else {
+      result = style + result;
+    }
+    if (/<\/body>/i.test(result)) {
+      result = result.replace(/<\/body>/i, script + "\n</body>");
+    } else {
+      result += script;
+    }
+    return result;
+  }
+
+  function refreshPreview() {
+    readEditor();
+    $("preview").srcdoc = buildDocument();
+    $("codeStatus").textContent = "Preview updated";
+  }
+
+  function getProjects() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
+    catch { return []; }
+  }
+
+  function saveProject() {
+    readEditor();
+    const projects = getProjects();
+    const item = {
+      id: projectName,
+      name: projectName,
+      updated: new Date().toISOString(),
+      code: { ...code }
+    };
+    const index = projects.findIndex(p => p.id === item.id);
+    if (index >= 0) projects[index] = item;
+    else projects.unshift(item);
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(projects.slice(0, 30)));
+      renderProjects();
+      setMessage("Project saved in this browser.");
+    } catch {
+      setMessage("Browser storage is full. Export your HTML and save a backup.", true);
+    }
+  }
+
+  function renderProjects() {
+    const root = $("projectList");
+    root.innerHTML = "";
+    const projects = getProjects();
+    if (!projects.length) {
+      root.textContent = "No saved projects yet.";
+      root.className = "project-list muted";
+      return;
+    }
+    root.className = "project-list";
+    projects.forEach(p => {
+      const row = document.createElement("div");
+      row.className = "notice project-item";
+      const label = document.createElement("div");
+      const title = document.createElement("strong");
+      title.textContent = p.name || "Untitled";
+      const date = document.createElement("div");
+      date.className = "small muted";
+      date.textContent = p.updated ? new Date(p.updated).toLocaleString() : "";
+      label.append(title, date);
+      const actions = document.createElement("div");
+      const open = document.createElement("button");
+      open.textContent = "Open";
+      open.addEventListener("click", () => {
+        projectName = p.name || "Untitled";
+        Object.assign(code, p.code || {});
+        currentTab = "html";
+        loadEditor();
+        refreshPreview();
+        setMessage("Opened " + projectName);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+      const del = document.createElement("button");
+      del.textContent = "Delete";
+      del.addEventListener("click", () => {
+        if (!confirm("Delete " + (p.name || "this project") + "?")) return;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(getProjects().filter(x => x.id !== p.id)));
+        renderProjects();
+      });
+      actions.append(open, del);
+      row.append(label, actions);
+      root.append(row);
+    });
+  }
+
+  function downloadFile(filename, content, type = "text/plain") {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function exportHTML() {
+    readEditor();
+    downloadFile(
+      projectName.toLowerCase().replace(/[^a-z0-9]+/g, "-") + ".html",
+      buildDocument(),
+      "text/html"
+    );
+  }
+
+  function loadSettings() {
+    try {
+      const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
+      $("apiBase").value = s.base || "";
+      $("apiPath").value = s.path || "/v1/chat/completions";
+      $("modelName").value = s.model || "anivora-text";
+    } catch {}
+  }
+
+  function saveSettings() {
+    const settings = {
+      base: $("apiBase").value.trim().replace(/\/+$/, ""),
+      path: $("apiPath").value.trim(),
+      model: $("modelName").value.trim() || "anivora-text"
+    };
+    if (settings.base && !/^https?:\/\//i.test(settings.base)) {
+      showApiMessage("Enter a valid API URL beginning with https:// or http://", true);
+      return null;
+    }
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    showApiMessage("Settings saved in this browser. No API secret was stored.");
+    return settings;
+  }
+
+  async function callAPI(prompt) {
+    const settings = saveSettings();
+    if (!settings || !settings.base) {
+      throw new Error("Open Settings and enter your AniVora API base URL first.");
+    }
+    const endpoint = settings.base + (
+      settings.path.startsWith("/") ? settings.path : "/" + settings.path
+    );
+
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: settings.model,
+        messages: [{
+          role: "system",
+          content: "You are AniVora Builder, an expert web developer. Create a complete, polished, responsive website. Return only one valid HTML document, with CSS inside a style tag and JavaScript inside a script tag. Do not use markdown fences. Do not include external dependencies unless necessary. The user's request is: " + prompt
+        }, {
+          role: "user",
+          content: "Build the complete website now. Return the complete HTML document only."
+        }],
+        max_tokens: 6000,
+        stream: false
+      })
+    });
+
+    if (!response.ok) {
+      const details = await response.text();
+      throw new Error("API returned HTTP " + response.status + ". " + details.slice(0, 350));
+    }
+
+    const data = await response.json();
+    const result =
+      data.choices?.[0]?.message?.content ??
+      data.message?.content ??
+      data.output_text ??
+      data.generated_text;
+
+    if (typeof result !== "string" || !result.trim()) {
+      throw new Error("API responded, but its JSON format did not contain generated text. Check your API response format.");
+    }
+
+    return result.replace(/^```(?:html)?\s*/i, "").replace(/\s*```$/, "").trim();
+  }
+
+  function splitGeneratedHTML(result) {
+    const doc = new DOMParser().parseFromString(result, "text/html");
+    if (!doc.body || !doc.body.innerHTML.trim()) {
+      throw new Error("The API did not return a usable HTML document.");
+    }
+
+    code.html = result;
+    const styleMatches = [...result.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)];
+    code.css = styleMatches.map(m => m[1]).join("\n\n") || starterCSS;
+
+    const scriptMatches = [...result.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
+    code.js = scriptMatches.map(m => m[1]).join("\n\n") || starterJS;
+
+    // The preview builder adds editable CSS and JS separately.
+    // Remove embedded CSS and JS from the HTML editor copy to avoid duplicates.
+    code.html = result
+      .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, "")
+      .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
+
+    // Retain a complete document skeleton when generated content has no head/body.
+    if (!/<html[\s>]/i.test(code.html)) {
+      code.html = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"></head><body>" + doc.body.innerHTML + "</body></html>";
+    }
+  }
+
+  async function generateWebsite() {
+    const prompt = $("prompt").value.trim();
+    if (!prompt) {
+      setMessage("Describe the website you want first.", true);
+      return;
+    }
+    const btn = $("generateBtn");
+    btn.disabled = true;
+    btn.textContent = "Generating…";
+    setMessage("Sending your prompt to AniVora API…");
+    try {
+      const result = await callAPI(prompt);
+      splitGeneratedHTML(result);
+      projectName = prompt.split(/\s+/).slice(0, 4).join(" ").replace(/[^\w -]/g, "") || "My Website";
+      currentTab = "html";
+      loadEditor();
+      refreshPreview();
+      setMessage("Website generated. Edit the code, refresh the preview, then save or export.");
+    } catch (error) {
+      setMessage(error.message || "Generation failed.", true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "✦ Generate Website";
+    }
+  }
+
+  async function testAPI() {
+    const settings = saveSettings();
+    if (!settings || !settings.base) {
+      showApiMessage("Enter your API base URL first.", true);
+      return;
+    }
+    showApiMessage("Testing API connection…");
+    try {
+      // This is a real generation request, not just a health check.
+      const result = await callAPI("Create a tiny one-page demo website with a heading saying AniVora API test.");
+      showApiMessage("Generation request succeeded. Received " + result.length + " characters.");
+    } catch (error) {
+      showApiMessage(error.message || "API test failed.", true);
+    }
+  }
+
+  $("codeEditor").addEventListener("input", () => {
+    code[currentTab] = $("codeEditor").value;
+    $("codeStatus").textContent = "Unsaved edits";
+  });
+  $("codeEditor").addEventListener("keydown", event => {
+    if (event.key === "Tab") {
+      event.preventDefault();
+      const el = event.target;
+      const start = el.selectionStart, end = el.selectionEnd;
+      el.setRangeText("  ", start, end, "end");
+      code[currentTab] = el.value;
+    }
+  });
+
+  document.querySelectorAll("[data-tab]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      readEditor();
+      currentTab = btn.dataset.tab;
+      loadEditor();
+    });
+  });
+
+  $("prompt").addEventListener("input", () => {
+    $("count").textContent = $("prompt").value.length;
+  });
+  document.querySelectorAll("[data-prompt]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      $("prompt").value = btn.dataset.prompt;
+      $("count").textContent = $("prompt").value.length;
+    });
+  });
+
+  $("generateBtn").addEventListener("click", generateWebsite);
+  $("saveBtn").addEventListener("click", saveProject);
+  $("exportBtn").addEventListener("click", exportHTML);
+  $("refreshBtn").addEventListener("click", refreshPreview);
+  $("openPreviewBtn").addEventListener("click", refreshPreview);
+  $("projectsBtn").addEventListener("click", () => $("projects").scrollIntoView({ behavior: "smooth" }));
+  $("newProjectBtn").addEventListener("click", () => {
+    if (!confirm("Start a new project? Save your current project first if you need it.")) return;
+    projectName = "Untitled Project";
+    code.html = starterHTML;
+    code.css = starterCSS;
+    code.js = starterJS;
+    currentTab = "html";
+    loadEditor();
+    refreshPreview();
+    setMessage("New project ready.");
+  });
+  $("copyCodeBtn").addEventListener("click", async () => {
+    readEditor();
+    try {
+      await navigator.clipboard.writeText(code[currentTab]);
+      $("codeStatus").textContent = "Copied";
+    } catch {
+      $("codeEditor").select();
+      $("codeStatus").textContent = "Select and copy the code";
+    }
+  });
+
+  document.querySelectorAll("[data-width]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const width = btn.dataset.width;
+      $("preview").style.width = width;
+      $("preview").style.maxWidth = "100%";
+      $("preview").style.display = "block";
+      $("preview").style.margin = "0 auto";
+    });
+  });
+
+  document.querySelectorAll("[data-section]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-section]").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const target = $(btn.dataset.section);
+      if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+
+  $("saveSettingsBtn").addEventListener("click", saveSettings);
+  $("testApiBtn").addEventListener("click", testAPI);
+
+  // Lightweight motion scene controls.
+  const object = $("object");
+  const orbit = $("orbit");
+  const scene = $("scene");
+  const colors = {
+    cyan: ["#8bffbd", "#159e92", "#10506b", "#40fff0"],
+    green: ["#d6ff78", "#4fc35d", "#135e3c", "#69ff8a"],
+    purple: ["#e3c6ff", "#9254f8", "#402276", "#b58aff"],
+    gold: ["#fff0a5", "#e5a629", "#79521b", "#ffe18a"]
+  };
+
+  function updateScene() {
+    const color = colors[$("sceneColor").value];
+    object.style.background = `radial-gradient(circle at 32% 25%, ${color[0]}, ${color[1]} 25%, ${color[2]} 65%, #050b20 88%)`;
+    object.style.transform = `rotate(${angle}deg) scale(${$("scale").value / 100})`;
+    object.style.boxShadow = `0 0 ${$("glow").value}px ${color[3]}88, inset -18px -12px 35px #000b2d`;
+    orbit.style.borderColor = color[3];
+    orbit.style.display = $("showOrbit").checked ? "block" : "none";
+    scene.querySelector(".grid-floor").style.display = $("showGrid").checked ? "block" : "none";
+
+    const env = $("environment").value;
+    scene.style.background = env === "ocean"
+      ? "radial-gradient(ellipse at center,#10505e,#061a2b 60%,#030911)"
+      : env === "sunset"
+      ? "radial-gradient(ellipse at center,#703b54,#251a39 55%,#030911)"
+      : "radial-gradient(ellipse at center,#123b4d 0,#071523 48%,#030911)";
+  }
+
+  $("rotation").addEventListener("input", () => { angle = Number($("rotation").value); updateScene(); });
+  ["scale", "glow", "sceneColor", "environment", "showOrbit", "showGrid"].forEach(id => {
+    $(id).addEventListener("input", updateScene);
+    $(id).addEventListener("change", updateScene);
+  });
+
+  document.querySelectorAll("[data-object]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-object]").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const type = btn.dataset.object;
+      object.style.borderRadius = type === "cube" ? "18px" : "50%";
+      object.style.clipPath = type === "pulse" ? "polygon(50% 0%,61% 35%,100% 50%,61% 65%,50% 100%,39% 65%,0 50%,39% 35%)" : "none";
+      orbit.style.display = type === "ring" ? "none" : ($("showOrbit").checked ? "block" : "none");
+      updateScene();
+    });
+  });
+
+  function animate() {
+    if (!playing) return;
+    angle = (angle + Number($("speed").value) * .35) % 360;
+    $("rotation").value = Math.round(angle);
+    updateScene();
+    animationFrame = requestAnimationFrame(animate);
+  }
+
+  $("playBtn").addEventListener("click", () => {
+    playing = !playing;
+    $("playBtn").textContent = playing ? "Ⅱ Pause animation" : "▶ Play animation";
+    $("motionStatus").textContent = playing ? "Animation playing" : "Animation paused";
+    if (playing) animate();
+    else if (animationFrame) cancelAnimationFrame(animationFrame);
+  });
+
+  $("exportSceneBtn").addEventListener("click", () => {
+    const settings = {
+      object: document.querySelector("[data-object].active")?.dataset.object || "orb",
+      rotation: Number($("rotation").value),
+      scale: Number($("scale").value),
+      speed: Number($("speed").value),
+      glow: Number($("glow").value),
+      color: $("sceneColor").value,
+      environment: $("environment").value,
+      showOrbit: $("showOrbit").checked,
+      showGrid: $("showGrid").checked
+    };
+    downloadFile("anivora-scene.json", JSON.stringify(settings, null, 2), "application/json");
+  });
+
+  loadSettings();
+  loadEditor();
+  refreshPreview();
+  renderProjects();
+  updateScene();
+})();
+</script>
+</body>
+  </html>
