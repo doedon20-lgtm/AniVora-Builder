@@ -1,0 +1,660 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10111a">
+<title>AniVora Builder — Creative Studio</title>
+<style>
+:root{--bg:#10111a;--panel:#171925;--panel2:#1e2130;--line:#303346;--text:#f4f4fc;--muted:#989db5;--purple:#9b83ff;--purple2:#7255ed;--green:#61dfb1;--red:#ff8797;--r:11px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:13px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--purple);outline-offset:2px}
+button:disabled{opacity:.45;cursor:not-allowed}
+.top{height:62px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 17px;border-bottom:1px solid var(--line);background:#141621;position:sticky;top:0;z-index:10}
+.brand{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:850;white-space:nowrap}
+.logo{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:linear-gradient(135deg,#b4a4ff,#7255ed);font-size:20px}
+.brand small{display:block;color:var(--muted);font-size:10px;font-weight:500}
+.top-actions,.toolbar,.row,.tabs{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.pill{font-size:10px;color:var(--green);border:1px solid #315d50;border-radius:20px;padding:4px 8px}
+.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:8px;padding:8px 11px;min-height:34px;font-size:12px;font-weight:650}
+.btn:hover{border-color:#77709e}
+.btn.primary{background:linear-gradient(120deg,var(--purple2),#9a6cf7);border:0;color:white}
+.btn.ghost{background:transparent}
+.btn.active{border-color:var(--purple);background:#30284e;color:#e5ddff}
+.iconbtn{width:34px;padding:0;display:grid;place-items:center}
+.layout{display:grid;grid-template-columns:66px 235px minmax(0,1fr) 270px;min-height:calc(100vh - 62px)}
+.rail{background:#131520;border-right:1px solid var(--line);padding:12px 7px;display:flex;align-items:center;gap:6px;flex-direction:column}
+.railbtn{width:49px;min-height:53px;background:transparent;color:var(--muted);border:1px solid transparent;border-radius:9px;font-size:19px}
+.railbtn span{display:block;font-size:9px}
+.railbtn:hover,.railbtn.active{background:#29243f;border-color:#494064;color:#e6dfff}
+.left,.right{min-width:0;background:var(--panel);padding:15px;border-right:1px solid var(--line)}
+.right{border-right:0;border-left:1px solid var(--line)}
+.panelhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:13px}
+.panelhead h2,.sectiontitle{font-size:13px;margin:0;font-weight:800}
+.muted{color:var(--muted)}
+.small{font-size:11px}
+.label{display:block;color:#c9cbda;font-size:11px;font-weight:650;margin:13px 0 6px}
+input,textarea,select{width:100%;min-width:0;color:var(--text);background:#10121b;border:1px solid var(--line);border-radius:8px;padding:9px}
+textarea{resize:vertical;min-height:95px}
+input[type=color]{padding:3px;height:36px}
+input[type=range]{padding:0;accent-color:var(--purple)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rule{height:1px;background:var(--line);margin:16px 0}
+.main{min-width:0;display:flex;flex-direction:column;background:#11131d}
+.workspacebar{min-height:55px;padding:9px 13px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.workspacebar strong{font-size:12px}
+.workspacebar .muted{font-size:10px}
+.canvaswrap{flex:1;min-height:470px;padding:17px;background-color:#1b1d2a;background-image:radial-gradient(#393b4b 1px,transparent 1px);background-size:17px 17px}
+.canvasframe{height:100%;min-height:520px;max-width:100%;margin:auto;background:white;border:1px solid #3d4053;border-radius:8px;overflow:hidden;box-shadow:0 15px 55px #0004;transition:width .2s}
+#preview{width:100%;height:100%;min-height:520px;display:block;border:0;background:white}
+.canvasfoot{padding:8px 13px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:10px}
+.workspacebottom{padding:12px;border-top:1px solid var(--line);background:#151722}
+.bottomhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px}
+#code{min-height:130px;max-height:300px;font:11px/1.55 ui-monospace,monospace;white-space:pre;tab-size:2}
+.hidden{display:none!important}
+.tab{padding:7px 8px;background:transparent;color:var(--muted);border:0;border-bottom:2px solid transparent;font-size:11px}
+.tab.active{color:#e5ddff;border-color:var(--purple)}
+.inspector-section{padding:13px 0;border-bottom:1px solid var(--line)}
+.inspector-section:first-of-type{padding-top:0}
+.effects{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.effect{background:#202232;color:var(--text);border:1px solid var(--line);border-radius:8px;text-align:left;padding:9px 8px;font-size:11px}
+.effect span{display:block;font-size:17px;margin-bottom:3px}
+.effect.active{border-color:var(--purple);background:#30284e}
+.tag{display:inline-block;border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-size:10px;color:var(--muted)}
+.status{padding:8px 10px;border-radius:8px;background:#202232;color:#c9c8e8;font-size:11px;overflow-wrap:anywhere}
+.status.error{color:#ffc0c6;background:#3b2029}
+.status.ok{color:#b4f3d9;background:#18382e}
+.projectlist{display:grid;gap:7px;margin-top:10px}
+.project{padding:9px;background:#202232;border:1px solid var(--line);border-radius:8px}
+.projectname{font-weight:700;overflow-wrap:anywhere}
+.project .row{margin-top:8px}
+.project .btn{padding:5px 7px;min-height:28px;font-size:10px}
+.help{font-size:10px;color:var(--muted);margin:8px 0 0}
+.empty{padding:22px 10px;text-align:center;color:var(--muted)}
+kbd{font:10px ui-monospace,monospace;background:#292b3b;border:1px solid var(--line);border-radius:4px;padding:2px 5px}
+@media(max-width:1150px){.layout{grid-template-columns:57px 210px minmax(0,1fr)}.right{grid-column:2/4;border-left:0;border-top:1px solid var(--line)}.inspector-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}}
+@media(max-width:700px){.top{padding:0 9px}.brand{font-size:13px}.brand small{display:none}.pill{display:none}.layout{grid-template-columns:48px minmax(0,1fr)}.rail{grid-row:1/4;padding:8px 3px}.railbtn{width:41px;min-height:46px;font-size:16px}.left{border-right:0;padding:12px}.main{grid-column:2;grid-row:2}.right{grid-column:2;grid-row:3;padding:12px}.canvaswrap{padding:8px;min-height:390px}.canvasframe,#preview{min-height:400px}.workspacebar{padding:8px}.workspacebottom{padding:9px}.inspector-grid{display:block}.top-actions .btn{padding:7px}.canvasfoot{font-size:9px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><div class="logo">A</div><div>AniVora Builder<small>CREATIVE WEBSITE STUDIO</small></div></div>
+  <div class="top-actions">
+    <span class="pill">● STUDIO</span>
+    <button class="btn ghost" id="newProject">＋ New</button>
+    <button class="btn" id="saveProject">Save</button>
+    <button class="btn primary" id="export">Export HTML ↗</button>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="rail" aria-label="Studio tools">
+    <button class="railbtn active" data-panel="generate" title="AI generation">✦<span>Generate</span></button>
+    <button class="railbtn" data-panel="design" title="Design controls">◈<span>Design</span></button>
+    <button class="railbtn" data-panel="motion" title="Motion Studio">⌁<span>Motion</span></button>
+    <button class="railbtn" data-panel="projects" title="Projects">▤<span>Projects</span></button>
+    <button class="railbtn" data-panel="code" title="HTML editor">&lt;/&gt;<span>Code</span></button>
+  </nav>
+
+  <aside class="left">
+    <div id="panel-generate" class="toolpanel">
+      <div class="panelhead"><h2>AI Website Builder</h2><span class="tag">AI</span></div>
+      <p class="muted small">Describe what you want to build. AniVora will generate HTML for the live canvas.</p>
+      <label class="label" for="projectTitle">Project name</label>
+      <input id="projectTitle" value="Untitled Website" maxlength="80">
+      <label class="label" for="prompt">Your website idea</label>
+      <textarea id="prompt" maxlength="3000" placeholder="Create a premium restaurant website with a cinematic hero, menu, gallery, reservations section and elegant scroll animations."></textarea>
+      <div class="label">Quick starts</div>
+      <div class="effects">
+        <button class="effect" data-prompt="Create a premium restaurant website with a cinematic hero, menu cards, story section, gallery and contact section."><span>🍽️</span>Restaurant</button>
+        <button class="effect" data-prompt="Create a polished portfolio for a creative designer with a large hero, selected work, biography, skills and contact section."><span>✦</span>Portfolio</button>
+        <button class="effect" data-prompt="Create a modern SaaS landing page with hero, features, product benefits, pricing cards, FAQ and clear calls to action."><span>◈</span>SaaS landing</button>
+        <button class="effect" data-prompt="Create a premium fashion brand website with a striking hero, product grid, category filters and newsletter form demo."><span>◌</span>Fashion</button>
+      </div>
+      <button class="btn primary" id="generate" style="width:100%;margin-top:13px">✦ Generate Website</button>
+      <p class="help">Generation uses your configured AniVora API. Large websites may exceed the current model's output limit.</p>
+      <div id="status" class="status" style="margin-top:12px">Ready. Describe a website to begin.</div>
+    </div>
+
+    <div id="panel-design" class="toolpanel hidden">
+      <div class="panelhead"><h2>Design inspector</h2><span class="tag">LIVE</span></div>
+      <p class="muted small">Click an element in the preview to select it, then edit its style.</p>
+      <div class="inspector-section">
+        <label class="label" for="selectedTarget">Selected element</label>
+        <input id="selectedTarget" value="No element selected" readonly>
+        <label class="label" for="textValue">Text content</label>
+        <textarea id="textValue" rows="2" placeholder="Select an element first"></textarea>
+        <button class="btn" id="applyText" style="margin-top:7px;width:100%">Apply text</button>
+      </div>
+      <div class="inspector-section">
+        <div class="grid2">
+          <div><label class="label" for="textColor">Text colour</label><input id="textColor" type="color" value="#202030"></div>
+          <div><label class="label" for="fillColor">Background</label><input id="fillColor" type="color" value="#ffffff"></div>
+        </div>
+        <label class="label" for="fontSize">Font size <span id="fontSizeLabel">16px</span></label>
+        <input id="fontSize" type="range" min="10" max="84" value="16">
+        <label class="label" for="radius">Corner radius <span id="radiusLabel">8px</span></label>
+        <input id="radius" type="range" min="0" max="48" value="8">
+        <label class="label" for="spacing">Padding <span id="spacingLabel">8px</span></label>
+        <input id="spacing" type="range" min="0" max="60" value="8">
+        <button class="btn primary" id="applyStyle" style="width:100%;margin-top:12px">Apply design changes</button>
+      </div>
+      <div class="inspector-section">
+        <label class="label" for="sectionTarget">Quick target</label>
+        <select id="sectionTarget">
+          <option value="">Select a type</option><option value="h1">Main headings</option>
+          <option value="p">Paragraphs</option><option value="a">Links</option>
+          <option value="button">Buttons</option><option value="img">Images</option>
+          <option value="section">Sections</option><option value="article">Cards / articles</option>
+        </select>
+        <button class="btn" id="selectType" style="width:100%;margin-top:8px">Select first matching element</button>
+      </div>
+    </div>
+
+    <div id="panel-motion" class="toolpanel hidden">
+      <div class="panelhead"><h2>Motion Studio</h2><span class="tag">EFFECTS</span></div>
+      <p class="muted small">Select an element in the preview, choose an effect, and apply it. Effects are written into the exported HTML.</p>
+      <label class="label" for="motionTarget">Apply to</label>
+      <select id="motionTarget">
+        <option value="selected">Selected element</option>
+        <option value="h1">All main headings</option>
+        <option value="button">All buttons</option>
+        <option value="img">All images</option>
+        <option value="section">All sections</option>
+        <option value="article">All cards</option>
+      </select>
+      <label class="label">Animation library</label>
+      <div class="effects" id="effectLibrary">
+        <button class="effect" data-effect="fade"><span>◉</span>Fade in</button>
+        <button class="effect" data-effect="slide-up"><span>↑</span>Slide up</button>
+        <button class="effect" data-effect="slide-left"><span>←</span>Slide left</button>
+        <button class="effect" data-effect="zoom"><span>⌕</span>Zoom in</button>
+        <button class="effect" data-effect="lift"><span>↟</span>Lift on hover</button>
+        <button class="effect" data-effect="bounce"><span>↕</span>Bounce</button>
+        <button class="effect" data-effect="rotate"><span>⟳</span>Rotate</button>
+        <button class="effect" data-effect="blur"><span>◌</span>Blur reveal</button>
+        <button class="effect" data-effect="flip"><span>◇</span>Flip in</button>
+        <button class="effect" data-effect="float"><span>↕</span>Floating</button>
+        <button class="effect" data-effect="gradient"><span>◐</span>Gradient</button>
+        <button class="effect" data-effect="type"><span>▏</span>Text reveal</button>
+        <button class="effect" data-effect="reveal"><span>▤</span>Scroll reveal</button>
+        <button class="effect" data-effect="pulse"><span>◎</span>Pulse</button>
+        <button class="effect" data-effect="tilt"><span>◇</span>Hover tilt</button>
+        <button class="effect" data-effect="stagger"><span>▦</span>Card stagger</button>
+      </div>
+      <div class="inspector-section">
+        <label class="label" for="trigger">Trigger</label>
+        <select id="trigger">
+          <option value="load">On page load</option>
+          <option value="scroll">On scroll into view</option>
+          <option value="hover">On hover</option>
+          <option value="click">On click</option>
+          <option value="continuous">Continuous loop</option>
+        </select>
+        <label class="label" for="duration">Duration <span id="durationLabel">700ms</span></label>
+        <input type="range" id="duration" min="100" max="3000" step="50" value="700">
+        <label class="label" for="delay">Delay <span id="delayLabel">0ms</span></label>
+        <input type="range" id="delay" min="0" max="2000" step="50" value="0">
+        <label class="label" for="repeat">Repeat</label>
+        <select id="repeat"><option value="1">Once</option><option value="2">Twice</option><option value="3">Three times</option><option value="infinite">Infinite</option></select>
+        <button class="btn primary" id="applyMotion" style="width:100%;margin-top:12px">Apply effect</button>
+        <button class="btn" id="clearMotion" style="width:100%;margin-top:7px">Clear studio effects</button>
+        <p class="help">Respects reduced-motion preferences. Effects depend on the selected website elements.</p>
+      </div>
+    </div>
+
+    <div id="panel-projects" class="toolpanel hidden">
+      <div class="panelhead"><h2>My projects</h2><span class="tag">LOCAL</span></div>
+      <p class="muted small">Saved in this browser on this device.</p>
+      <button class="btn primary" id="saveProject2" style="width:100%">＋ Save current project</button>
+      <div class="projectlist" id="projects"></div>
+    </div>
+
+    <div id="panel-code" class="toolpanel hidden">
+      <div class="panelhead"><h2>Code editor</h2></div>
+      <p class="muted small">Edit HTML in the code area below the canvas. Apply your changes to preview them.</p>
+      <button class="btn" id="focusCode" style="width:100%">Open HTML editor ↓</button>
+      <p class="help">Export creates a standalone HTML file. Backend services still need their own configuration.</p>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="workspacebar">
+      <div><strong id="canvasTitle">Untitled Website</strong><div class="muted" id="canvasSubtitle">Live canvas · no website generated yet</div></div>
+      <div class="toolbar">
+        <button class="btn iconbtn" id="undo" title="Undo" disabled>↶</button>
+        <button class="btn iconbtn" id="redo" title="Redo" disabled>↷</button>
+        <button class="btn active" id="desktop">Desktop</button>
+        <button class="btn" id="mobile">Mobile</button>
+        <button class="btn" id="refresh">↻ Refresh</button>
+      </div>
+    </div>
+    <div class="canvaswrap">
+      <div class="canvasframe" id="canvasframe">
+        <iframe id="preview" title="Website design canvas" sandbox="allow-scripts allow-forms allow-modals" referrerpolicy="no-referrer"></iframe>
+      </div>
+    </div>
+    <div class="canvasfoot"><span id="selectionStatus">Nothing selected</span><span>Preview sandbox · <kbd>Ctrl</kbd> + <kbd>S</kbd> saves</span></div>
+    <div class="workspacebottom" id="editorSection">
+      <div class="bottomhead"><strong>HTML editor</strong><div class="toolbar"><button class="btn" id="applyCode">Apply code</button><button class="btn" id="copyCode">Copy</button><button class="btn" id="toggleEditor">Hide editor</button></div></div>
+      <textarea id="code" spellcheck="false" aria-label="Generated HTML code" placeholder="Your website HTML appears here after generation."></textarea>
+    </div>
+  </main>
+
+  <aside class="right">
+    <div class="panelhead"><h2>Properties</h2><span class="tag" id="elementTag">PAGE</span></div>
+    <div class="tabs"><button class="tab active" data-tab="properties">Design</button><button class="tab" data-tab="motioninfo">Motion</button><button class="tab" data-tab="pageinfo">Page</button></div>
+    <div id="right-properties">
+      <div class="inspector-section">
+        <label class="label">Selection</label>
+        <div class="status" id="rightSelection">Select an element inside the preview.</div>
+        <p class="help">Click a heading, button, image or section in the website canvas. Its tag and editable properties appear here.</p>
+      </div>
+      <div class="inspector-section">
+        <label class="label" for="rightText">Content</label>
+        <textarea id="rightText" rows="3" placeholder="Selected element text"></textarea>
+        <button class="btn" id="rightApplyText" style="width:100%;margin-top:7px">Update content</button>
+      </div>
+      <div class="inspector-section">
+        <div class="grid2"><div><label class="label" for="rightColor">Text</label><input id="rightColor" type="color" value="#202030"></div><div><label class="label" for="rightBg">Background</label><input id="rightBg" type="color" value="#ffffff"></div></div>
+        <label class="label" for="rightSize">Font size <span id="rightSizeLabel">16px</span></label><input id="rightSize" type="range" min="10" max="84" value="16">
+        <label class="label" for="rightRadius">Radius <span id="rightRadiusLabel">8px</span></label><input id="rightRadius" type="range" min="0" max="48" value="8">
+        <label class="label" for="rightPadding">Padding <span id="rightPaddingLabel">8px</span></label><input id="rightPadding" type="range" min="0" max="60" value="8">
+        <button class="btn primary" id="rightApplyStyle" style="width:100%;margin-top:12px">Apply styles</button>
+      </div>
+    </div>
+    <div id="right-motioninfo" class="hidden">
+      <div class="inspector-section"><h3 class="sectiontitle">Motion settings</h3><p class="muted small">Open Motion Studio in the left toolbar to choose effects, triggers, timing and repeat behaviour.</p><button class="btn" id="openMotion" style="width:100%">Open Motion Studio</button></div>
+      <div class="inspector-section"><div class="status" id="motionStatus">No motion effect applied yet.</div></div>
+    </div>
+    <div id="right-pageinfo" class="hidden">
+      <div class="inspector-section"><h3 class="sectiontitle">Page settings</h3>
+        <label class="label" for="pageTitle">Document title</label><input id="pageTitle" placeholder="Website title">
+        <label class="label" for="pageBg">Page background</label><input id="pageBg" type="color" value="#ffffff">
+        <button class="btn primary" id="applyPage" style="width:100%;margin-top:12px">Apply page settings</button>
+        <p class="help">These settings update the current website document.</p>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const KEY = "anivora_studio_projects_v1";
+const DRAFT = "anivora_studio_draft_v1";
+const frame = $("preview"), code = $("code"), frameBox = $("canvasframe");
+let html = "", selectedId = null, mobileMode = false, busy = false;
+let undoStack = [], undoIndex = -1, currentProjectId = null;
+let activeEffect = "fade", effectCounter = 0;
+let styleEdits = new Map(), textEdits = new Map(), appliedMotions = [];
+let previewDocumentTitle = "";
+const effects = {
+ fade:["av-fade","opacity:0;animation-name:avFade"],
+ "slide-up":["av-slide-up","opacity:0;animation-name:avSlideUp"],
+ "slide-left":["av-slide-left","opacity:0;animation-name:avSlideLeft"],
+ zoom:["av-zoom","opacity:0;animation-name:avZoom"],
+ bounce:["av-bounce","animation-name:avBounce"],
+ rotate:["av-rotate","animation-name:avRotate"],
+ blur:["av-blur","filter:blur(10px);animation-name:avBlur"],
+ flip:["av-flip","opacity:0;animation-name:avFlip"],
+ float:["av-float","animation-name:avFloat"],
+ gradient:["av-gradient","background-size:200% 200%;animation-name:avGradient"],
+ pulse:["av-pulse","animation-name:avPulse"],
+ lift:["av-lift","transition:transform .25s,box-shadow .25s"],
+ tilt:["av-tilt","transition:transform .25s"],
+ reveal:["av-reveal","opacity:0;transform:translateY(24px);animation-name:avReveal"],
+ stagger:["av-stagger","opacity:0;animation-name:avReveal"]
+};
+function say(text, type=""){const el=$("status");el.textContent=text;el.className="status"+(type?" "+type:"")}
+function safeId(){return "av-el-"+(++effectCounter)}
+function escapeAttr(s){return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;")}
+function escapeText(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function readProjects(){try{const a=JSON.parse(localStorage.getItem(KEY)||"[]");return Array.isArray(a)?a:[]}catch(_){return []}}
+function saveDraft(){try{localStorage.setItem(DRAFT,JSON.stringify({name:$("projectTitle").value,prompt:$("prompt").value,html:code.value,projectId:currentProjectId}))}catch(_){}}
+function setHistoryButtons(){$("undo").disabled=undoIndex<=0;$("redo").disabled=undoIndex<0||undoIndex>=undoStack.length-1}
+function recordHistory(value){
+ if(undoIndex>=0&&undoStack[undoIndex]===value)return;
+ undoStack=undoStack.slice(0,undoIndex+1);undoStack.push(value);
+ if(undoStack.length>25)undoStack.shift();
+ undoIndex=undoStack.length-1;setHistoryButtons();
+}
+function ensureDocument(value){
+ value=String(value||"").trim().replace(/^```(?:html)?\s*/i,"").replace(/\s*```$/,"").trim();
+ if(!value)throw Error("There is no website HTML to display.");
+ if(!/<(?:!doctype\s+html|html|body|main|section)\b/i.test(value))throw Error("The response did not contain recognizable HTML.");
+ if(!/<html\b/i.test(value))value='<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AniVora Website</title></head><body>'+value+'</body></html>';
+ return value;
+}
+function stripStudioAttributes(value){
+ const doc=new DOMParser().parseFromString(value,"text/html");
+ doc.querySelectorAll("[data-av-id],[data-av-selected],[data-av-motion]").forEach(el=>{
+  el.removeAttribute("data-av-id");el.removeAttribute("data-av-selected");el.removeAttribute("data-av-motion");
+ });
+ doc.querySelectorAll("#av-studio-bridge,#av-studio-style,#av-studio-motions").forEach(el=>el.remove());
+ return "<!DOCTYPE html>\n"+doc.documentElement.outerHTML;
+}
+function addBridge(value){
+ const doc=new DOMParser().parseFromString(value,"text/html");
+ let style=doc.createElement("style");style.id="av-studio-style";
+ style.textContent='[data-av-selected="true"]{outline:2px solid #8c70ff!important;outline-offset:3px!important;cursor:pointer!important}';
+ doc.head.appendChild(style);
+ let bridge=doc.createElement("script");bridge.id="av-studio-bridge";
+ bridge.textContent=`(function(){
+  let chosen=null, serial=0;
+  function send(type,extra){try{parent.postMessage(Object.assign({source:"anivora-studio",type},extra||{}),"*")}catch(e){}}
+  function getId(el){if(!el.dataset.avId)el.dataset.avId="av-"+(++serial);return el.dataset.avId}
+  function desc(el){return {id:getId(el),tag:el.tagName.toLowerCase(),text:(el.innerText||el.alt||el.getAttribute("aria-label")||"").slice(0,120),color:getComputedStyle(el).color,bg:getComputedStyle(el).backgroundColor,size:parseInt(getComputedStyle(el).fontSize)||16,radius:parseInt(getComputedStyle(el).borderRadius)||0,padding:parseInt(getComputedStyle(el).padding)||0,title:document.title}}
+  document.addEventListener("click",function(e){
+    const el=e.target.closest("h1,h2,h3,h4,p,a,button,img,section,article,header,footer,nav,div,li,span");
+    if(!el||el===document.body||el===document.documentElement)return;
+    if(el.closest("script,style"))return;
+    if(el.matches("a")||el.matches("button")||el.closest("button"))e.preventDefault();
+    if(chosen)chosen.removeAttribute("data-av-selected");
+    chosen=el;chosen.setAttribute("data-av-selected","true");
+    send("select",{element:desc(el)});
+  },true);
+  document.addEventListener("input",function(e){if(e.target===chosen)send("select",{element:desc(chosen)})});
+  window.addEventListener("message",function(e){
+    const d=e.data;if(!d||d.source!=="anivora-studio-parent")return;
+    if(d.action==="selectType"){
+      const el=document.querySelector(d.selector);if(el){if(chosen)chosen.removeAttribute("data-av-selected");chosen=el;chosen.setAttribute("data-av-selected","true");send("select",{element:desc(el)})}
+    }
+    if(d.action==="style"&&chosen){
+      const s=d.styles||{};Object.keys(s).forEach(k=>{chosen.style[k]=s[k]});
+      send("select",{element:desc(chosen)});
+    }
+    if(d.action==="text"&&chosen){
+      if(chosen.matches("img"))chosen.alt=d.text;
+      else chosen.textContent=d.text;
+      send("select",{element:desc(chosen)});
+    }
+    if(d.action==="page"&&d.title){document.title=d.title;send("page",{title:document.title})}
+    if(d.action==="pageStyle"&&d.background)document.body.style.background=d.background;
+  });
+  send("ready",{title:document.title});
+ })();`;
+ doc.body.appendChild(bridge);
+ return "<!DOCTYPE html>\n"+doc.documentElement.outerHTML;
+}
+function render(value,history=true){
+ html=ensureDocument(value);code.value=html;
+ frame.srcdoc=addBridge(html);
+ $("canvasSubtitle").textContent="Live canvas · preview refreshed";
+ $("selectionStatus").textContent="Click an element in the preview to select it";
+ $("canvasTitle").textContent=$("projectTitle").value.trim()||"Untitled Website";
+ if(history)recordHistory(html);
+ saveDraft();
+}
+function applyStoredEdits(){
+ let doc=new DOMParser().parseFromString(html,"text/html");
+ styleEdits.forEach((styles,id)=>{const el=doc.querySelector('[data-av-id="'+CSS.escape(id)+'"]');if(el)Object.assign(el.style,styles)});
+ textEdits.forEach((text,id)=>{const el=doc.querySelector('[data-av-id="'+CSS.escape(id)+'"]');if(el){if(el.matches("img"))el.alt=text;else el.textContent=text}});
+ return "<!DOCTYPE html>\n"+doc.documentElement.outerHTML;
+}
+function syncSelection(data){
+ selectedId=data.id;
+ $("selectedTarget").value=data.tag+" · "+(data.text||"element").slice(0,45);
+ $("rightSelection").textContent=data.tag+" · "+(data.text||"No text content").slice(0,90);
+ $("elementTag").textContent=data.tag.toUpperCase();
+ $("selectionStatus").textContent="Selected: "+data.tag;
+ $("textValue").value=data.text||"";$("rightText").value=data.text||"";
+ const c=hexColor(data.color,"#202030"), b=hexColor(data.bg,"#ffffff");
+ $("textColor").value=c;$("rightColor").value=c;$("fillColor").value=b;$("rightBg").value=b;
+ $("fontSize").value=data.size;$("rightSize").value=data.size;
+ $("radius").value=data.radius;$("rightRadius").value=data.radius;
+ $("spacing").value=data.padding;$("rightPadding").value=data.padding;
+ updateLabels();
+}
+function hexColor(color,fallback){
+ if(!color||color==="transparent"||color==="rgba(0, 0, 0, 0)")return fallback;
+ const m=color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+ if(m)return "#"+m.slice(1,4).map(x=>(+x).toString(16).padStart(2,"0")).join("");
+ return /^#[0-9a-f]{6}$/i.test(color)?color:fallback;
+}
+function updateLabels(){
+ $("fontSizeLabel").textContent=$("fontSize").value+"px";$("radiusLabel").textContent=$("radius").value+"px";$("spacingLabel").textContent=$("spacing").value+"px";
+ $("rightSizeLabel").textContent=$("rightSize").value+"px";$("rightRadiusLabel").textContent=$("rightRadius").value+"px";$("rightPaddingLabel").textContent=$("rightPadding").value+"px";
+ $("durationLabel").textContent=$("duration").value+"ms";$("delayLabel").textContent=$("delay").value+"ms";
+}
+function messageFrame(action,data={}){
+ if(frame.contentWindow)frame.contentWindow.postMessage(Object.assign({source:"anivora-studio-parent",action},data),"*");
+}
+window.addEventListener("message",e=>{
+ const d=e.data;if(!d||d.source!=="anivora-studio")return;
+ if(d.type==="select"&&d.element)syncSelection(d.element);
+ if(d.type==="ready")$("canvasSubtitle").textContent="Live canvas · "+(d.title||"Website preview");
+});
+function applyStyles(){
+ if(!selectedId){say("Select an element inside the preview first.","error");return}
+ const styles={color:$("textColor").value,backgroundColor:$("fillColor").value,fontSize:$("fontSize").value+"px",borderRadius:$("radius").value+"px",padding:$("spacing").value+"px"};
+ const rightOnly=event&&event.currentTarget&&event.currentTarget.id==="rightApplyStyle";
+ if(rightOnly){styles.color=$("rightColor").value;styles.backgroundColor=$("rightBg").value;styles.fontSize=$("rightSize").value+"px";styles.borderRadius=$("rightRadius").value+"px";styles.padding=$("rightPadding").value+"px"}
+ styleEdits.set(selectedId,styles);messageFrame("style",{styles});
+ const doc=new DOMParser().parseFromString(html,"text/html");
+ const el=doc.querySelector('[data-av-id="'+CSS.escape(selectedId)+'"]');
+ if(el)Object.assign(el.style,styles);
+ html="<!DOCTYPE html>\n"+doc.documentElement.outerHTML;code.value=html;recordHistory(html);saveDraft();
+ say("Design changes applied to the selected element.","ok");
+}
+function applyTextValue(value){
+ if(!selectedId){say("Select an element in the preview first.","error");return}
+ textEdits.set(selectedId,value);messageFrame("text",{text:value});
+ const doc=new DOMParser().parseFromString(html,"text/html"),el=doc.querySelector('[data-av-id="'+CSS.escape(selectedId)+'"]');
+ if(el){if(el.matches("img"))el.alt=value;else el.textContent=value}
+ html="<!DOCTYPE html>\n"+doc.documentElement.outerHTML;code.value=html;recordHistory(html);saveDraft();
+ say("Content updated.","ok");
+}
+function saveProject(){
+ if(!code.value.trim()){say("Generate a website before saving.","error");return}
+ const list=readProjects(),id=currentProjectId||("p-"+Date.now()+"-"+Math.random().toString(36).slice(2));
+ const item={id,name:$("projectTitle").value.trim()||"Untitled Website",prompt:$("prompt").value,html:code.value,updatedAt:new Date().toISOString()};
+ const i=list.findIndex(x=>x.id===id);if(i>=0)list[i]=item;else list.unshift(item);
+ try{localStorage.setItem(KEY,JSON.stringify(list));currentProjectId=id;saveDraft();renderProjects();say("Project saved in this browser.","ok")}catch(_){say("Saving failed. Browser storage may be full.","error")}
+}
+function renderProjects(){
+ const list=$("projects");list.replaceChildren();const projects=readProjects();
+ if(!projects.length){const p=document.createElement("p");p.className="empty";p.textContent="No saved projects yet.";list.append(p);return}
+ projects.forEach(p=>{
+  const box=document.createElement("div");box.className="project";
+  const name=document.createElement("div");name.className="projectname";name.textContent=p.name||"Untitled Website";
+  const row=document.createElement("div");row.className="row";
+  const open=document.createElement("button");open.className="btn";open.textContent="Open";open.onclick=()=>openProject(p.id);
+  const rename=document.createElement("button");rename.className="btn";rename.textContent="Rename";rename.onclick=()=>{const n=prompt("New project name",p.name);if(n&&n.trim()){const a=readProjects(),i=a.findIndex(x=>x.id===p.id);if(i>=0){a[i].name=n.trim();localStorage.setItem(KEY,JSON.stringify(a));renderProjects()}}};
+  const del=document.createElement("button");del.className="btn";del.textContent="Delete";del.onclick=()=>{if(!confirm("Delete this saved project?"))return;localStorage.setItem(KEY,JSON.stringify(readProjects().filter(x=>x.id!==p.id)));renderProjects();say("Project deleted.","ok")};
+  row.append(open,rename,del);box.append(name,row);list.append(box);
+ });
+}
+function openProject(id){
+ const p=readProjects().find(x=>x.id===id);if(!p)return;
+ currentProjectId=id;$("projectTitle").value=p.name||"Untitled Website";$("prompt").value=p.prompt||"";
+ styleEdits.clear();textEdits.clear();appliedMotions=[];
+ try{render(p.html);say("Project opened.","ok")}catch(e){say(e.message,"error")}
+}
+function exportHtml(){
+ if(!code.value.trim()){say("There is no website HTML to export.","error");return}
+ try{
+  let output=stripStudioAttributes(code.value);
+  output=injectMotion(output);
+  const blob=new Blob([output],{type:"text/html;charset=utf-8"}),url=URL.createObjectURL(blob);
+  const a=document.createElement("a");a.href=url;
+  a.download=(($("projectTitle").value||"anivora-website").trim().replace(/[^a-z0-9_-]+/gi,"-")||"anivora-website")+".html";
+  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  say("HTML export started. Test the exported file in a browser.","ok");
+ }catch(e){say("Export failed: "+e.message,"error")}
+}
+function injectMotion(source){
+ const doc=new DOMParser().parseFromString(source,"text/html");
+ let style=doc.createElement("style");style.id="av-studio-motions";
+ style.textContent=`
+ @keyframes avFade{to{opacity:1}}@keyframes avSlideUp{to{opacity:1;transform:translateY(0)}}@keyframes avSlideLeft{to{opacity:1;transform:translateX(0)}}@keyframes avZoom{to{opacity:1;transform:scale(1)}}@keyframes avBounce{0%,100%{transform:translateY(0)}40%{transform:translateY(-14px)}70%{transform:translateY(-5px)}}@keyframes avRotate{to{transform:rotate(360deg)}}@keyframes avBlur{to{filter:blur(0);opacity:1}}@keyframes avFlip{to{opacity:1;transform:perspective(600px) rotateY(0)}}@keyframes avFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}@keyframes avGradient{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}@keyframes avPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}@keyframes avReveal{to{opacity:1;transform:translateY(0)}}.av-lift:hover{transform:translateY(-5px);box-shadow:0 12px 30px #0002}.av-tilt:hover{transform:perspective(600px) rotateX(3deg) rotateY(-3deg)}@media(prefers-reduced-motion:reduce){[data-av-motion]{animation:none!important;transition:none!important;opacity:1!important;transform:none!important;filter:none!important}}`;
+ doc.head.appendChild(style);
+ appliedMotions.forEach(m=>{
+  const selector=m.target==="selected"&&m.id?'[data-av-id="'+CSS.escape(m.id)+'"]':m.target;
+  if(!selector)return;
+  let elements=[];try{elements=Array.from(doc.querySelectorAll(selector))}catch(_){}
+  elements.forEach((el,i)=>{
+   const cls=effects[m.effect]?.[0];if(!cls)return;
+   el.classList.add(cls);el.setAttribute("data-av-motion",m.effect);
+   if(m.trigger==="hover"&&(m.effect==="fade"||m.effect==="zoom"||m.effect==="slide-up")){el.style.transition="opacity "+m.duration+"ms,transform "+m.duration+"ms";el.style.opacity="1";el.style.transform="none"}
+   else if(m.trigger==="scroll"){
+    el.style.opacity="0";el.style.animation="none";
+    const script=doc.createElement("script");script.textContent=`(function(){const el=document.querySelector('[data-av-motion="${m.effect}"]');if(!el)return;const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.style.animation="${cls} ${m.duration}ms ease ${m.delay}ms ${m.repeat} both";io.unobserve(e.target)}}));io.observe(el)})();`;
+    doc.body.appendChild(script);
+   }else if(m.trigger==="click"){
+    el.style.cursor="pointer";el.addEventListener?.("click",()=>{});
+    el.style.animation=cls+" "+m.duration+"ms ease "+m.delay+"ms "+m.repeat;
+   }else if(m.trigger==="continuous"||m.effect==="float"||m.effect==="pulse"||m.effect==="gradient"){
+    el.style.animation=cls+" "+m.duration+"ms ease "+m.delay+"ms "+(m.trigger==="continuous"?"infinite":m.repeat)+" both";
+   }else{
+    if(m.effect==="lift"||m.effect==="tilt")continue;
+    el.style.animation=cls+" "+m.duration+"ms ease "+m.delay+"ms "+m.repeat+" both";
+   }
+   if(m.effect==="stagger")el.style.animationDelay=(m.delay+i*100)+"ms";
+  });
+ });
+ return "<!DOCTYPE html>\n"+doc.documentElement.outerHTML;
+}
+function applyMotion(){
+ const target=$("motionTarget").value;
+ if(target==="selected"&&!selectedId){say("Select an element in the preview first.","error");return}
+ const effect=activeEffect,trigger=$("trigger").value,duration=+$("duration").value,delay=+$("delay").value,repeat=$("repeat").value;
+ const m={effect,trigger,duration,delay,repeat,target,id:target==="selected"?selectedId:null};
+ appliedMotions=appliedMotions.filter(x=>!(x.target===m.target&&x.id===m.id&&x.effect===m.effect));appliedMotions.push(m);
+ const cls=effects[effect]?.[0];
+ const selector=target==="selected"?'[data-av-id="'+CSS.escape(selectedId)+'"]':target;
+ if(!cls){say("Choose a supported animation.","error");return}
+ let styleText=`
+ @keyframes avFade{from{opacity:0}to{opacity:1}}
+ @keyframes avSlideUp{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:translateY(0)}}
+ @keyframes avSlideLeft{from{opacity:0;transform:translateX(25px)}to{opacity:1;transform:translateX(0)}}
+ @keyframes avZoom{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+ @keyframes avBounce{0%,100%{transform:translateY(0)}40%{transform:translateY(-14px)}70%{transform:translateY(-5px)}}
+ @keyframes avRotate{to{transform:rotate(360deg)}}
+ @keyframes avBlur{from{filter:blur(10px);opacity:0}to{filter:blur(0);opacity:1}}
+ @keyframes avFlip{from{opacity:0;transform:perspective(600px) rotateY(-70deg)}to{opacity:1;transform:perspective(600px) rotateY(0)}}
+ @keyframes avFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+ @keyframes avGradient{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+ @keyframes avPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+ @keyframes avReveal{to{opacity:1;transform:translateY(0)}}
+ .av-lift:hover{transform:translateY(-5px);box-shadow:0 12px 30px #0002;transition:all .25s}
+ .av-tilt:hover{transform:perspective(600px) rotateX(3deg) rotateY(-3deg);transition:transform .25s}
+ @media(prefers-reduced-motion:reduce){[data-av-motion]{animation:none!important;transition:none!important;opacity:1!important;transform:none!important;filter:none!important}}`;
+ let style=frame.contentDocument.getElementById("av-runtime-motion");
+ if(!style){style=frame.contentDocument.createElement("style");style.id="av-runtime-motion";frame.contentDocument.head.appendChild(style)}
+ style.textContent=styleText;
+ let els=[];try{els=Array.from(frame.contentDocument.querySelectorAll(selector))}catch(_){}
+ if(!els.length){say("No matching elements were found for that target.","error");return}
+ els.forEach((el,i)=>{
+  el.classList.remove(...Object.values(effects).map(x=>x[0]));
+  el.setAttribute("data-av-motion",effect);el.classList.add(cls);
+  el.style.animation="none";el.style.transition="";el.style.opacity="";el.style.transform="";el.style.filter="";
+  if(trigger==="hover"){
+   if(effect==="lift"||effect==="tilt"){el.style.transition="transform .25s,box-shadow .25s"}
+   else{el.style.transition="opacity "+duration+"ms,transform "+duration+"ms";el.style.opacity="1";el.style.transform="none"}
+  }else if(trigger==="scroll"||effect==="reveal"){
+   el.style.opacity="0";el.style.transform="translateY(24px)";
+   const obs=new IntersectionObserver(entries=>entries.forEach(en=>{if(en.isIntersecting){en.target.style.animation=cls+" "+duration+"ms ease "+(delay+i*100)+"ms "+repeat+" both";obs.unobserve(en.target)}}));
+   obs.observe(el);
+  }else if(trigger==="click"){
+   el.style.cursor="pointer";el.onclick=()=>{el.style.animation="none";void el.offsetWidth;el.style.animation=cls+" "+duration+"ms ease "+delay+"ms "+repeat+" both"};
+  }else{
+   if(effect==="lift"||effect==="tilt"){el.style.transition="transform .25s,box-shadow .25s";return}
+   if(effect==="gradient")el.style.backgroundImage=el.style.backgroundImage||"linear-gradient(120deg,#7559ef,#c17cff,#65c9f5)";
+   el.style.animation=cls+" "+duration+"ms ease "+delay+"ms "+(trigger==="continuous"?"infinite":repeat)+" both";
+  }
+ });
+ $("motionStatus").textContent=effect+" · "+trigger+" · "+duration+"ms · "+repeat;
+ $("selectionStatus").textContent="Motion applied: "+effect;
+ say("Applied "+effect+" to "+els.length+" element(s). Export HTML to keep the effect.","ok");
+}
+function switchPanel(name){
+ document.querySelectorAll(".toolpanel").forEach(p=>p.classList.toggle("hidden",p.id!=="panel-"+name));
+ document.querySelectorAll(".railbtn").forEach(b=>b.classList.toggle("active",b.dataset.panel===name));
+ if(name==="projects")renderProjects();
+ if(name==="code"){$("editorSection").scrollIntoView({behavior:"smooth",block:"nearest"})}
+}
+function freshProject(){
+ if(code.value.trim()&&!confirm("Start a new project? Save your current work first if you need it."))return;
+ currentProjectId=null;html="";selectedId=null;styleEdits.clear();textEdits.clear();appliedMotions=[];undoStack=[];undoIndex=-1;
+ $("projectTitle").value="Untitled Website";$("prompt").value="";code.value="";
+ frame.srcdoc="<!doctype html><html><body style='font:16px system-ui;color:#62657a;display:grid;place-items:center;min-height:90vh'><div style='text-align:center;padding:25px'><div style='font-size:42px'>✦</div><h2>Your website canvas</h2><p>Describe your idea in AniVora Builder to begin.</p></div></body></html>";
+ $("canvasTitle").textContent="Untitled Website";$("canvasSubtitle").textContent="Ready for a new website";$("selectionStatus").textContent="Nothing selected";
+ setHistoryButtons();saveDraft();say("New project ready.");
+}
+async function generate(){
+ if(busy)return;
+ const promptText=$("prompt").value.trim();if(!promptText){say("Describe the website you want to build first.","error");$("prompt").focus();return}
+ busy=true;$("generate").disabled=true;$("generate").textContent="Generating…";say("Connecting to AniVora API. This may take a while.");
+ try{
+  const response=await fetch("/api/generate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:promptText})});
+  const raw=await response.text();let data;
+  try{data=JSON.parse(raw)}catch(_){throw Error("The API returned a non-JSON response. Check the Builder deployment logs.")}
+  if(!response.ok||data.success===false)throw Error(data.error||"Generation failed (HTTP "+response.status+").");
+  const result=data.website?.html||data.html||data.output||data.result||data.text;
+  if(typeof result!=="string"||!result.trim())throw Error("The API did not return website HTML.");
+  html=ensureDocument(result);appliedMotions=[];styleEdits.clear();textEdits.clear();render(html);
+  if(data.website?.name&&$("projectTitle").value==="Untitled Website")$("projectTitle").value=data.website.name;
+  $("canvasTitle").textContent=$("projectTitle").value;say("Website generated and rendered in the canvas. Review it and save your project.","ok");
+ }catch(e){say(e.message||"Could not reach AniVora API.","error")}
+ finally{busy=false;$("generate").disabled=false;$("generate").textContent="✦ Generate Website"}
+}
+document.querySelectorAll(".railbtn").forEach(b=>b.addEventListener("click",()=>switchPanel(b.dataset.panel)));
+document.querySelectorAll("[data-prompt]").forEach(b=>b.addEventListener("click",()=>{$("prompt").value=b.dataset.prompt;$("prompt").focus()}));
+document.querySelectorAll("[data-effect]").forEach(b=>b.addEventListener("click",()=>{
+ activeEffect=b.dataset.effect;document.querySelectorAll("[data-effect]").forEach(x=>x.classList.toggle("active",x===b));say("Selected motion effect: "+activeEffect+". Configure it, then apply.");
+}));
+document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{
+ document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x===b));
+ ["properties","motioninfo","pageinfo"].forEach(n=>$("right-"+n).classList.toggle("hidden",n!==b.dataset.tab));
+}));
+$("generate").addEventListener("click",generate);
+$("saveProject").addEventListener("click",saveProject);$("saveProject2").addEventListener("click",saveProject);
+$("newProject").addEventListener("click",freshProject);
+$("export").addEventListener("click",exportHtml);
+$("desktop").addEventListener("click",()=>{mobileMode=false;frameBox.style.width="100%";$("desktop").classList.add("active");$("mobile").classList.remove("active")});
+$("mobile").addEventListener("click",()=>{mobileMode=true;frameBox.style.width="390px";$("mobile").classList.add("active");$("desktop").classList.remove("active")});
+$("refresh").addEventListener("click",()=>{if(html)render(html,false);else say("Generate a website first.")});
+$("undo").addEventListener("click",()=>{if(undoIndex<=0)return;undoIndex--;html=undoStack[undoIndex];render(html,false);setHistoryButtons()});
+$("redo").addEventListener("click",()=>{if(undoIndex>=undoStack.length-1)return;undoIndex++;html=undoStack[undoIndex];render(html,false);setHistoryButtons()});
+$("applyCode").addEventListener("click",()=>{try{styleEdits.clear();textEdits.clear();render(code.value);say("Code applied to the visual canvas.","ok")}catch(e){say(e.message,"error")}});
+$("copyCode").addEventListener("click",async()=>{try{await navigator.clipboard.writeText(code.value);say("Code copied.","ok")}catch(_){code.focus();code.select();say("Code selected. Use your device's Copy command.")}});
+$("toggleEditor").addEventListener("click",()=>{const hidden=code.classList.toggle("hidden");$("toggleEditor").textContent=hidden?"Show editor":"Hide editor"});
+$("focusCode").addEventListener("click",()=>{$("editorSection").scrollIntoView({behavior:"smooth"});code.focus()});
+$("applyStyle").addEventListener("click",applyStyles);
+$("rightApplyStyle").addEventListener("click",applyStyles);
+$("applyText").addEventListener("click",()=>applyTextValue($("textValue").value));
+$("rightApplyText").addEventListener("click",()=>applyTextValue($("rightText").value));
+$("fontSize").addEventListener("input",updateLabels);$("radius").addEventListener("input",updateLabels);$("spacing").addEventListener("input",updateLabels);
+$("rightSize").addEventListener("input",updateLabels);$("rightRadius").addEventListener("input",updateLabels);$("rightPadding").addEventListener("input",updateLabels);
+$("duration").addEventListener("input",updateLabels);$("delay").addEventListener("input",updateLabels);
+$("applyMotion").addEventListener("click",applyMotion);
+$("clearMotion").addEventListener("click",()=>{
+ appliedMotions=[];const doc=frame.contentDocument;if(doc){doc.querySelectorAll("[data-av-motion]").forEach(el=>{el.removeAttribute("data-av-motion");el.classList.remove(...Object.values(effects).map(x=>x[0]));el.style.animation="";el.style.transition="";el.style.opacity="";el.style.transform="";el.style.filter=""});const s=doc.getElementById("av-runtime-motion");if(s)s.remove()}
+ $("motionStatus").textContent="Motion effects cleared.";say("Studio motion effects cleared. Exported code will no longer include them.");
+});
+$("selectType").addEventListener("click",()=>{const type=$("sectionTarget").value;if(type)messageFrame("selectType",{selector:type})});
+$("openMotion").addEventListener("click",()=>switchPanel("motion"));
+$("applyPage").addEventListener("click",()=>{const title=$("pageTitle").value.trim();if(title)messageFrame("page",{title});messageFrame("pageStyle",{background:$("pageBg").value});say("Page settings applied to preview.","ok")});
+$("projectTitle").addEventListener("input",()=>{$("canvasTitle").textContent=$("projectTitle").value||"Untitled Website";saveDraft()});
+$("prompt").addEventListener("input",saveDraft);code.addEventListener("input",saveDraft);
+window.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="s"){e.preventDefault();saveProject()}});
+updateLabels();renderProjects();
+try{
+ const d=JSON.parse(localStorage.getItem(DRAFT)||"null");
+ if(d&&typeof d==="object"){
+  $("projectTitle").value=d.name||"Untitled Website";$("prompt").value=d.prompt||"";currentProjectId=d.projectId||null;
+  if(typeof d.html==="string"&&d.html.trim()){render(d.html);say("Previous draft restored.","ok")}
+ }
+}catch(_){}
+if(!html)freshProject();
+})();
+</script>
+</body>
+</html>
