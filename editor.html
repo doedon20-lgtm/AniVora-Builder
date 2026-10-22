@@ -1,0 +1,289 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090b10">
+<title>AniVora Builder — AI Website Generator</title>
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #090b10;
+  --panel: #10131a;
+  --line: #292d38;
+  --muted: #a0a6b7;
+  --purple: #7c5cff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: #fff;
+  font: 15px/1.5 system-ui, Arial, sans-serif;
+}
+button, textarea { font: inherit; }
+button { cursor: pointer; }
+.topbar {
+  min-height: 64px;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+}
+.logo { font-size: 20px; font-weight: 850; }
+.logo span { color: var(--purple); }
+.actions { display: flex; flex-wrap: wrap; gap: 7px; }
+.small-btn, .example {
+  padding: 9px 12px;
+  border: 1px solid #363b49;
+  border-radius: 9px;
+  background: #191c25;
+  color: #fff;
+}
+.small-btn.active { background: var(--purple); }
+.builder {
+  min-height: calc(100vh - 64px);
+  display: grid;
+  grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+}
+.sidebar {
+  padding: 22px;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+}
+h1 { margin: 0 0 8px; font-size: 25px; }
+.description { color: var(--muted); font-size: 14px; }
+textarea {
+  width: 100%;
+  min-height: 175px;
+  margin-top: 12px;
+  padding: 13px;
+  resize: vertical;
+  border: 1px solid #363b49;
+  border-radius: 11px;
+  outline: none;
+  background: #181b24;
+  color: white;
+}
+textarea:focus { border-color: var(--purple); }
+.generate {
+  width: 100%;
+  margin-top: 10px;
+  padding: 13px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--purple);
+  color: white;
+  font-weight: 800;
+}
+.generate:disabled { opacity: .65; cursor: wait; }
+h3 { margin-top: 24px; font-size: 15px; }
+.example { display: block; width: 100%; margin: 8px 0; text-align: left; }
+.workspace { display: flex; flex-direction: column; min-width: 0; }
+.workspace-top {
+  min-height: 50px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-bottom: 1px solid var(--line);
+}
+.status { color: var(--muted); font-size: 12px; }
+.preview-area {
+  flex: 1;
+  min-height: 600px;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  background: #080a0f;
+}
+#preview {
+  width: 100%;
+  max-width: 1100px;
+  min-height: 650px;
+  border: 0;
+  border-radius: 10px;
+  background: white;
+}
+@media (max-width: 800px) {
+  .builder { grid-template-columns: 1fr; }
+  .sidebar { border-right: 0; border-bottom: 1px solid var(--line); }
+  .preview-area { min-height: 500px; padding: 8px; }
+  #preview { min-height: 550px; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="logo">Ani<span>Vora</span> Builder</div>
+  <div class="actions">
+    <button class="small-btn active" id="desktopBtn" type="button">Desktop</button>
+    <button class="small-btn" id="mobileBtn" type="button">Mobile</button>
+    <button class="small-btn" id="exportBtn" type="button">↓ Export HTML</button>
+  </div>
+</header>
+
+<main class="builder">
+  <aside class="sidebar">
+    <h1>Build your website</h1>
+    <p class="description">
+      Describe your idea. AniVora's AI will create a website,
+      show a live preview, and let you export the HTML.
+    </p>
+
+    <label for="prompt">Website description</label>
+    <textarea id="prompt"
+      maxlength="3000"
+      placeholder="Example: Create a premium restaurant website with a menu, food gallery, opening hours, contact details, and a dark elegant design."></textarea>
+
+    <button class="generate" id="generateBtn" type="button">
+      ✨ Generate Website
+    </button>
+
+    <h3>Try an example</h3>
+    <button class="example" type="button"
+      data-prompt="Create a modern restaurant website with menu items, prices, food gallery, opening hours and contact information.">
+      🍽 Restaurant
+    </button>
+    <button class="example" type="button"
+      data-prompt="Create a professional developer portfolio with an introduction, skills, projects and contact section.">
+      💻 Developer portfolio
+    </button>
+    <button class="example" type="button"
+      data-prompt="Create a premium fashion brand website with a product collection, editorial hero section and newsletter form.">
+      👕 Fashion brand
+    </button>
+    <button class="example" type="button"
+      data-prompt="Create a modern fitness website with workout programs, trainer profiles, membership plans and contact details.">
+      🏋️ Fitness
+    </button>
+  </aside>
+
+  <section class="workspace">
+    <div class="workspace-top">
+      <strong>Live website preview</strong>
+      <span class="status" id="status" role="status" aria-live="polite">
+        Ready — describe your website.
+      </span>
+    </div>
+    <div class="preview-area">
+      <iframe id="preview" title="Generated website preview"
+        sandbox="allow-scripts"
+        referrerpolicy="no-referrer"></iframe>
+    </div>
+  </section>
+</main>
+
+<script>
+"use strict";
+
+const promptBox = document.getElementById("prompt");
+const generateButton = document.getElementById("generateBtn");
+const preview = document.getElementById("preview");
+const statusText = document.getElementById("status");
+const desktopButton = document.getElementById("desktopBtn");
+const mobileButton = document.getElementById("mobileBtn");
+const exportButton = document.getElementById("exportBtn");
+
+let generatedHTML = "";
+
+async function generateWebsite() {
+  const prompt = promptBox.value.trim();
+
+  if (!prompt) {
+    statusText.textContent = "Enter a website description first.";
+    promptBox.focus();
+    return;
+  }
+
+  if (prompt.length > 3000) {
+    statusText.textContent = "Please shorten your description.";
+    return;
+  }
+
+  generateButton.disabled = true;
+  generateButton.textContent = "Generating...";
+  statusText.textContent = "Connecting to AniVora AI. Please wait.";
+
+  try {
+    const response = await fetch("/api/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt })
+    });
+
+    const data = await response.json().catch(() => null);
+
+    if (!response.ok || !data?.success || !data?.website?.html) {
+      throw new Error(
+        data?.error || "Website generation failed. Please try again."
+      );
+    }
+
+    generatedHTML = data.website.html;
+    preview.srcdoc = generatedHTML;
+    statusText.textContent = "Website generated successfully.";
+  } catch (error) {
+    statusText.textContent = error?.message ||
+      "Could not connect. Check your internet and try again.";
+  } finally {
+    generateButton.disabled = false;
+    generateButton.textContent = "✨ Generate Website";
+  }
+}
+
+generateButton.addEventListener("click", generateWebsite);
+
+promptBox.addEventListener("keydown", event => {
+  if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+    generateWebsite();
+  }
+});
+
+document.querySelectorAll(".example").forEach(button => {
+  button.addEventListener("click", () => {
+    promptBox.value = button.dataset.prompt || "";
+    promptBox.focus();
+    statusText.textContent = "Example loaded. Tap Generate Website.";
+  });
+});
+
+desktopButton.addEventListener("click", () => {
+  preview.style.width = "100%";
+  desktopButton.classList.add("active");
+  mobileButton.classList.remove("active");
+});
+
+mobileButton.addEventListener("click", () => {
+  preview.style.width = "390px";
+  mobileButton.classList.add("active");
+  desktopButton.classList.remove("active");
+});
+
+exportButton.addEventListener("click", () => {
+  if (!generatedHTML) {
+    statusText.textContent = "Generate a website before exporting.";
+    return;
+  }
+
+  const blob = new Blob([generatedHTML], { type: "text/html;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "anivora-website.html";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  statusText.textContent = "HTML file exported.";
+});
+</script>
+</body>
+</html>
