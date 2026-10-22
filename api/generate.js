@@ -72,7 +72,7 @@ export default async function handler(req, res) {
         },
         body: JSON.stringify({
           prompt: instructions,
-          max_new_tokens: 1800,
+          max_new_tokens:256,
           temperature: 0.6
         }),
         signal: AbortSignal.timeout(300000)
