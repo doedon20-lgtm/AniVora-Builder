@@ -1,0 +1,953 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10111b">
+  <meta name="description" content="AniVora Builder — create, preview, edit and export websites with AI.">
+  <title>AniVora Builder — AI Website Creator</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #10111b;
+      --panel: #191b29;
+      --panel2: #202337;
+      --border: #303348;
+      --text: #f4f4ff;
+      --muted: #a4a8c0;
+      --accent: #9b87ff;
+      --accent2: #6f5bff;
+      --green: #5fe0b1;
+      --danger: #ff858e;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 15px/1.5 system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+
+    button, input, textarea, select { font: inherit; }
+    button { cursor: pointer; }
+
+    button:focus-visible, input:focus-visible,
+    textarea:focus-visible, select:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .topbar {
+      min-height: 68px;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid var(--border);
+      background: #141521;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -.5px;
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #b6a6ff, #6d50ff);
+      color: white;
+      font-size: 22px;
+    }
+
+    .brand small {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    .status {
+      color: var(--green);
+      font-size: 12px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(290px, 370px) minmax(0, 1fr);
+      min-height: calc(100vh - 68px);
+    }
+
+    .sidebar {
+      padding: 22px;
+      border-right: 1px solid var(--border);
+      background: #151623;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 26px;
+      line-height: 1.2;
+      letter-spacing: -1px;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 15px;
+    }
+
+    p { color: var(--muted); }
+
+    .intro {
+      margin: 0 0 23px;
+      font-size: 13px;
+    }
+
+    label {
+      display: block;
+      margin: 16px 0 7px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      color: var(--text);
+      background: #10111c;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    textarea {
+      min-height: 145px;
+      resize: vertical;
+    }
+
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 7px;
+      min-height: 40px;
+      padding: 9px 13px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--panel2);
+      color: var(--text);
+      font-weight: 650;
+      font-size: 13px;
+    }
+
+    .button:hover { filter: brightness(1.14); }
+    .button:disabled { cursor: wait; opacity: .6; }
+
+    .primary {
+      width: 100%;
+      min-height: 46px;
+      margin-top: 13px;
+      border: 0;
+      color: white;
+      background: linear-gradient(120deg, var(--accent2), #a16cff);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .examples {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 12px;
+    }
+
+    .example {
+      padding: 6px 9px;
+      color: #d6d0ff;
+      background: #25223e;
+      border: 1px solid #3c3561;
+      border-radius: 30px;
+      font-size: 11px;
+    }
+
+    .message {
+      display: none;
+      margin-top: 13px;
+      padding: 11px;
+      border-radius: 9px;
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .message.show { display: block; }
+    .message.error { color: #ffc2c6; background: #3a202b; }
+    .message.info { color: #d8d2ff; background: #292544; }
+    .message.success { color: #b6f6dc; background: #17372e; }
+
+    .divider {
+      height: 1px;
+      margin: 25px 0;
+      background: var(--border);
+    }
+
+    .saved-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .saved-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 10px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+    }
+
+    .saved-name {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      font-size: 12px;
+    }
+
+    .saved-actions { display: flex; gap: 5px; }
+    .saved-actions .button { padding: 5px 7px; min-height: 30px; }
+
+    .workspace {
+      min-width: 0;
+      padding: 18px;
+    }
+
+    .workspace-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .workspace-header h2 { margin: 0; }
+    .workspace-header p { margin: 3px 0 0; font-size: 12px; }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      align-items: center;
+    }
+
+    .toolbar .button { min-height: 36px; padding: 7px 10px; }
+
+    .preview-shell {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      background: white;
+    }
+
+    .preview-top {
+      min-height: 42px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: #dedfee;
+      background: #202131;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #777b91;
+    }
+
+    .preview-url {
+      margin-left: 6px;
+      color: #b5b7ca;
+    }
+
+    .preview-stage {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      min-height: 420px;
+      height: min(68vh, 760px);
+      background: #e9eaf0;
+      overflow: auto;
+    }
+
+    #preview {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      height: 100%;
+      border: 0;
+      background: white;
+    }
+
+    #preview.mobile {
+      width: 390px;
+      max-width: 100%;
+      flex: 0 0 390px;
+      border-left: 1px solid #ccc;
+      border-right: 1px solid #ccc;
+    }
+
+    .empty-state {
+      margin: auto;
+      max-width: 380px;
+      padding: 30px;
+      color: #31334b;
+      text-align: center;
+    }
+
+    .empty-icon { font-size: 42px; }
+    .empty-state h3 { margin-bottom: 6px; }
+    .empty-state p { color: #62657c; font-size: 13px; }
+
+    .editor-section { margin-top: 20px; }
+
+    .editor-section summary {
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    #codeEditor {
+      min-height: 240px;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      tab-size: 2;
+      white-space: pre;
+      overflow: auto;
+    }
+
+    .editor-actions { margin-top: 10px; }
+
+    .footer-note {
+      margin-top: 18px;
+      font-size: 11px;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar {
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .workspace { padding: 14px; }
+      .preview-stage { height: 60vh; min-height: 350px; }
+    }
+
+    @media (max-width: 480px) {
+      .topbar { padding: 12px; }
+      .sidebar { padding: 16px; }
+      .workspace { padding: 10px; }
+      h1 { font-size: 23px; }
+      .preview-stage { min-height: 330px; }
+      .toolbar { width: 100%; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">A</div>
+      <div>
+        AniVora Builder
+        <small>Describe · Generate · Edit · Preview · Export</small>
+      </div>
+    </div>
+    <div class="status">● Creator workspace</div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <h1>Build your website.</h1>
+      <p class="intro">
+        Describe your idea. Generate a website, preview it, edit its code,
+        and save or export your work.
+      </p>
+
+      <label for="projectName">Project name</label>
+      <input id="projectName" maxlength="80" value="My Website"
+        placeholder="Enter a project name">
+
+      <label for="prompt">Describe your website</label>
+      <textarea id="prompt" maxlength="3000"
+        placeholder="Example: Create a modern restaurant website with a hero section, menu cards, About section, contact details and smooth animations."></textarea>
+
+      <button class="button primary" id="generateBtn" type="button">
+        ✨ Generate Website
+      </button>
+
+      <div class="examples" aria-label="Example prompts">
+        <button class="example" data-prompt="Create a modern restaurant website with a hero, menu cards, About section and Contact section.">Restaurant</button>
+        <button class="example" data-prompt="Create a professional portfolio website for a designer, with projects, skills, biography and contact details.">Portfolio</button>
+        <button class="example" data-prompt="Create a stylish online fashion store with product cards, category filters and a shopping bag demo. Clearly label checkout as a demo.">Fashion store</button>
+        <button class="example" data-prompt="Create a modern SaaS landing page with a hero, features, pricing cards, FAQ and a sign-up call to action.">SaaS landing page</button>
+      </div>
+
+      <div id="message" class="message" role="status" aria-live="polite"></div>
+
+      <div class="divider"></div>
+
+      <h2>Save your project</h2>
+      <div class="button-row">
+        <button class="button" id="saveBtn" type="button">Save project</button>
+        <button class="button" id="newBtn" type="button">New project</button>
+      </div>
+      <div id="savedList" class="saved-list"></div>
+
+      <p class="footer-note">
+        Saved projects are stored in this browser on this device.
+        They are not cloud-synced.
+      </p>
+    </aside>
+
+    <section class="workspace" aria-label="Website workspace">
+      <div class="workspace-header">
+        <div>
+          <h2>Live website preview</h2>
+          <p id="previewStatus">Your generated website will appear here.</p>
+        </div>
+
+        <div class="toolbar">
+          <button class="button" id="desktopBtn" type="button" aria-pressed="true">Desktop</button>
+          <button class="button" id="mobileBtn" type="button" aria-pressed="false">Mobile</button>
+          <button class="button" id="undoBtn" type="button" disabled>Undo</button>
+          <button class="button" id="redoBtn" type="button" disabled>Redo</button>
+          <button class="button" id="exportBtn" type="button">Export HTML</button>
+        </div>
+      </div>
+
+      <div class="preview-shell">
+        <div class="preview-top">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="preview-url">your-website.anivora</span>
+        </div>
+
+        <div class="preview-stage">
+          <iframe
+            id="preview"
+            title="Generated website preview"
+            sandbox="allow-scripts allow-forms allow-modals"
+            referrerpolicy="no-referrer"
+          ></iframe>
+
+          <div id="emptyState" class="empty-state" hidden>
+            <div class="empty-icon">✦</div>
+            <h3>Your next website starts here</h3>
+            <p>Enter a description on the left and select Generate Website.
+              Your website will appear in this preview.</p>
+          </div>
+        </div>
+      </div>
+
+      <details class="editor-section" open>
+        <summary>HTML code editor</summary>
+        <textarea id="codeEditor" spellcheck="false"
+          aria-label="Website HTML source code"
+          placeholder="Generated website HTML will appear here."></textarea>
+        <div class="button-row editor-actions">
+          <button class="button" id="applyBtn" type="button">Apply code to preview</button>
+          <button class="button" id="copyBtn" type="button">Copy code</button>
+          <button class="button" id="clearBtn" type="button">Clear editor</button>
+        </div>
+      </details>
+
+      <p class="footer-note">
+        Preview code runs in a sandbox. External services, databases,
+        authentication and payments require their own integrations.
+      </p>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const $ = (id) => document.getElementById(id);
+
+      const promptInput = $("prompt");
+      const projectNameInput = $("projectName");
+      const generateBtn = $("generateBtn");
+      const editor = $("codeEditor");
+      const preview = $("preview");
+      const emptyState = $("emptyState");
+      const message = $("message");
+      const previewStatus = $("previewStatus");
+
+      const STORAGE_KEY = "anivora_builder_projects_v1";
+      const DRAFT_KEY = "anivora_builder_draft_v1";
+
+      let currentHtml = "";
+      let currentProjectId = null;
+      let history = [];
+      let historyIndex = -1;
+      let busy = false;
+      let mobileMode = false;
+
+      function showMessage(text, type = "info") {
+        message.textContent = text;
+        message.className = "message show " + type;
+      }
+
+      function clearMessage() {
+        message.textContent = "";
+        message.className = "message";
+      }
+
+      function setBusy(value) {
+        busy = value;
+        generateBtn.disabled = value;
+        generateBtn.textContent = value ? "⏳ Generating…" : "✨ Generate Website";
+      }
+
+      function updateHistoryButtons() {
+        $("undoBtn").disabled = historyIndex <= 0;
+        $("redoBtn").disabled = historyIndex < 0 || historyIndex >= history.length - 1;
+      }
+
+      function addHistory(html) {
+        if (historyIndex >= 0 && history[historyIndex] === html) return;
+
+        history = history.slice(0, historyIndex + 1);
+        history.push(html);
+
+        if (history.length > 30) history.shift();
+
+        historyIndex = history.length - 1;
+        updateHistoryButtons();
+      }
+
+      function renderPreview(html) {
+        currentHtml = html;
+        preview.srcdoc = html;
+        emptyState.hidden = true;
+        preview.hidden = false;
+        preview.classList.toggle("mobile", mobileMode);
+        previewStatus.textContent = "Preview updated. This is a local browser preview.";
+      }
+
+      function setWebsite(html, recordHistory = true) {
+        if (typeof html !== "string" || !html.trim()) {
+          throw new Error("There is no website HTML to display.");
+        }
+
+        html = html.trim();
+
+        if (!/<(?:!doctype\s+html|html|body|main|section)\b/i.test(html)) {
+          throw new Error("The response does not contain recognizable HTML. Try generating again.");
+        }
+
+        if (!/<html\b/i.test(html)) {
+          html = "<!DOCTYPE html><html lang=\"en\"><head>" +
+            "<meta charset=\"UTF-8\">" +
+            "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">" +
+            "<title>AniVora Website</title></head><body>" +
+            html + "</body></html>";
+        }
+
+        editor.value = html;
+        renderPreview(html);
+
+        if (recordHistory) addHistory(html);
+
+        saveDraft();
+      }
+
+      function readProjects() {
+        try {
+          const projects = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+          return Array.isArray(projects) ? projects : [];
+        } catch (_) {
+          return [];
+        }
+      }
+
+      function writeProjects(projects) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+      }
+
+      function saveDraft() {
+        try {
+          localStorage.setItem(DRAFT_KEY, JSON.stringify({
+            name: projectNameInput.value,
+            prompt: promptInput.value,
+            html: editor.value,
+            projectId: currentProjectId
+          }));
+        } catch (_) {
+          // Draft recovery is best effort when storage is full or disabled.
+        }
+      }
+
+      function renderSavedProjects() {
+        const list = $("savedList");
+        list.replaceChildren();
+
+        const projects = readProjects();
+
+        if (!projects.length) {
+          const empty = document.createElement("p");
+          empty.textContent = "No saved projects yet.";
+          empty.style.fontSize = "12px";
+          list.appendChild(empty);
+          return;
+        }
+
+        projects.forEach((project) => {
+          const item = document.createElement("div");
+          item.className = "saved-item";
+
+          const name = document.createElement("span");
+          name.className = "saved-name";
+          name.textContent = project.name || "Untitled website";
+
+          const actions = document.createElement("div");
+          actions.className = "saved-actions";
+
+          const open = document.createElement("button");
+          open.className = "button";
+          open.textContent = "Open";
+          open.type = "button";
+          open.addEventListener("click", () => openProject(project.id));
+
+          const remove = document.createElement("button");
+          remove.className = "button";
+          remove.textContent = "Delete";
+          remove.type = "button";
+          remove.setAttribute("aria-label", "Delete " + name.textContent);
+          remove.addEventListener("click", () => deleteProject(project.id));
+
+          actions.append(open, remove);
+          item.append(name, actions);
+          list.appendChild(item);
+        });
+      }
+
+      function saveProject() {
+        const html = editor.value.trim();
+
+        if (!html) {
+          showMessage("Generate or enter a website before saving.", "error");
+          return;
+        }
+
+        const projects = readProjects();
+        const now = new Date().toISOString();
+
+        const project = {
+          id: currentProjectId || (
+            typeof crypto !== "undefined" && crypto.randomUUID
+              ? crypto.randomUUID()
+              : String(Date.now()) + Math.random().toString(36).slice(2)
+          ),
+          name: projectNameInput.value.trim() || "Untitled website",
+          prompt: promptInput.value,
+          html,
+          updatedAt: now
+        };
+
+        const index = projects.findIndex((p) => p.id === project.id);
+
+        if (index >= 0) projects[index] = project;
+        else projects.unshift(project);
+
+        try {
+          writeProjects(projects);
+          currentProjectId = project.id;
+          saveDraft();
+          renderSavedProjects();
+          showMessage("Project saved in this browser.", "success");
+        } catch (_) {
+          showMessage("Could not save. Browser storage may be full or disabled.", "error");
+        }
+      }
+
+      function openProject(id) {
+        const project = readProjects().find((p) => p.id === id);
+        if (!project) {
+          showMessage("That saved project could not be found.", "error");
+          return;
+        }
+
+        currentProjectId = project.id;
+        projectNameInput.value = project.name || "My Website";
+        promptInput.value = project.prompt || "";
+
+        try {
+          setWebsite(project.html, true);
+          showMessage("Project opened.", "success");
+        } catch (error) {
+          showMessage(error.message, "error");
+        }
+      }
+
+      function deleteProject(id) {
+        const projects = readProjects().filter((p) => p.id !== id);
+
+        try {
+          writeProjects(projects);
+          if (currentProjectId === id) currentProjectId = null;
+          renderSavedProjects();
+          saveDraft();
+          showMessage("Saved project deleted.", "success");
+        } catch (_) {
+          showMessage("Could not update saved projects.", "error");
+        }
+      }
+
+      async function generateWebsite() {
+        if (busy) return;
+
+        const prompt = promptInput.value.trim();
+
+        if (!prompt) {
+          showMessage("Describe the website you want to build first.", "error");
+          promptInput.focus();
+          return;
+        }
+
+        if (prompt.length > 3000) {
+          showMessage("Keep your description under 3000 characters.", "error");
+          return;
+        }
+
+        clearMessage();
+        setBusy(true);
+        previewStatus.textContent = "Waiting for AniVora AI…";
+
+        try {
+          const response = await fetch("/api/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ prompt })
+          });
+
+          const raw = await response.text();
+          let data;
+
+          try {
+            data = JSON.parse(raw);
+          } catch (_) {
+            throw new Error(
+              "The Builder API returned a non-JSON response. Check the /api/generate endpoint."
+            );
+          }
+
+          if (!response.ok || data.success === false) {
+            throw new Error(data.error || "Website generation failed (HTTP " + response.status + ").");
+          }
+
+          const html = data.website && data.website.html
+            ? data.website.html
+            : data.html || data.output || data.result;
+
+          if (typeof html !== "string" || !html.trim()) {
+            throw new Error("The API responded but did not include website HTML.");
+          }
+
+          setWebsite(html, true);
+
+          if (data.website && data.website.name && projectNameInput.value === "My Website") {
+            projectNameInput.value = data.website.name;
+          }
+
+          currentProjectId = null;
+          saveDraft();
+          showMessage("Website generated. Review it in the preview, then save or export it.", "success");
+        } catch (error) {
+          previewStatus.textContent = "Generation did not complete.";
+          showMessage(error.message || "Could not reach the AniVora Builder API.", "error");
+        } finally {
+          setBusy(false);
+        }
+      }
+
+      function exportHtml() {
+        const html = editor.value.trim();
+
+        if (!html) {
+          showMessage("There is no HTML to export yet.", "error");
+          return;
+        }
+
+        const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+
+        const safeName = (projectNameInput.value || "anivora-website")
+          .trim()
+          .replace(/[^a-z0-9_-]+/gi, "-")
+          .replace(/^-+|-+$/g, "")
+          .toLowerCase() || "anivora-website";
+
+        link.href = url;
+        link.download = safeName + ".html";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+
+        showMessage("HTML export started.", "success");
+      }
+
+      function applyEditor() {
+        try {
+          setWebsite(editor.value, true);
+          showMessage("Your code has been applied to the preview.", "success");
+        } catch (error) {
+          showMessage(error.message, "error");
+        }
+      }
+
+      function setPreviewMode(mobile) {
+        mobileMode = mobile;
+        preview.classList.toggle("mobile", mobile);
+        $("desktopBtn").setAttribute("aria-pressed", String(!mobile));
+        $("mobileBtn").setAttribute("aria-pressed", String(mobile));
+      }
+
+      generateBtn.addEventListener("click", generateWebsite);
+      $("saveBtn").addEventListener("click", saveProject);
+      $("exportBtn").addEventListener("click", exportHtml);
+      $("applyBtn").addEventListener("click", applyEditor);
+
+      $("desktopBtn").addEventListener("click", () => setPreviewMode(false));
+      $("mobileBtn").addEventListener("click", () => setPreviewMode(true));
+
+      $("undoBtn").addEventListener("click", () => {
+        if (historyIndex <= 0) return;
+        historyIndex--;
+        editor.value = history[historyIndex];
+        renderPreview(editor.value);
+        updateHistoryButtons();
+        saveDraft();
+      });
+
+      $("redoBtn").addEventListener("click", () => {
+        if (historyIndex >= history.length - 1) return;
+        historyIndex++;
+        editor.value = history[historyIndex];
+        renderPreview(editor.value);
+        updateHistoryButtons();
+        saveDraft();
+      });
+
+      $("copyBtn").addEventListener("click", async () => {
+        if (!editor.value.trim()) {
+          showMessage("There is no code to copy.", "error");
+          return;
+        }
+
+        try {
+          await navigator.clipboard.writeText(editor.value);
+          showMessage("HTML code copied.", "success");
+        } catch (_) {
+          editor.focus();
+          editor.select();
+          showMessage("Automatic copy was blocked. The code is selected; use your device's Copy command.", "info");
+        }
+      });
+
+      $("clearBtn").addEventListener("click", () => {
+        editor.value = "";
+        currentHtml = "";
+        preview.srcdoc = "";
+        emptyState.hidden = false;
+        preview.hidden = true;
+        previewStatus.textContent = "Editor cleared.";
+        addHistory("");
+        saveDraft();
+        showMessage("Editor cleared. Your saved projects were not deleted.", "info");
+      });
+
+      $("newBtn").addEventListener("click", () => {
+        currentProjectId = null;
+        projectNameInput.value = "My Website";
+        promptInput.value = "";
+        editor.value = "";
+        currentHtml = "";
+        history = [];
+        historyIndex = -1;
+        updateHistoryButtons();
+        preview.srcdoc = "";
+        preview.hidden = true;
+        emptyState.hidden = false;
+        previewStatus.textContent = "Ready for a new website.";
+        saveDraft();
+        clearMessage();
+      });
+
+      document.querySelectorAll("[data-prompt]").forEach((button) => {
+        button.addEventListener("click", () => {
+          promptInput.value = button.getAttribute("data-prompt");
+          promptInput.focus();
+        });
+      });
+
+      projectNameInput.addEventListener("input", saveDraft);
+      promptInput.addEventListener("input", saveDraft);
+      editor.addEventListener("input", saveDraft);
+
+      // Restore an unsaved draft when available.
+      try {
+        const draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null");
+
+        if (draft && typeof draft === "object") {
+          projectNameInput.value = draft.name || "My Website";
+          promptInput.value = draft.prompt || "";
+          currentProjectId = draft.projectId || null;
+
+          if (typeof draft.html === "string" && draft.html.trim()) {
+            setWebsite(draft.html, true);
+            showMessage("Your previous draft was restored.", "info");
+          }
+        }
+      } catch (_) {
+        // Start with a clean workspace if a saved draft is invalid.
+      }
+
+      renderSavedProjects();
+
+      if (!currentHtml) {
+        preview.hidden = true;
+        emptyState.hidden = false;
+      }
+    })();
+  </script>
+</body>
+</html>
