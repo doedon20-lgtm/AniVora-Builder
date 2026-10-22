@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#6d4aff">
+  <meta name="description" content="AniVora Builder turns your ideas into beautiful, responsive websites. Describe your idea, generate, edit, preview and export.">
+  <title>AniVora Builder — Turn ideas into websites</title>
+  <style>
+    :root {
+      --ink:#17142a; --muted:#706d83; --purple:#6d4aff; --purple-dark:#5033d4;
+      --lav:#f1edff; --line:#e9e5f5; --white:#fff; --mint:#baffd7;
+      --shadow:0 24px 70px rgba(48,31,111,.13); --radius:24px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:90px}
+    body{margin:0;background:#fff;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    img{max-width:100%;display:block}
+    .container{width:min(1160px,calc(100% - 40px));margin-inline:auto}
+    .topbar{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.86);backdrop-filter:blur(18px);border-bottom:1px solid rgba(233,229,245,.8)}
+    .nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .brand{display:inline-flex;align-items:center;gap:10px;font-weight:850;letter-spacing:-.045em;font-size:1.17rem;white-space:nowrap}
+    .brand-mark{width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,#987bff,#5635e9);display:grid;place-items:center;color:#fff;box-shadow:0 8px 20px #6d4aff45}
+    .brand-mark svg{width:23px;height:23px}
+    .nav-links{display:flex;align-items:center;gap:25px;color:#59556e;font-size:.91rem;font-weight:650}
+    .nav-links a:hover{color:var(--purple)}
+    .nav-actions{display:flex;align-items:center;gap:10px}
+    .btn{border:0;display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:12px 18px;border-radius:13px;font-weight:750;transition:transform .22s ease,box-shadow .22s ease,background .22s ease;min-height:46px}
+    .btn:hover{transform:translateY(-2px)}
+    .btn-primary{color:white;background:linear-gradient(135deg,#7858ff,#5937e7);box-shadow:0 10px 24px #6d4aff35}
+    .btn-primary:hover{box-shadow:0 14px 30px #6d4aff48}
+    .btn-dark{background:var(--ink);color:#fff}
+    .btn-soft{background:#f4f1ff;color:var(--purple-dark)}
+    .btn-outline{background:white;border:1px solid var(--line);color:var(--ink)}
+    .btn:disabled{opacity:.55;cursor:wait;transform:none}
+    .menu-toggle{display:none;width:44px;height:44px;border:1px solid var(--line);border-radius:12px;background:white;color:var(--ink);font-size:1.3rem}
+    .hero{position:relative;isolation:isolate;padding:76px 0 66px;overflow:hidden;background:radial-gradient(ellipse at 80% 8%,#e8e0ff 0,transparent 36%),radial-gradient(ellipse at 5% 85%,#edfff6 0,transparent 30%),#fff}
+    .hero-grid{display:grid;grid-template-columns:1fr 1.02fr;gap:50px;align-items:center}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid #e6defe;background:#ffffffc9;border-radius:999px;color:#5c40d7;font-size:.79rem;font-weight:800;letter-spacing:.03em}
+    .spark{width:8px;height:8px;border-radius:50%;background:#42d990;box-shadow:0 0 0 5px #42d99022}
+    h1{font-size:clamp(2.8rem,5.5vw,5.15rem);line-height:.99;letter-spacing:-.075em;margin:23px 0 22px;font-weight:900;max-width:650px}
+    .gradient-text{background:linear-gradient(110deg,#5c38e8 10%,#9878ff 55%,#19a978 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .hero-copy{font-size:1.08rem;color:var(--muted);max-width:530px;margin:0 0 26px}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+    .trust-line{display:flex;align-items:center;gap:12px;margin-top:24px;color:#77738a;font-size:.82rem}
+    .avatar-stack{display:flex;padding-left:5px}
+    .avatar{width:27px;height:27px;margin-left:-5px;border:2px solid white;border-radius:50%;display:grid;place-items:center;background:#eee8ff;color:#6342d8;font-size:.65rem;font-weight:900}
+    .hero-visual{position:relative;min-width:0;perspective:1000px}
+    .orb{position:absolute;border-radius:50%;filter:blur(1px);pointer-events:none}
+    .orb-one{width:130px;height:130px;background:linear-gradient(135deg,#b5a1ff99,#e6ddff22);top:-36px;right:7%;animation:float 7s ease-in-out infinite}
+    .orb-two{width:75px;height:75px;background:linear-gradient(135deg,#9bffd0bb,#e1fff0aa);bottom:4%;left:-20px;animation:float 6s ease-in-out infinite reverse}
+    .showcase-window{position:relative;border:1px solid #e9e3ff;background:#fff;border-radius:25px;padding:13px;box-shadow:0 35px 100px #5033d425;transform:rotateY(-5deg) rotateX(2deg);animation:window-enter 1s cubic-bezier(.2,.8,.2,1) both}
+    .window-top{height:28px;display:flex;align-items:center;gap:6px;padding:0 8px 10px}
+    .window-dot{width:7px;height:7px;border-radius:50%;background:#e4dff3}
+    .window-url{margin-left:8px;background:#f7f5fc;color:#9a95ad;border-radius:7px;font-size:.63rem;padding:4px 13px;flex:1;text-align:center}
+    .mock-site{min-height:375px;border-radius:15px;overflow:hidden;background:#111c19;color:white;position:relative;padding:27px 25px 22px}
+    .mock-site:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 70% 36%,#1bd99b45,transparent 33%),linear-gradient(125deg,transparent 25%,#16c78b12 55%,transparent 80%);animation:aurora 8s ease-in-out infinite alternate}
+    .mock-nav,.mock-title,.mock-sub,.mock-products{position:relative;z-index:1}
+    .mock-nav{display:flex;justify-content:space-between;align-items:center;font-size:.64rem;color:#d7e5df}
+    .mock-logo{font-weight:900;letter-spacing:.12em;color:#baffd7}
+    .mock-title{font-size:clamp(1.7rem,3.5vw,3rem);line-height:.98;letter-spacing:-.06em;font-weight:900;margin:45px 0 10px;max-width:320px}
+    .mock-title span{color:#baffd7}
+    .mock-sub{font-size:.72rem;color:#b6c8c0;max-width:240px}
+    .mock-products{display:flex;align-items:end;justify-content:center;gap:14px;margin-top:26px;height:115px}
+    .speaker{position:relative;width:73px;height:110px;border-radius:19px;background:linear-gradient(125deg,#3d4845,#0c100f 55%,#45534d);border:1px solid #52655a;box-shadow:inset 4px 0 10px #ffffff10,0 15px 28px #0008;animation:float 4.8s ease-in-out infinite}
+    .speaker:nth-child(2){height:133px;width:86px;animation-delay:-1.6s}
+    .speaker:nth-child(3){height:92px;animation-delay:-2.8s}
+    .speaker:before{content:"";position:absolute;width:48px;height:48px;border-radius:50%;left:50%;top:22%;transform:translateX(-50%);border:4px solid #baffd7;background:radial-gradient(circle,#1a2922 0 35%,#5b7d6a 38%,#101512 65%);box-shadow:0 0 16px #45ffa26b}
+    .speaker:after{content:"";position:absolute;width:28px;height:28px;border-radius:50%;left:50%;top:65%;transform:translateX(-50%);border:3px solid #9df9c9;background:#17241d}
+    .mock-light{position:absolute;z-index:0;left:5%;right:5%;bottom:26%;height:2px;background:linear-gradient(90deg,transparent,#baffd7,transparent);filter:drop-shadow(0 0 8px #55ffb4);animation:wipe 4s ease-in-out infinite}
+    .floating-chip{position:absolute;z-index:3;background:#fff;border:1px solid #eee8ff;border-radius:15px;padding:12px 14px;box-shadow:0 18px 40px #4c31a51c;display:flex;align-items:center;gap:10px;font-size:.77rem;font-weight:800;animation:float 5.5s ease-in-out infinite}
+    .chip-icon{width:31px;height:31px;border-radius:10px;background:#e9fff2;display:grid;place-items:center;color:#138553;font-size:1rem}
+    .chip-one{top:19%;left:-36px}.chip-two{bottom:7%;right:-22px;animation-delay:-2.2s}
+    .section{padding:82px 0}
+    .section-soft{background:#faf9ff}
+    .section-head{text-align:center;max-width:690px;margin:0 auto 35px}
+    .section-kicker{color:var(--purple);font-size:.78rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+    h2{font-size:clamp(2rem,4vw,3.2rem);line-height:1.06;letter-spacing:-.06em;margin:11px 0 13px;font-weight:900}
+    .section-head p{color:var(--muted);margin:0;font-size:1rem}
+    .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .template-card{background:white;border:1px solid var(--line);border-radius:20px;overflow:hidden;transition:transform .28s ease,box-shadow .28s ease}
+    .template-card:hover{transform:translateY(-7px);box-shadow:var(--shadow)}
+    .template-art{height:205px;position:relative;overflow:hidden;padding:20px}
+    .template-art.restaurant{background:linear-gradient(140deg,#f8d9ba,#b85b36);color:#3c2118}
+    .template-art.studio{background:linear-gradient(135deg,#e5dcff,#8f7ae2);color:#26164c}
+    .template-art.tech{background:radial-gradient(circle at 70% 20%,#2b3b80,#101526 65%);color:white}
+    .art-label{font-size:.62rem;letter-spacing:.16em;font-weight:900;position:relative;z-index:1}
+    .art-heading{position:relative;z-index:1;font-size:1.75rem;line-height:.98;letter-spacing:-.06em;font-weight:900;max-width:210px;margin-top:24px}
+    .art-shape{position:absolute;border-radius:50%;right:-20px;bottom:-50px;width:190px;height:190px;background:radial-gradient(circle at 30% 30%,#fff9,#fff0 60%),linear-gradient(135deg,#ffcb86,#b44422);box-shadow:0 0 0 12px #ffffff12}
+    .studio .art-shape{background:linear-gradient(135deg,#fff,#c6b4ff);width:150px;height:150px;right:12px;bottom:-25px;border-radius:35% 65% 53% 47%;transform:rotate(-25deg)}
+    .tech .art-shape{background:radial-gradient(circle,#7bf0ff,#5542e8 30%,#1a1a35 68%);width:170px;height:170px;right:15px;bottom:-35px;box-shadow:0 0 45px #5c6bff80}
+    .template-info{padding:17px 18px 19px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .template-info strong{display:block;font-size:.95rem}.template-info span{display:block;color:var(--muted);font-size:.8rem;margin-top:2px}
+    .use-template{border:0;background:#f1edff;color:var(--purple-dark);border-radius:10px;padding:10px 12px;font-weight:800;white-space:nowrap}
+    .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .step-card{border:1px solid var(--line);border-radius:20px;padding:25px;background:white;transition:transform .25s ease}
+    .step-card:hover{transform:translateY(-5px)}
+    .step-number{width:42px;height:42px;border-radius:14px;background:var(--lav);color:var(--purple);display:grid;place-items:center;font-weight:900;margin-bottom:17px}
+    .step-card h3{margin:0 0 7px;letter-spacing:-.03em}.step-card p{margin:0;color:var(--muted);font-size:.92rem}
+    .creator-wrap{display:grid;grid-template-columns:.9fr 1.1fr;gap:24px;align-items:start}
+    .creator-panel,.preview-panel{border:1px solid var(--line);border-radius:22px;background:white;box-shadow:0 16px 50px #30205c0b;overflow:hidden}
+    .panel-head{padding:19px 21px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .panel-head strong{font-size:1rem;letter-spacing:-.02em}
+    .panel-body{padding:21px}
+    .field-label{display:block;font-size:.82rem;font-weight:850;margin-bottom:8px}
+    textarea,input[type="url"]{width:100%;border:1px solid #dfd9f1;border-radius:13px;padding:13px 14px;color:var(--ink);outline:none;background:#fdfcff;transition:border .2s,box-shadow .2s}
+    textarea:focus,input[type="url"]:focus{border-color:#8a72ff;box-shadow:0 0 0 4px #6d4aff16}
+    textarea{min-height:142px;resize:vertical}
+    .field-help{font-size:.76rem;color:var(--muted);margin:7px 0 18px}
+    .prompt-examples{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 19px}
+    .example-chip{border:1px solid #e5dfff;background:#faf8ff;color:#5e48b7;border-radius:999px;padding:7px 10px;font-size:.74rem;font-weight:750}
+    .creator-actions{display:flex;gap:9px;flex-wrap:wrap}
+    .creator-actions .btn{flex:1}
+    .status{min-height:24px;font-size:.82rem;color:var(--muted);margin-top:12px}
+    .status.error{color:#b4233b}.status.success{color:#16804c}
+    .preview-tools{display:flex;align-items:center;gap:7px}
+    .tool-btn{border:1px solid var(--line);background:white;border-radius:9px;padding:7px 9px;font-size:.76rem;font-weight:800}
+    .preview-frame-wrap{padding:13px;background:#f4f2fa}
+    .preview-frame{width:100%;height:430px;border:1px solid #e4dfef;border-radius:13px;background:white;display:block}
+    .preview-empty{height:430px;border:1px dashed #d7d0ec;border-radius:13px;background:linear-gradient(135deg,#fcfbff,#f5f1ff);display:flex;align-items:center;justify-content:center;text-align:center;padding:25px;color:#77718d}
+    .empty-inner{max-width:260px}.empty-icon{width:55px;height:55px;display:grid;place-items:center;border-radius:18px;background:white;box-shadow:0 8px 25px #3f2d8014;font-size:1.5rem;margin:0 auto 14px}
+    .editor-area{border-top:1px solid var(--line);padding:17px 20px}
+    .editor-area summary{font-weight:850;cursor:pointer;font-size:.86rem}
+    .editor-area textarea{min-height:180px;margin-top:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.76rem}
+    .editor-buttons{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .editor-buttons .btn{min-height:38px;padding:8px 12px;font-size:.8rem}
+    .feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+    .feature{padding:21px;border:1px solid var(--line);border-radius:18px;background:#fff}
+    .feature-icon{width:40px;height:40px;border-radius:13px;background:#f1edff;color:#6748ec;display:grid;place-items:center;font-size:1.1rem;margin-bottom:15px}
+    .feature h3{font-size:.95rem;margin:0 0 7px}.feature p{font-size:.83rem;color:var(--muted);margin:0}
+    .cta{padding:0 0 80px}
+    .cta-box{position:relative;overflow:hidden;background:linear-gradient(120deg,#261858,#5b3bdb 65%,#8068f7);border-radius:28px;padding:45px;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:25px}
+    .cta-box:after{content:"";position:absolute;width:330px;height:330px;border:1px solid #ffffff26;border-radius:50%;right:20%;top:-190px;box-shadow:0 0 0 35px #ffffff08,0 0 0 75px #ffffff06;pointer-events:none}
+    .cta-copy{position:relative;z-index:1;max-width:600px}.cta-copy h2{margin-top:0}.cta-copy p{color:#ded7ff;margin:0}
+    .cta-box .btn{position:relative;z-index:1;background:white;color:#4c31c7;white-space:nowrap}
+    footer{border-top:1px solid var(--line);padding:25px 0;color:var(--muted);font-size:.82rem}
+    .footer-inner{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+    .toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;z-index:80;background:#21183e;color:#fff;padding:12px 17px;border-radius:13px;box-shadow:var(--shadow);font-size:.85rem;transition:opacity .25s,transform .25s;max-width:calc(100% - 30px)}
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+    @keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-12px) rotate(1.5deg)}}
+    @keyframes window-enter{from{opacity:0;transform:translateY(24px) rotateY(-9deg) rotateX(3deg)}to{opacity:1;transform:rotateY(-5deg) rotateX(2deg)}}
+    @keyframes aurora{from{opacity:.45;transform:scale(1)}to{opacity:1;transform:scale(1.08)}}
+    @keyframes wipe{0%,100%{transform:translateX(-45%);opacity:.2}50%{transform:translateX(35%);opacity:1}}
+    @media(max-width:900px){
+      .nav-links{gap:15px}.hero{padding-top:55px}.hero-grid{gap:30px;grid-template-columns:1fr 1fr}
+      .chip-one{left:-15px}.chip-two{right:-8px}.mock-site{min-height:345px;padding:22px 18px}
+      .gallery-grid{gap:13px}.template-art{height:180px}.feature-grid{grid-template-columns:repeat(2,1fr)}
+      .creator-wrap{grid-template-columns:1fr}.preview-frame,.preview-empty{height:390px}
+    }
+    @media(max-width:680px){
+      .container{width:min(100% - 28px,560px)}.nav{height:66px}.brand{font-size:1.05rem}.brand-mark{width:35px;height:35px}
+      .menu-toggle{display:inline-grid;place-items:center}.nav-actions .btn{display:none}
+      .nav-links{display:none;position:absolute;top:65px;left:0;right:0;background:#fff;padding:16px 22px 20px;border-bottom:1px solid var(--line);box-shadow:0 18px 25px #24164a0c;flex-direction:column;align-items:stretch;gap:0}
+      .nav-links.open{display:flex}.nav-links a{padding:12px 3px;border-bottom:1px solid #f2eff8}.nav-links a:last-child{border-bottom:0}
+      .hero{padding:42px 0 47px}.hero-grid{grid-template-columns:1fr;gap:34px}.hero-copy{font-size:1rem}
+      h1{font-size:clamp(2.8rem,13vw,4rem);max-width:500px;margin-top:18px}.hero-actions .btn{flex:1}
+      .hero-visual{margin:0 9px}.showcase-window{transform:none;animation:window-enter .8s ease both}.mock-site{min-height:340px}
+      .chip-one{top:14%;left:-10px}.chip-two{right:-7px;bottom:3%}.floating-chip{padding:9px 10px;font-size:.68rem}.chip-icon{width:27px;height:27px}
+      .section{padding:62px 0}.gallery-grid{grid-template-columns:1fr;gap:14px}.template-art{height:190px}.steps{grid-template-columns:1fr;gap:12px}
+      .step-card{padding:21px}.creator-wrap{gap:16px}.panel-body{padding:16px}.panel-head{padding:15px 16px}
+      .preview-frame,.preview-empty{height:340px}.feature-grid{grid-template-columns:1fr 1fr;gap:10px}.feature{padding:15px}
+      .cta{padding-bottom:60px}.cta-box{padding:28px 22px;display:block;border-radius:22px}.cta-box .btn{margin-top:22px}
+      .footer-inner{align-items:flex-start;flex-direction:column;gap:10px}
+    }
+    @media(max-width:380px){.feature-grid{grid-template-columns:1fr}.hero-actions{flex-direction:column}.hero-actions .btn{width:100%}.mock-products{gap:8px}.speaker{width:58px}.speaker:nth-child(2){width:72px}}
+    @media(prefers-reduced-motion:reduce){
+      *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+      .reveal{opacity:1;transform:none}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a class="brand" href="#home" aria-label="AniVora Builder home">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 17.5 11.8 4 20 17.5h-5.2l-3-5.2-3 5.2H4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M13.5 17.5 16 13.2l2.5 4.3" stroke="#baffd7" stroke-width="2" stroke-linecap="round"/></svg></span>
+        <span>AniVora <span style="color:var(--purple)">Builder</span></span>
+      </a>
+      <nav class="nav-links" id="navLinks" aria-label="Main navigation">
+        <a href="#templates">Templates</a><a href="#my-websites">My Websites</a><a href="#how-it-works">How it works</a><a href="#features">Features</a><a href="#creator">AI Creator</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="btn btn-primary" href="#creator">Create with AI <span aria-hidden="true">↗</span></a>
+        <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="home">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy-block">
+          <div class="eyebrow"><span class="spark"></span> YOUR IDEA, BUILT WITH AI</div>
+          <h1>Turn your ideas into <span class="gradient-text">beautiful websites.</span></h1>
+          <p class="hero-copy">Describe what you imagine. AniVora Builder creates a website you can preview, refine, save and export — without a complicated setup.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#creator">✦ Start building free</a>
+            <a class="btn btn-outline" href="#templates">Explore designs <span aria-hidden="true">↓</span></a>
+          </div>
+          <div class="trust-line">
+            <div class="avatar-stack" aria-hidden="true"><span class="avatar">A</span><span class="avatar">V</span><span class="avatar">✦</span></div>
+            <span>From first idea to a live preview, all in one simple flow.</span>
+          </div>
+        </div>
+        <div class="hero-visual" aria-label="Animated preview of a premium product website">
+          <div class="orb orb-one"></div><div class="orb orb-two"></div>
+          <div class="floating-chip chip-one"><span class="chip-icon">✦</span><span>AI-crafted design</span></div>
+          <div class="showcase-window">
+            <div class="window-top"><span class="window-dot"></span><span class="window-dot"></span><span class="window-dot"></span><span class="window-url">your-next-big-idea.site</span></div>
+            <div class="mock-site">
+              <div class="mock-light"></div>
+              <div class="mock-nav"><span class="mock-logo">AURASONIC</span><span>PRODUCTS　 STORY　 ↗</span></div>
+              <div class="mock-title">Sound that<br><span>moves you.</span></div>
+              <div class="mock-sub">Designed for deep focus. Built for every moment.</div>
+              <div class="mock-products"><div class="speaker"></div><div class="speaker"></div><div class="speaker"></div></div>
+            </div>
+          </div>
+          <div class="floating-chip chip-two"><span class="chip-icon">✓</span><span>Ready to customise</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="templates">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-kicker">A little inspiration</span>
+          <h2>Start with a style.<br><span class="gradient-text">Make it your own.</span></h2>
+          <p>Pick a starting point, then tell AniVora what you want to build.</p>
+        </div>
+        <div class="gallery-grid">
+          <article class="template-card reveal">
+            <div class="template-art restaurant"><div class="art-label">TASTE HAVEN · EST. 2026</div><div class="art-heading">Good food.<br>Great moments.</div><div class="art-shape"></div></div>
+            <div class="template-info"><div><strong>Restaurant</strong><span>Menus, reservations, story</span></div><button class="use-template" data-prompt="Create a modern restaurant website called Taste Haven with a beautiful menu, food photography, opening hours, location, and a reservation call to action.">Use style ↗</button></div>
+          </article>
+          <article class="template-card reveal">
+            <div class="template-art studio"><div class="art-label">NORTHSTAR STUDIO</div><div class="art-heading">Ideas into<br>impact.</div><div class="art-shape"></div></div>
+            <div class="template-info"><div><strong>Creative studio</strong><span>Portfolio, services, contact</span></div><button class="use-template" data-prompt="Create a premium creative studio website called Northstar Studio with bold typography, a project portfolio, services, an about section, and a contact call to action.">Use style ↗</button></div>
+          </article>
+          <article class="template-card reveal">
+            <div class="template-art tech"><div class="art-label">NOVA ANALYTICS</div><div class="art-heading">See the<br>whole picture.</div><div class="art-shape"></div></div>
+            <div class="template-info"><div><strong>Technology</strong><span>Product, benefits, pricing</span></div><button class="use-template" data-prompt="Create a polished technology SaaS website called Nova Analytics with a futuristic dark hero, product benefits, dashboard preview, pricing cards, and a clear sign-up call to action.">Use style ↗</button></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="how-it-works">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-kicker">Simple by design</span>
+          <h2>Three steps. <span class="gradient-text">One website.</span></h2>
+          <p>No complicated workflow. Start with a sentence and keep improving from there.</p>
+        </div>
+        <div class="steps">
+          <article class="step-card reveal"><div class="step-number">01</div><h3>Describe your idea</h3><p>Tell AniVora what your website is for, who it serves and what style you like.</p></article>
+          <article class="step-card reveal"><div class="step-number">02</div><h3>Generate and preview</h3><p>Get a website draft and view it in the preview panel. If the result needs work, refine the request.</p></article>
+          <article class="step-card reveal"><div class="step-number">03</div><h3>Edit, save and export</h3><p>Adjust the generated HTML, keep a local draft, and export your website as an HTML file.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="creator">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-kicker">Your workspace</span>
+          <h2>What shall we <span class="gradient-text">build today?</span></h2>
+          <p>Describe the website below. Generate it, check the preview, then save or export your work.</p>
+        </div>
+        <div class="creator-wrap">
+          <section class="creator-panel reveal" aria-label="Website creation controls">
+            <div class="panel-head"><strong><span style="color:var(--purple)">✦</span> Create with AniVora AI</strong><span class="eyebrow" style="font-size:.68rem;padding:5px 9px">STEP 1 OF 3</span></div>
+            <div class="panel-body">
+              <label class="field-label" for="projectName">Website name</label>
+              <input id="projectName" maxlength="80" placeholder="e.g. Taste Haven" style="width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:12px;margin:0 0 15px;background:#fff;color:var(--ink);font:inherit">
+              <label class="field-label" for="prompt">Describe your website</label>
+              <textarea id="prompt" maxlength="3000" placeholder="Example: Create a premium speaker website with floating 3D products, glowing green lights and smooth scrolling animations."></textarea>
+              <div class="field-help"><span id="charCount">0</span>/3000 characters. Include the pages, style and sections you want.</div>
+              <div class="prompt-examples">
+                <button type="button" class="example-chip" data-prompt="Create a modern restaurant website with a menu, food photography, opening hours and a reservation button.">Restaurant</button>
+                <button type="button" class="example-chip" data-prompt="Create a personal portfolio website with an animated hero, project gallery, about section and contact form.">Portfolio</button>
+                <button type="button" class="example-chip" data-prompt="Create a premium speaker website with floating 3D products, glowing green lights and smooth scrolling animations.">Product launch</button>
+              </div>
+              <div class="creator-actions">
+                <button class="btn btn-primary" id="generateBtn" type="button">✦ Generate website</button>
+                <button class="btn btn-outline" id="clearBtn" type="button">Clear</button>
+              </div>
+              <div class="status" id="status" role="status" aria-live="polite">Your website will appear in the preview panel.</div>
+              <div class="editor-buttons">
+                <button class="btn btn-soft" id="saveBtn" type="button">Save to My Websites</button>
+                <button class="btn btn-outline" id="loadDraftBtn" type="button">Restore saved draft</button>
+                <a class="btn btn-outline" href="#my-websites">Open My Websites</a>
+              </div>
+            </div>
+          </section>
+
+          <section class="preview-panel reveal" aria-label="Website preview">
+            <div class="panel-head"><strong>Live website preview</strong><div class="preview-tools"><button class="tool-btn" id="desktopBtn" type="button" aria-pressed="true">Desktop</button><button class="tool-btn" id="mobileBtn" type="button" aria-pressed="false">Mobile</button></div></div>
+            <div class="preview-frame-wrap">
+              <div class="preview-empty" id="previewEmpty"><div class="empty-inner"><div class="empty-icon">✦</div><strong>Your design will appear here</strong><p style="font-size:.83rem">Write a description and select Generate website to begin.</p></div></div>
+              <iframe class="preview-frame" id="preview" title="Generated website preview" sandbox="allow-scripts allow-forms allow-modals" style="display:none"></iframe>
+            </div>
+            <div class="editor-area">
+              <details>
+                <summary>Advanced: view or edit website HTML</summary>
+                <p class="field-help">Changes in this editor update the preview when you press Apply HTML.</p>
+                <textarea id="htmlEditor" spellcheck="false" aria-label="Generated HTML source" placeholder="Generated HTML will be available here."></textarea>
+                <div class="editor-buttons">
+                  <button class="btn btn-primary" id="applyHtmlBtn" type="button">Apply HTML</button>
+                  <button class="btn btn-outline" id="undoBtn" type="button">Undo</button>
+                  <button class="btn btn-outline" id="redoBtn" type="button">Redo</button>
+                  <button class="btn btn-outline" id="exportBtn" type="button">Export HTML</button>
+                </div>
+              </details>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="my-websites">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-kicker">Your saved work</span>
+          <h2>My <span class="gradient-text">Websites.</span></h2>
+          <p>Save multiple projects in this browser, then reopen them to preview, edit or export.</p>
+        </div>
+        <div class="my-sites-toolbar">
+          <div><strong id="projectCount">0 saved websites</strong><p class="field-help" style="margin:4px 0 0">Saved on this device and browser.</p></div>
+          <button class="btn btn-primary" id="newWebsiteBtn" type="button">＋ New website</button>
+        </div>
+        <div id="projectsGrid" class="projects-grid" aria-live="polite"></div>
+        <div id="projectsEmpty" class="projects-empty"><div class="empty-icon">▤</div><strong>No saved websites yet</strong><p>Generate a website, then tap “Save to My Websites”.</p><a class="btn btn-outline" href="#creator">Create your first website</a></div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-kicker">Made for making</span>
+          <h2>Everything starts with <span class="gradient-text">your idea.</span></h2>
+          <p>A simple first step toward a complete creative workspace.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature reveal"><div class="feature-icon">✦</div><h3>AI website generation</h3><p>Turn a clear description into a complete HTML website draft.</p></article>
+          <article class="feature reveal"><div class="feature-icon">▣</div><h3>Live preview</h3><p>Check your generated page before you export it.</p></article>
+          <article class="feature reveal"><div class="feature-icon">↗</div><h3>HTML export</h3><p>Download your current website draft as a standalone HTML file.</p></article>
+          <article class="feature reveal"><div class="feature-icon">◷</div><h3>Local saving</h3><p>Save a draft in this browser and return to it on the same device.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="container">
+        <div class="cta-box reveal"><div class="cta-copy"><h2>That idea in your head?<br>Let's build it.</h2><p>Start with a short description. You can improve the result one step at a time.</p></div><a href="#creator" class="btn">Start creating <span aria-hidden="true">↗</span></a></div>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="container footer-inner"><a class="brand" href="#home"><span class="brand-mark" style="width:30px;height:30px;border-radius:10px">A</span><span>AniVora Builder</span></a><span>Build boldly. Start simply.</span><a href="#creator">Open AI Creator ↑</a></div></footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      const $ = (id) => document.getElementById(id);
+      const promptBox = $('prompt'), htmlEditor = $('htmlEditor'), preview = $('preview');
+      const status = $('status'), generateBtn = $('generateBtn'), previewEmpty = $('previewEmpty');
+      const STORAGE_KEY = 'anivora-builder-projects-v1';
+      const LEGACY_KEY = 'anivora-builder-draft-v2';
+      let currentHtml = '', currentProjectId = null, undoStack = [], redoStack = [], previewMode = 'desktop', toastTimer;
+
+      function say(message, kind = '') {
+        status.textContent = message;
+        status.className = 'status' + (kind ? ' ' + kind : '');
+      }
+      function toast(message) {
+        const el = $('toast'); el.textContent = message; el.classList.add('show');
+        clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+      }
+      function remember(html) {
+        if (html && undoStack[undoStack.length - 1] !== html) undoStack.push(html);
+        if (undoStack.length > 40) undoStack.shift();
+        redoStack = [];
+        updateHistoryButtons();
+      }
+      function updateHistoryButtons() {
+        $('undoBtn').disabled = undoStack.length < 2;
+        $('redoBtn').disabled = redoStack.length === 0;
+      }
+      function showHtml(html, addHistory = true) {
+        if (!html || typeof html !== 'string') return;
+        if (addHistory) remember(currentHtml);
+        currentHtml = html;
+        htmlEditor.value = html;
+        preview.srcdoc = html;
+        scheduleWorkingDraftSave();
+        preview.style.display = 'block';
+        previewEmpty.style.display = 'none';
+        updateHistoryButtons();
+      }
+      function safeDownload(html) {
+        if (!html.trim()) { toast('Generate or add website HTML first.'); return; }
+        const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'anivora-website.html';
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        toast('Website HTML exported.');
+      }
+      function getProjects() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          const parsed = raw ? JSON.parse(raw) : [];
+          return Array.isArray(parsed) ? parsed : [];
+        } catch (_) { return []; }
+      }
+      function setProjects(projects) { localStorage.setItem(STORAGE_KEY, JSON.stringify(projects)); }
+      function saveWorkingDraft() {
+        try {
+          const draft = {
+            prompt: promptBox.value || '',
+            name: $('projectName').value || '',
+            html: htmlEditor.value || currentHtml || '',
+            savedAt: new Date().toISOString(),
+            projectId: currentProjectId
+          };
+          localStorage.setItem(LEGACY_KEY, JSON.stringify(draft));
+        } catch (_) {
+          // A working draft is a convenience; explicit project saving and HTML export remain available.
+        }
+      }
+      let autosaveTimer = null;
+      function scheduleWorkingDraftSave() {
+        clearTimeout(autosaveTimer);
+        autosaveTimer = setTimeout(saveWorkingDraft, 350);
+      }
+      function guessProjectName(html, fallback) {
+        const match = String(html || '').match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+        const title = match ? match[1].replace(/<[^>]+>/g, '').trim() : '';
+        return (fallback || title || 'My Website').slice(0, 80);
+      }
+      function migrateLegacyDraft() {
+        try {
+          if (getProjects().length || !localStorage.getItem(LEGACY_KEY)) return;
+          const old = JSON.parse(localStorage.getItem(LEGACY_KEY));
+          if (!old || typeof old.html !== 'string' || !old.html.trim()) return;
+          const now = old.savedAt || new Date().toISOString();
+          const project = { id: `recovered-${Date.now()}`, name: guessProjectName(old.html, 'Recovered Website'), prompt: old.prompt || '', html: old.html, createdAt: now, updatedAt: now };
+          setProjects([project]);
+        } catch (_) { /* Keep the app usable if old local storage is unreadable. */ }
+      }
+      function renderProjects() {
+        migrateLegacyDraft();
+        const projects = getProjects();
+        const grid = $('projectsGrid'), empty = $('projectsEmpty');
+        $('projectCount').textContent = `${projects.length} saved website${projects.length === 1 ? '' : 's'}`;
+        grid.innerHTML = '';
+        empty.style.display = projects.length ? 'none' : 'block';
+        projects.slice().sort((a,b) => (b.updatedAt || '').localeCompare(a.updatedAt || '')).forEach(project => {
+          const card = document.createElement('article'); card.className = 'project-card';
+          const previewBox = document.createElement('div'); previewBox.className = 'project-preview'; previewBox.textContent = '✦';
+          const title = document.createElement('h3'); title.textContent = project.name || 'Untitled website';
+          const desc = document.createElement('p'); desc.textContent = `${project.prompt || 'Website project'}\nUpdated ${project.updatedAt ? new Date(project.updatedAt).toLocaleString() : 'recently'}`;
+          const actions = document.createElement('div'); actions.className = 'project-actions';
+          const makeBtn = (label, cls, action) => { const b = document.createElement('button'); b.type = 'button'; b.className = `btn ${cls}`; b.textContent = label; b.addEventListener('click', action); return b; };
+          actions.append(makeBtn('Preview', 'btn-outline', () => openProject(project.id, 'preview')));
+          actions.append(makeBtn('Edit website', 'btn-primary', () => openProject(project.id, 'edit')));
+          actions.append(makeBtn('Rename', 'btn-soft', () => renameProject(project.id)));
+          actions.append(makeBtn('Export', 'btn-outline', () => safeDownload(project.html || '')));
+          actions.append(makeBtn('Delete', 'btn-outline', () => deleteProject(project.id)));
+          card.append(previewBox, title, desc, actions); grid.appendChild(card);
+        });
+      }
+      function saveDraft() {
+        const html = (htmlEditor.value || currentHtml || '').trim();
+        if (!html) { say('Generate a website before saving it.', 'error'); toast('There is no website to save yet.'); return; }
+        const projects = getProjects();
+        const now = new Date().toISOString();
+        const name = ($('projectName').value.trim() || guessProjectName(html, 'My Website')).slice(0, 80);
+        let existing = projects.find(p => p.id === currentProjectId);
+        if (!existing) { existing = { id: (crypto.randomUUID ? crypto.randomUUID() : `site-${Date.now()}-${Math.random().toString(36).slice(2,8)}`), createdAt: now }; projects.unshift(existing); currentProjectId = existing.id; }
+        Object.assign(existing, { name, prompt: promptBox.value.trim(), html, updatedAt: now });
+        try { setProjects(projects.slice(0, 50)); saveWorkingDraft(); renderProjects(); say(`“${name}” saved to My Websites on this device.`, 'success'); toast('Website saved to My Websites.'); }
+        catch (_) { say('Could not save. Your browser storage may be full or disabled.', 'error'); toast('Save failed. Export the HTML as a backup.'); }
+      }
+      function openProject(id, mode = 'edit') {
+        const project = getProjects().find(p => p.id === id);
+        if (!project) { toast('That saved website could not be found.'); renderProjects(); return; }
+        currentProjectId = project.id; $('projectName').value = project.name || ''; promptBox.value = project.prompt || ''; updateCount();
+        undoStack = []; redoStack = []; currentHtml = ''; showHtml(project.html || '', false); scheduleWorkingDraftSave();
+        $('creator').scrollIntoView({behavior:'smooth', block:'start'});
+        say(`Opened “${project.name || 'My Website'}”. You can preview or edit it now.`, 'success');
+        if (mode === 'preview') $('preview').scrollIntoView({behavior:'smooth', block:'center'});
+        else { const details = document.querySelector('.editor-area details'); if (details) details.open = true; $('htmlEditor').focus({preventScroll:true}); }
+      }
+      function renameProject(id) {
+        const projects = getProjects(), project = projects.find(p => p.id === id); if (!project) return;
+        const next = prompt('Enter a new website name:', project.name || 'My Website');
+        if (next === null) return; if (!next.trim()) { toast('Website name cannot be empty.'); return; }
+        project.name = next.trim().slice(0, 80); project.updatedAt = new Date().toISOString();
+        try { setProjects(projects); renderProjects(); toast('Website renamed.'); } catch (_) { toast('Could not rename this website.'); }
+      }
+      function deleteProject(id) {
+        const project = getProjects().find(p => p.id === id); if (!project) return;
+        if (!confirm(`Delete “${project.name || 'My Website'}” from My Websites? This cannot be undone.`)) return;
+        try { setProjects(getProjects().filter(p => p.id !== id)); if (currentProjectId === id) currentProjectId = null; renderProjects(); toast('Website deleted.'); } catch (_) { toast('Could not delete this website.'); }
+      }
+      function loadDraft() {
+        const projects = getProjects();
+        if (projects.length) { openProject(projects[0].id, 'edit'); return; }
+        try {
+          const raw = localStorage.getItem(LEGACY_KEY);
+          if (!raw) { toast('No saved website found in this browser.'); return; }
+          const draft = JSON.parse(raw); promptBox.value = draft.prompt || ''; updateCount();
+          if (draft.html) {
+            currentProjectId = null;
+            showHtml(draft.html, false);
+            $('projectName').value = draft.name || guessProjectName(draft.html, 'Recovered Website');
+            toast('Draft restored. Tap Save to My Websites to keep it in your project list.');
+          } else if (draft.prompt) {
+            $('projectName').value = draft.name || '';
+            toast('Your saved description was restored. Generate a website to continue.');
+          } else {
+            toast('No saved website draft was found in this browser.');
+          }
+          scheduleWorkingDraftSave();
+        } catch (_) { say('Could not load the older saved draft.', 'error'); }
+      }
+      function updateCount() { $('charCount').textContent = promptBox.value.length; }
+      function setPreviewMode(mode) {
+        previewMode = mode;
+        preview.style.maxWidth = mode === 'mobile' ? '390px' : '100%';
+        preview.style.margin = mode === 'mobile' ? '0 auto' : '0';
+        $('desktopBtn').setAttribute('aria-pressed', String(mode === 'desktop'));
+        $('mobileBtn').setAttribute('aria-pressed', String(mode === 'mobile'));
+        $('desktopBtn').style.background = mode === 'desktop' ? '#f1edff' : '#fff';
+        $('mobileBtn').style.background = mode === 'mobile' ? '#f1edff' : '#fff';
+      }
+      async function generate() {
+        const prompt = promptBox.value.trim();
+        if (!prompt) { say('Describe the website you want to build first.', 'error'); promptBox.focus(); return; }
+        if (prompt.length > 3000) { say('Keep your description under 3000 characters.', 'error'); return; }
+        generateBtn.disabled = true; generateBtn.textContent = 'Generating…';
+        say('AniVora is generating your website. This can take a little while.');
+        try {
+          const controller = new AbortController();
+          const timer = setTimeout(() => controller.abort(), 310000);
+          let response;
+          try {
+            response = await fetch('/api/generate', {
+              method:'POST',
+              headers:{'Content-Type':'application/json'},
+              body:JSON.stringify({prompt}),
+              signal:controller.signal
+            });
+          } finally { clearTimeout(timer); }
+          const data = await response.json().catch(() => null);
+          if (!response.ok || !data || data.success !== true || typeof data.website?.html !== 'string') {
+            throw new Error(data?.error || 'The website could not be generated. Please try again.');
+          }
+          undoStack = []; redoStack = []; currentHtml = '';
+          showHtml(data.website.html, false);
+          if (!$('projectName').value.trim()) $('projectName').value = guessProjectName(data.website.html, 'My Website');
+          saveWorkingDraft();
+          say('Website generated. Preview it, edit the HTML if needed, then save or export.', 'success');
+          $('preview').scrollIntoView({behavior:'smooth',block:'nearest'});
+        } catch (err) {
+          const message = err.name === 'AbortError' ? 'Generation took too long. Please try again.' :
+            (err.message || 'Could not connect to AniVora API. Please try again.');
+          say(message, 'error');
+        } finally {
+          generateBtn.disabled = false; generateBtn.textContent = '✦ Generate website';
+        }
+      }
+
+      $('menuToggle').addEventListener('click', () => {
+        const open = $('navLinks').classList.toggle('open');
+        $('menuToggle').setAttribute('aria-expanded', String(open));
+        $('menuToggle').setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+        $('menuToggle').textContent = open ? '×' : '☰';
+      });
+      document.querySelectorAll('#navLinks a').forEach(a => a.addEventListener('click', () => {
+        $('navLinks').classList.remove('open'); $('menuToggle').setAttribute('aria-expanded','false'); $('menuToggle').textContent = '☰';
+      }));
+      promptBox.addEventListener('input', () => { updateCount(); scheduleWorkingDraftSave(); });
+      $('projectName').addEventListener('input', scheduleWorkingDraftSave);
+      htmlEditor.addEventListener('input', scheduleWorkingDraftSave);
+      document.querySelectorAll('[data-prompt]').forEach(button => button.addEventListener('click', () => {
+        promptBox.value = button.dataset.prompt || ''; updateCount();
+        $('creator').scrollIntoView({behavior:'smooth'}); promptBox.focus({preventScroll:true});
+      }));
+      generateBtn.addEventListener('click', generate);
+      $('clearBtn').addEventListener('click', () => { promptBox.value = ''; updateCount(); scheduleWorkingDraftSave(); say('Describe the website you want to build.'); promptBox.focus(); });
+      $('saveBtn').addEventListener('click', saveDraft);
+      $('loadDraftBtn').addEventListener('click', () => {
+        const projects = getProjects().slice().sort((a,b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
+        if (projects.length) openProject(projects[0].id, 'edit');
+        else loadDraft();
+      });
+      $('newWebsiteBtn').addEventListener('click', () => { currentProjectId = null; currentHtml = ''; promptBox.value = ''; $('projectName').value = ''; htmlEditor.value = ''; preview.removeAttribute('srcdoc'); preview.style.display = 'none'; previewEmpty.style.display = 'flex'; undoStack = []; redoStack = []; updateCount(); updateHistoryButtons(); scheduleWorkingDraftSave(); say('Ready for a new website.'); $('creator').scrollIntoView({behavior:'smooth'}); promptBox.focus({preventScroll:true}); });
+      $('applyHtmlBtn').addEventListener('click', () => {
+        const html = htmlEditor.value.trim();
+        if (!html) { toast('Paste or generate website HTML first.'); return; }
+        showHtml(html, true); say('HTML applied to the preview.', 'success');
+      });
+      $('exportBtn').addEventListener('click', () => safeDownload(htmlEditor.value.trim() || currentHtml));
+      $('undoBtn').addEventListener('click', () => {
+        if (undoStack.length < 2) return;
+        redoStack.push(currentHtml); currentHtml = undoStack.pop();
+        htmlEditor.value = currentHtml; preview.srcdoc = currentHtml; updateHistoryButtons(); say('Last HTML change undone.');
+      });
+      $('redoBtn').addEventListener('click', () => {
+        if (!redoStack.length) return;
+        const next = redoStack.pop(); undoStack.push(currentHtml); currentHtml = next;
+        htmlEditor.value = currentHtml; preview.srcdoc = currentHtml; updateHistoryButtons(); say('HTML change restored.');
+      });
+      $('desktopBtn').addEventListener('click', () => setPreviewMode('desktop'));
+      $('mobileBtn').addEventListener('click', () => setPreviewMode('mobile'));
+
+      // Lightweight reveal-on-scroll. Reduced-motion preference is respected in CSS.
+      if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+          if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+        }), {threshold:0.12});
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+      } else document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+
+      updateCount(); updateHistoryButtons(); setPreviewMode('desktop'); renderProjects();
+      try {
+        const lastDraft = JSON.parse(localStorage.getItem(LEGACY_KEY) || 'null');
+        if (lastDraft && (lastDraft.html || lastDraft.prompt)) {
+          say('A saved working draft is available. Use “Restore saved draft” to reopen it.');
+        }
+      } catch (_) {}
+    })();
+  </script>
+</body>
+</html>
