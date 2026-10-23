@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080a12">
+<title>AniVora Builder — AI Creation Studio</title>
+<style>
+:root{--bg:#080a12;--panel:#10131f;--panel2:#171b2b;--line:#292e43;--text:#f4f5ff;--muted:#929ab5;--purple:#9167ff;--cyan:#46e5f5;--green:#6cf0b4;--red:#ff758c}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 70% -10%,#22204a 0,transparent 42%),var(--bg);color:var(--text);font:14px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;border:1px solid var(--line);border-radius:9px;padding:10px 13px;color:var(--text);background:var(--panel2)}
+button:hover{border-color:var(--purple)}
+button:disabled{opacity:.55;cursor:wait}
+input,textarea,select{width:100%;color:var(--text);background:#090c16;border:1px solid var(--line);border-radius:9px;padding:11px;outline:none}
+input:focus,textarea:focus{border-color:var(--purple)}
+textarea{resize:vertical}
+a{color:var(--cyan)}
+.topbar{height:65px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);background:#090b14ed;position:sticky;top:0;z-index:5}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;letter-spacing:-.5px}
+.logo{width:35px;height:35px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,var(--purple),var(--cyan));color:#080a12;font-weight:950;font-size:20px}
+.status{font-size:11px;color:var(--green);display:flex;align-items:center;gap:6px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.top-actions{display:flex;gap:8px;align-items:center}
+.primary{background:linear-gradient(110deg,#8058f5,#a56bff);border:0;color:white;font-weight:750}
+.secondary{background:transparent}
+.layout{display:grid;grid-template-columns:225px minmax(0,1fr);min-height:calc(100vh - 65px)}
+.sidebar{padding:20px 13px;border-right:1px solid var(--line);background:#0c0f19}
+.nav-label{color:#66708f;font-size:10px;font-weight:800;letter-spacing:1.6px;padding:12px 10px 7px}
+.nav{display:flex;align-items:center;gap:10px;width:100%;background:transparent;border-color:transparent;text-align:left;color:#aeb5cc;margin:2px 0}
+.nav.active{background:#28203f;color:white;border-color:#4a3b71}
+.side-card{margin-top:25px;padding:14px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(150deg,#19182e,#10131f)}
+.side-card p{color:var(--muted);font-size:12px}
+main{min-width:0;padding:26px;max-width:1600px;width:100%;margin:0 auto}
+.heading{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;margin-bottom:23px}
+h1{font-size:clamp(24px,3vw,34px);line-height:1.2;letter-spacing:-1px;margin:0 0 8px}
+h2{font-size:16px;margin:0}
+p{margin:5px 0;color:var(--muted)}
+.eyebrow{color:var(--cyan);font-size:10px;letter-spacing:2px;font-weight:800;margin-bottom:8px}
+.badge{border:1px solid #3c365e;border-radius:30px;color:#c9b9ff;padding:5px 9px;font-size:11px;white-space:nowrap}
+.generator{border:1px solid #39304f;border-radius:16px;padding:20px;background:linear-gradient(130deg,#18152c,#111521 68%,#10202a);margin-bottom:20px}
+.prompt-label{display:block;font-weight:700;margin:15px 0 8px}
+#prompt{min-height:105px}
+.prompt-tools{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.examples{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.examples button{font-size:11px;color:#c3c8dc;padding:7px 9px}
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.panel{border:1px solid var(--line);background:#0d101b;border-radius:14px;overflow:hidden;min-width:0}
+.panel-head{min-height:51px;padding:10px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.panel-head small{color:var(--muted)}
+.panel-body{padding:13px}
+.tabs{display:flex;gap:5px}
+.tabs button{font-size:11px;padding:6px 9px}
+.tabs button.active{background:#302449;border-color:#6e51a6}
+#code{font:12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;min-height:365px;white-space:pre;overflow:auto;tab-size:2}
+#preview{display:block;width:100%;height:420px;border:0;background:white}
+.preview-tools{display:flex;gap:6px}
+.preview-tools button{font-size:11px;padding:6px 8px}
+.message{padding:10px 12px;border-radius:9px;margin:12px 0;font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere}
+.message.info{background:#171d31;color:#cbd4f4}
+.message.success{background:#10281f;color:#9cf4c7}
+.message.error{background:#311722;color:#ffb0be}
+.hidden{display:none!important}
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:17px}
+.section{border:1px solid var(--line);border-radius:13px;background:var(--panel);padding:16px;min-width:0}
+.section h2{margin-bottom:12px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row>*{flex:1;min-width:0}
+.small{font-size:11px;color:var(--muted)}
+#projects{display:flex;flex-direction:column;gap:8px}
+.project{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px;background:#0b0e17;border:1px solid var(--line);border-radius:9px}
+.project button{font-size:11px;padding:6px 8px}
+.scene{height:190px;position:relative;overflow:hidden;border-radius:10px;background:radial-gradient(ellipse at center,#25204e,#090b15 70%);display:grid;place-items:center;margin-bottom:12px;perspective:700px}
+.orb{position:absolute;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle at 30% 25%,#c5faff,#8b6dff 35%,#2b1769 70%,#080a12);box-shadow:0 0 35px #9365ff99,0 0 80px #47e5f522;animation:float 4s ease-in-out infinite}
+.ring{position:absolute;width:150px;height:55px;border:2px solid #75e9ff;border-radius:50%;transform:rotateX(68deg) rotateZ(-20deg);box-shadow:0 0 14px #48eaff66;animation:spin 9s linear infinite}
+.ring.two{width:180px;height:70px;border-color:#a38aff;transform:rotateX(70deg) rotateZ(45deg);animation-direction:reverse}
+.cube{position:absolute;width:34px;height:34px;border:1px solid #b6a1ff;transform:translate(70px,-36px) rotate(35deg);box-shadow:0 0 15px #9a75ff55;animation:float 3s ease-in-out infinite}
+@keyframes float{50%{translate:0 -10px}}
+@keyframes spin{to{rotate:360deg}}
+footer{text-align:center;color:#656e8a;padding:25px 10px;font-size:11px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{display:none}main{padding:17px}.workspace{grid-template-columns:1fr}.bottom-grid{grid-template-columns:1fr}#code{min-height:300px}}
+@media(max-width:500px){.topbar{padding:0 11px}.brand{font-size:14px}.top-actions button{padding:8px;font-size:11px}main{padding:12px}.generator{padding:13px}.heading{flex-direction:column}.badge{display:none}.prompt-tools button{flex:1}.panel-head{padding:9px}#preview{height:350px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><div class="logo">A</div><span>AniVora <span style="color:#a48aff">Builder</span></span></div>
+  <div class="top-actions">
+    <span class="status"><span class="dot"></span><span id="apiStatus">API not tested</span></span>
+    <button id="testApi" class="secondary">Test API</button>
+  </div>
+</header>
+
+<div class="layout">
+<aside class="sidebar">
+  <div class="nav-label">WORKSPACE</div>
+  <button class="nav active" data-section="builder">✦ &nbsp; AI Builder</button>
+  <button class="nav" data-section="projectsSection">▤ &nbsp; My Projects</button>
+  <button class="nav" data-section="sceneSection">◈ &nbsp; 3D Scene</button>
+  <button class="nav" data-section="settingsSection">⚙ &nbsp; API Settings</button>
+  <div class="side-card">
+    <div style="font-weight:750">Your creation space</div>
+    <p>Describe your idea. Generate a starting point. Edit and preview your code.</p>
+    <div class="status"><span class="dot"></span> Builder ready</div>
+  </div>
+  <div class="side-card">
+    <div style="font-size:12px;font-weight:750">API connection</div>
+    <p id="sideApi">Not tested yet</p>
+    <button style="width:100%" onclick="document.getElementById('settingsSection').scrollIntoView({behavior:'smooth'})">Connection settings</button>
+  </div>
+</aside>
+
+<main>
+  <section id="builder">
+    <div class="heading">
+      <div><div class="eyebrow">AI CREATION STUDIO</div><h1>Turn your ideas into websites.</h1><p>Describe your vision. Generate code. Edit it and see your changes.</p></div>
+      <span class="badge">EARLY ACCESS · 0.1</span>
+    </div>
+
+    <div class="generator">
+      <div style="font-size:16px;font-weight:800">✦ What do you want to create?</div>
+      <p>Be specific about the layout, colors, sections, and style.</p>
+      <label class="prompt-label" for="prompt">Your website idea</label>
+      <textarea id="prompt" placeholder="Example: Create a modern restaurant website with a dark background, menu cards, online booking button, customer reviews and a contact section."></textarea>
+      <div class="examples">
+        <button data-prompt="Create a modern restaurant website with a hero section, food menu cards, customer reviews and a reservation button.">🍽 Restaurant</button>
+        <button data-prompt="Create a professional portfolio website with an introduction, skills, projects, about section and contact form.">✦ Portfolio</button>
+        <button data-prompt="Create a modern online store with a hero banner, product cards, prices, categories and shopping buttons.">🛍 Online store</button>
+        <button data-prompt="Create a SaaS landing page with a hero section, features, pricing cards, testimonials and a call to action.">⚡ SaaS</button>
+      </div>
+      <div class="prompt-tools">
+        <span class="small">Generation uses your configured AniVora API.</span>
+        <button id="generate" class="primary">✦ Generate Website</button>
+      </div>
+      <div id="generationMessage" class="message info hidden"></div>
+    </div>
+
+    <div class="workspace">
+      <section class="panel">
+        <div class="panel-head"><div><strong>Code Editor</strong><br><small id="codeLanguage">HTML document</small></div><div class="tabs"><button class="active" data-code="html">HTML</button></div></div>
+        <div class="panel-body">
+          <textarea id="code" spellcheck="false" aria-label="Website HTML code"></textarea>
+          <div class="row" style="margin-top:9px">
+            <button id="updatePreview" class="primary">Update Preview</button>
+            <button id="download">Export HTML</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><div><strong>Live Preview</strong><br><small>Your website appears here</small></div><div class="preview-tools"><button id="refresh">↻ Refresh</button><button id="openPreview">↗ Open</button></div></div>
+        <iframe id="preview" title="Generated website preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+      </section>
+    </div>
+  </section>
+
+  <div class="bottom-grid">
+    <section id="projectsSection" class="section">
+      <h2>▤ My Projects</h2>
+      <div class="row"><input id="projectName" placeholder="Project name" value="My Website"><button id="saveProject" class="primary">Save Project</button></div>
+      <div id="projects" style="margin-top:12px"></div>
+      <p class="small">Projects are stored in this browser on this device.</p>
+    </section>
+
+    <section id="sceneSection" class="section">
+      <h2>◈ 3D Motion Preview</h2>
+      <div class="scene" id="scene"><div class="orb"></div><div class="ring"></div><div class="ring two"></div><div class="cube"></div></div>
+      <div class="row">
+        <button id="animateScene">Pause Motion</button>
+        <button id="newScene">Change Scene Colors</button>
+      </div>
+      <p class="small">A lightweight CSS 3D-style visual starter, not yet a full 3D modeling editor.</p>
+    </section>
+  </div>
+
+  <section id="settingsSection" class="section" style="margin-top:17px">
+    <h2>⚙ API Settings</h2>
+    <p>Use the documented AniVora API generation endpoint.</p>
+    <label class="prompt-label" for="apiUrl">Generation endpoint</label>
+    <input id="apiUrl" value="https://anivora-api-two.vercel.app/v1/generate" autocomplete="url">
+    <div class="row" style="margin-top:10px">
+      <div><label class="small" for="maxTokens">Maximum new tokens</label><input id="maxTokens" type="number" value="256" min="32" max="2048"></div>
+      <div><label class="small" for="temperature">Temperature</label><input id="temperature" type="number" value="0.7" min="0" max="2" step="0.1"></div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <button id="saveSettings" class="primary">Save Settings</button>
+      <button id="checkStatus">Check API Status</button>
+    </div>
+    <div id="settingsMessage" class="message info">No API key is embedded in this page. If your deployment requires an API key, use the authentication method configured by your backend.</div>
+  </section>
+
+  <footer>AniVora Builder · Create, edit, preview and export · Early development</footer>
+</main>
+</div>
+
+<script>
+"use strict";
+
+const DEFAULT_API = "https://anivora-api-two.vercel.app/v1/generate";
+const $ = (id) => document.getElementById(id);
+
+const starterHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My New Website</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:#172033}
+nav{padding:20px 8%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee}
+nav a{color:#6650d9;text-decoration:none;font-weight:bold}
+.hero{padding:85px 8%;background:linear-gradient(130deg,#f3efff,#e5faff);text-align:center}
+h1{font-size:clamp(32px,6vw,60px);line-height:1.1;margin:0 auto 20px;max-width:800px}
+p{line-height:1.7;color:#5d6678}
+.hero p{max-width:600px;margin:0 auto 25px}
+.btn{display:inline-block;padding:13px 22px;background:#7254e8;color:white;border-radius:8px;text-decoration:none}
+.cards{padding:55px 8%;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:18px}
+.card{border:1px solid #e6e8ef;border-radius:14px;padding:22px}
+.card h2{font-size:19px}
+footer{padding:28px;text-align:center;background:#111827;color:white}
+</style>
+</head>
+<body>
+<nav><strong>My Website</strong><a href="#contact">Contact</a></nav>
+<section class="hero"><h1>Your next big idea starts here.</h1><p>Edit this starter website using the AniVora Builder code editor, or describe your own idea above.</p><a class="btn" href="#features">Explore features</a></section>
+<section class="cards" id="features"><article class="card"><h2>Beautiful design</h2><p>A clean, responsive layout that adapts to different screens.</p></article><article class="card"><h2>Made for you</h2><p>Replace this text with your own products, services, or story.</p></article><article class="card"><h2>Get started</h2><p>Customize the design and export the HTML when ready.</p></article></section>
+<footer id="contact">Contact · Your business · 2026</footer>
+</body>
+</html>`;
+
+let currentHTML = starterHTML;
+let animationPaused = false;
+
+function showMessage(id, text, type = "info") {
+  const element = $(id);
+  element.className = "message " + type;
+  element.textContent = text;
+  element.classList.remove("hidden");
+}
+
+function setAPIStatus(text, ok = false) {
+  $("apiStatus").textContent = text;
+  $("sideApi").textContent = text;
+  const dot = document.querySelector(".status .dot");
+  if (dot) dot.style.background = ok ? "var(--green)" : "var(--red)";
+}
+
+function getSettings() {
+  return {
+    endpoint: $("apiUrl").value.trim() || DEFAULT_API,
+    maxTokens: Math.max(32, Math.min(2048, Number($("maxTokens").value) || 256)),
+    temperature: Math.max(0, Math.min(2, Number($("temperature").value) || 0.7))
+  };
+}
+
+function saveSettings() {
+  const settings = getSettings();
+  if (!/^https?:\/\//i.test(settings.endpoint)) {
+    showMessage("settingsMessage", "Enter a valid HTTP or HTTPS endpoint.", "error");
+    return;
+  }
+  try {
+    localStorage.setItem("anivora-builder-settings", JSON.stringify(settings));
+    showMessage("settingsMessage", "Settings saved on this device.", "success");
+  } catch (error) {
+    showMessage("settingsMessage", "Could not save settings in this browser.", "error");
+  }
+}
+
+function loadSettings() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("anivora-builder-settings") || "null");
+    if (saved) {
+      $("apiUrl").value = saved.endpoint || DEFAULT_API;
+      $("maxTokens").value = saved.maxTokens || 256;
+      $("temperature").value = saved.temperature ?? 0.7;
+    }
+  } catch (error) {
+    console.warn("Could not load saved settings.");
+  }
+}
+
+function updatePreview() {
+  currentHTML = $("code").value;
+  $("preview").srcdoc = currentHTML;
+}
+
+function extractGeneratedText(data) {
+  if (typeof data === "string") return data;
+  if (data && typeof data === "object") {
+    if (typeof data.generated_text === "string") return data.generated_text;
+    if (typeof data.text === "string") return data.text;
+    if (typeof data.output === "string") return data.output;
+    if (typeof data.content === "string") return data.content;
+    if (typeof data.response === "string") return data.response;
+  }
+  return "";
+}
+
+function extractHTML(text) {
+  let value = String(text || "").trim();
+  value = value.replace(/^```(?:html)?\s*/i, "").replace(/\s*```$/i, "").trim();
+
+  const start = value.toLowerCase().indexOf("<!doctype html");
+  const altStart = value.toLowerCase().indexOf("<html");
+  const index = start >= 0 ? start : altStart;
+
+  if (index > 0) value = value.slice(index);
+  return value;
+}
+
+async function generateWebsite() {
+  const prompt = $("prompt").value.trim();
+  if (!prompt) {
+    showMessage("generationMessage", "Describe the website you want to create first.", "error");
+    $("prompt").focus();
+    return;
+  }
+
+  const settings = getSettings();
+  const button = $("generate");
+  button.disabled = true;
+  button.textContent = "Generating…";
+  showMessage("generationMessage", "Sending your prompt to AniVora API. Please wait.", "info");
+
+  const fullPrompt = [
+    "You are the website generation engine for AniVora Builder.",
+    "Generate one complete, self-contained, working HTML document for the user's website.",
+    "Return only HTML, starting with <!DOCTYPE html>. Do not use Markdown fences or explanations.",
+    "Put all CSS inside a style element and any necessary JavaScript inside a script element.",
+    "Use responsive design, accessible markup, polished visual design, realistic sample content, and working navigation.",
+    "Do not claim that forms, payments, authentication, or backend services work unless implemented.",
+    "Avoid external libraries and external images where possible.",
+    "User's website request:",
+    prompt
+  ].join("\n\n");
+
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 120000);
+
+    let response;
+    try {
+      response = await fetch(settings.endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json, text/plain" },
+        body: JSON.stringify({
+          prompt: fullPrompt,
+          max_new_tokens: settings.maxTokens,
+          temperature: settings.temperature
+        }),
+        signal: controller.signal
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
+
+    const responseText = await response.text();
+
+    if (!response.ok) {
+      throw new Error("API returned HTTP " + response.status + ". " + responseText.slice(0, 500));
+    }
+
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch {
+      data = responseText;
+    }
+
+    const generated = extractGeneratedText(data);
+    if (!generated) {
+      throw new Error("The API responded, but no generated text was found in its response. Response: " + responseText.slice(0, 400));
+    }
+
+    const html = extractHTML(generated);
+    if (!/<html[\s>]/i.test(html) && !/<!doctype html/i.test(html)) {
+      throw new Error("The model responded, but its output does not appear to be a complete HTML page. Try a shorter prompt or adjust the model.");
+    }
+
+    $("code").value = html;
+    currentHTML = html;
+    updatePreview();
+    setAPIStatus("Generation connected", true);
+    showMessage("generationMessage", "Website generated successfully. You can edit the HTML, update the preview, save the project, or export it.", "success");
+  } catch (error) {
+    let message = error && error.message ? error.message : String(error);
+    if (error.name === "AbortError") message = "The generation request timed out. The model may be taking too long to respond.";
+    if (error instanceof TypeError) {
+      message = "The browser could not reach the generation endpoint. The API may have a CORS configuration issue, or your connection may be unavailable. Check API Status below. Details: " + message;
+    }
+    setAPIStatus("Connection issue", false);
+    showMessage("generationMessage", message, "error");
+  } finally {
+    button.disabled = false;
+    button.textContent = "✦ Generate Website";
+  }
+}
+
+async function checkAPIStatus() {
+  const endpoint = getSettings().endpoint;
+  let origin;
+  try {
+    origin = new URL(endpoint).origin;
+  } catch {
+    showMessage("settingsMessage", "The endpoint URL is invalid.", "error");
+    return;
+  }
+
+  $("checkStatus").disabled = true;
+  showMessage("settingsMessage", "Checking the AniVora API root and status endpoint…", "info");
+
+  try {
+    const results = await Promise.allSettled([
+      fetch(origin + "/", { method: "GET" }),
+      fetch(origin + "/v1/status", { method: "GET" })
+    ]);
+
+    const details = results.map((result, index) => {
+      const name = index === 0 ? "Root" : "/v1/status";
+      if (result.status === "rejected") return name + ": browser could not access it (possibly CORS).";
+      return name + ": HTTP " + result.value.status;
+    });
+
+    const ok = results.some(result => result.status === "fulfilled" && result.value.ok);
+    setAPIStatus(ok ? "API reachable" : "Check connection", ok);
+    showMessage("settingsMessage", details.join("\n") + "\n\nThis checks GET endpoints only; it does not yet prove that generation works. If the browser reports a network/CORS error, the API backend may need a CORS configuration update.", ok ? "success" : "error");
+  } catch (error) {
+    setAPIStatus("Connection issue", false);
+    showMessage("settingsMessage", "Could not check the API from this browser. " + error.message, "error");
+  } finally {
+    $("checkStatus").disabled = false;
+  }
+}
+
+async function testAPI() {
+  $("settingsSection").scrollIntoView({ behavior: "smooth" });
+  await checkAPIStatus();
+}
+
+function downloadHTML() {
+  const content = $("code").value;
+  const blob = new Blob([content], { type: "text/html;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = (($("projectName").value || "anivora-website").trim().replace(/[^a-z0-9-_]+/gi, "-") || "anivora-website") + ".html";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function readProjects() {
+  try {
+    const value = JSON.parse(localStorage.getItem("anivora-builder-projects") || "[]");
+    return Array.isArray(value) ? value : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveProject() {
+  const name = $("projectName").value.trim() || "Untitled Website";
+  const projects = readProjects();
+  const existingIndex = projects.findIndex(project => project.name === name);
+
+  const project = { name, html: $("code").value, updatedAt: new Date().toISOString() };
+  if (existingIndex >= 0) projects[existingIndex] = project;
+  else projects.unshift(project);
+
+  try {
+    localStorage.setItem("anivora-builder-projects", JSON.stringify(projects));
+    renderProjects();
+    showMessage("generationMessage", 'Project "' + name + '" saved on this device.', "success");
+  } catch {
+    showMessage("generationMessage", "Could not save this project. Browser storage may be full or unavailable.", "error");
+  }
+}
+
+function loadProject(name) {
+  const project = readProjects().find(item => item.name === name);
+  if (!project) return;
+  $("projectName").value = project.name;
+  $("code").value = project.html;
+  updatePreview();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function deleteProject(name) {
+  const remaining = readProjects().filter(item => item.name !== name);
+  try {
+    localStorage.setItem("anivora-builder-projects", JSON.stringify(remaining));
+    renderProjects();
+  } catch {
+    alert("Could not update saved projects.");
+  }
+}
+
+function renderProjects() {
+  const container = $("projects");
+  container.replaceChildren();
+  const projects = readProjects();
+
+  if (!projects.length) {
+    const empty = document.createElement("p");
+    empty.className = "small";
+    empty.textContent = "No saved projects yet.";
+    container.appendChild(empty);
+    return;
+  }
+
+  projects.forEach(project => {
+    const row = document.createElement("div");
+    row.className = "project";
+    const name = document.createElement("span");
+    name.textContent = project.name;
+    name.style.overflowWrap = "anywhere";
+
+    const actions = document.createElement("div");
+    actions.className = "row";
+    actions.style.flex = "0 0 auto";
+
+    const open = document.createElement("button");
+    open.textContent = "Open";
+    open.addEventListener("click", () => loadProject(project.name));
+
+    const remove = document.createElement("button");
+    remove.textContent = "Delete";
+    remove.addEventListener("click", () => deleteProject(project.name));
+
+    actions.append(open, remove);
+    row.append(name, actions);
+    container.appendChild(row);
+  });
+}
+
+document.querySelectorAll("[data-prompt]").forEach(button => {
+  button.addEventListener("click", () => {
+    $("prompt").value = button.dataset.prompt;
+    $("prompt").focus();
+    $("builder").scrollIntoView({ behavior: "smooth" });
+  });
+});
+
+document.querySelectorAll("[data-section]").forEach(button => {
+  button.addEventListener("click", () => {
+    const target = $(button.dataset.section);
+    if (target) target.scrollIntoView({ behavior: "smooth" });
+    document.querySelectorAll("[data-section]").forEach(item => item.classList.remove("active"));
+    button.classList.add("active");
+  });
+});
+
+$("generate").addEventListener("click", generateWebsite);
+$("updatePreview").addEventListener("click", updatePreview);
+$("refresh").addEventListener("click", updatePreview);
+$("download").addEventListener("click", downloadHTML);
+$("saveProject").addEventListener("click", saveProject);
+$("testApi").addEventListener("click", testAPI);
+$("checkStatus").addEventListener("click", checkAPIStatus);
+$("saveSettings").addEventListener("click", saveSettings);
+$("animateScene").addEventListener("click", () => {
+  animationPaused = !animationPaused;
+  $("scene").querySelectorAll(".orb,.ring,.cube").forEach(element => {
+    element.style.animationPlayState = animationPaused ? "paused" : "running";
+  });
+  $("animateScene").textContent = animationPaused ? "Resume Motion" : "Pause Motion";
+});
+$("newScene").addEventListener("click", () => {
+  const hues = [190, 240, 270, 310, 160, 35];
+  const hue = hues[Math.floor(Math.random() * hues.length)];
+  $("scene").querySelector(".orb").style.filter = "hue-rotate(" + hue + "deg)";
+  $("scene").querySelectorAll(".ring").forEach((ring, index) => {
+    ring.style.filter = "hue-rotate(" + (hue + index * 40) + "deg)";
+  });
+});
+$("openPreview").addEventListener("click", () => {
+  const blob = new Blob([$("code").value], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  const opened = window.open(url, "_blank", "noopener");
+  if (!opened) {
+    showMessage("generationMessage", "Your browser blocked the new tab. Use Export HTML instead.", "error");
+  }
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+});
+
+loadSettings();
+$("code").value = starterHTML;
+updatePreview();
+renderProjects();
+</script>
+</body>
+  </html>
