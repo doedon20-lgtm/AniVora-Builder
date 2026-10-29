@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0b10">
+  <meta name="description" content="Explore imaginative AI art, remix creative prompts, and discover your next visual idea with AniVora Build.">
+  <title>ANIVORA BUILD — AI Art Gallery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="navbar" id="top">
+    <a class="brand" href="#top" aria-label="AniVora Build home"><span class="brand-mark">A</span><span>ANIVORA <b>BUILD</b></span></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+    <nav class="nav-links" id="navLinks" aria-label="Main navigation">
+      <a href="#gallery">Explore</a><a href="#create">Create</a><a href="#pricing">Pricing</a>
+    </nav>
+    <div class="nav-actions">
+      <label class="search-box"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Search art..." aria-label="Search gallery"></label>
+      <a class="button button-ghost" href="#footer">Sign in</a>
+      <a class="button button-primary" href="#create">Get Started <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero section-wrap" id="create">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="status-dot"></span> YOUR IMAGINATION, AMPLIFIED</div>
+        <h1>Art has no limits.<br><span>Neither should you.</span></h1>
+        <p class="hero-description">Explore worlds that don't exist yet. Find inspiration, shape a prompt, and bring your next big idea to life.</p>
+        <form class="prompt-box" id="promptForm">
+          <label for="promptInput">Describe the image you imagine</label>
+          <textarea id="promptInput" rows="2" placeholder="A glass city floating above lavender clouds at sunset..." maxlength="500"></textarea>
+          <div class="prompt-bottom"><span class="prompt-hint">✦ Be specific. Dream big.</span><button class="button button-primary generate-button" type="submit">✦ Generate</button></div>
+        </form>
+        <div class="suggestions" aria-label="Prompt suggestions"><span>Try:</span>
+          <button type="button" class="chip" data-prompt="A dreamy underwater palace with glowing coral, cinematic light">Underwater worlds</button>
+          <button type="button" class="chip" data-prompt="Anime hero standing in a neon rain-soaked Tokyo street">Anime hero</button>
+          <button type="button" class="chip" data-prompt="A tiny cottage in an enchanted forest, soft morning mist">Enchanted forest</button>
+          <button type="button" class="chip" data-prompt="Minimal futuristic architecture in a desert, warm editorial photography">Future architecture</button>
+        </div>
+        <p class="form-note" id="formNote" role="status" aria-live="polite"></p>
+      </div>
+      <div class="hero-art">
+        <img src="https://picsum.photos/seed/anivora-hero/760/900" alt="Atmospheric abstract art inspiration" fetchpriority="high">
+        <div class="art-caption"><span class="caption-avatar">✦</span><div><strong>Dreamscape No. 08</strong><small>Featured inspiration · Editorial</small></div><span class="caption-spark">✧</span></div>
+        <div class="floating-tag"><span>✦</span> Made for the curious</div>
+      </div>
+    </section>
+
+    <section class="section-wrap gallery-section" id="gallery">
+      <div class="section-heading"><div><div class="eyebrow">THE COMMUNITY CANVAS</div><h2>Ideas made <span>visual.</span></h2><p>Fresh inspiration for wherever your imagination takes you.</p></div><a class="text-link" href="#gallery" id="resetGallery">Explore all art <span>↗</span></a></div>
+      <div class="category-tabs" role="group" aria-label="Filter art by category">
+        <button class="category-tab active" data-category="all" aria-pressed="true">All art</button>
+        <button class="category-tab" data-category="portrait" aria-pressed="false">Portraits</button>
+        <button class="category-tab" data-category="anime" aria-pressed="false">Anime</button>
+        <button class="category-tab" data-category="fantasy" aria-pressed="false">Fantasy</button>
+        <button class="category-tab" data-category="architecture" aria-pressed="false">Architecture</button>
+        <button class="category-tab" data-category="scifi" aria-pressed="false">Sci-Fi</button>
+      </div>
+      <div class="gallery" id="galleryGrid">
+        <article class="art-card" data-category="fantasy" data-prompt="A moonlit botanical garden with luminous flowers and silver mist"><img src="https://picsum.photos/seed/avi-flora/520/690" alt="Moonlit garden inspiration" loading="lazy"><div class="art-overlay"><p>A moonlit botanical garden with luminous flowers and silver mist</p><div><button class="icon-button like-button" aria-label="Like artwork" aria-pressed="false">♡ <span>24</span></button><button class="button button-small remix-button">Remix ↗</button></div></div><span class="art-tag">Fantasy</span></article>
+        <article class="art-card" data-category="portrait" data-prompt="Editorial portrait, soft golden light, sculptural shadows and rich texture"><img src="https://picsum.photos/seed/avi-portrait/520/440" alt="Editorial portrait inspiration" loading="lazy"><div class="art-overlay"><p>Editorial portrait, soft golden light, sculptural shadows and rich texture</p><div><button class="icon-button like-button" aria-label="Like artwork" aria-pressed="false">♡ <span>18</span></button><button class="button button-small remix-button">Remix ↗</button></div></div><span class="art-tag">Portraits</span></article>
+        <article class="art-card" data-category="architecture" data-prompt="Sculptural concrete house nestled in a quiet desert landscape"><img src="https://picsum.photos/seed/avi-arch/520/600" alt="Modern architecture inspiration" loading="lazy"><div class="art-overlay"><p>Sculptural concrete house nestled in a quiet desert landscape</p><div><button class="icon-button like-button" aria-label="Like artwork" aria-pressed="false">♡ <span>31</span></button><button class="button button-small remix-button">Remix ↗</button></div></div><span class="art-tag">Architecture</span></article>
+        <article class="art-card" data-category="anime" data-prompt="Anime wanderer beneath a sky filled with electric blue stars"><img src="https://picsum.photos/seed/avi-anime/520/720" alt="Anime-inspired night scene" loading="lazy"><div class="art-overlay"><p>Anime wanderer beneath a sky filled with electric blue stars</p><div><button class="icon-button like-button" aria-label="Like artwork" aria-pressed="false">♡ <span>42</span></button><button class="button button-small remix-button">Remix ↗</button></div></div><span class="art-tag">Anime</span></article>
+        <article class="art-card" data-category="scifi" data-prompt="A futuristic city seen through a rain-covered glass canopy"><img src="https://picsum.photos/seed/avi-scifi/520/510" alt="Futuristic city inspiration" loading="lazy"><div class="art-overlay"><p>A futuristic city seen through a rain-covered glass canopy</p><div><button class="icon-button like-button" aria-label="Like artwork" aria-pressed="false">♡ <span>16</span></button><button class="button button-small remix-button">Remix ↗</button></div></div><span class="art-tag">Sci-Fi</span></article>
+        <article class="art-card" data-category="fantasy" data-prompt="Tiny storybook village perched on cliffs above a sea of clouds"><img src="https://picsum.photos/seed/avi-village/520/650" alt="Fantasy village inspiration" loading="lazy"><div class="art-overlay"><p>Tiny storybook village perched on cliffs above a sea of clouds</p><div><button class="icon-button like-button" aria-label="Like artwork" aria-pressed="false">♡ <span>27</span></button><button class="button button-small remix-button">Remix ↗</button></div></div><span class="art-tag">Fantasy</span></article>
+        <article class="art-card" data-category="portrait" data-prompt="Minimal beauty portrait with iridescent highlights and a dreamy backdrop"><img src="https://picsum.photos/seed/avi-beauty/520/470" alt="Minimal beauty portrait inspiration" loading="lazy"><div class="art-overlay"><p>Minimal beauty portrait with iridescent highlights and a dreamy backdrop</p><div><button class="icon-button like-button" aria-label="Like artwork" aria-pressed="false">♡ <span>35</span></button><button class="button button-small remix-button">Remix ↗</button></div></div><span class="art-tag">Portraits</span></article>
+        <article class="art-card" data-category="architecture" data-prompt="A serene modern museum framed by a reflecting pool at dusk"><img src="https://picsum.photos/seed/avi-museum/520/680" alt="Museum architecture inspiration" loading="lazy"><div class="art-overlay"><p>A serene modern museum framed by a reflecting pool at dusk</p><div><button class="icon-button like-button" aria-label="Like artwork" aria-pressed="false">♡ <span>12</span></button><button class="button button-small remix-button">Remix ↗</button></div></div><span class="art-tag">Architecture</span></article>
+        <article class="art-card" data-category="anime" data-prompt="A brave young explorer with a tiny robot companion in a flower field"><img src="https://picsum.photos/seed/avi-explorer/520/570" alt="Anime explorer inspiration" loading="lazy"><div class="art-overlay"><p>A brave young explorer with a tiny robot companion in a flower field</p><div><button class="icon-button like-button" aria-label="Like artwork" aria-pressed="false">♡ <span>29</span></button><button class="button button-small remix-button">Remix ↗</button></div></div><span class="art-tag">Anime</span></article>
+        <article class="art-card" data-category="scifi" data-prompt="A luminous spacecraft drifting through a violet nebula"><img src="https://picsum.photos/seed/avi-space/520/720" alt="Spacecraft and nebula inspiration" loading="lazy"><div class="art-overlay"><p>A luminous spacecraft drifting through a violet nebula</p><div><button class="icon-button like-button" aria-label="Like artwork" aria-pressed="false">♡ <span>39</span></button><button class="button button-small remix-button">Remix ↗</button></div></div><span class="art-tag">Sci-Fi</span></article>
+        <article class="art-card" data-category="fantasy" data-prompt="An ancient library hidden inside a giant tree, warm magical light"><img src="https://picsum.photos/seed/avi-library/520/500" alt="Magical library inspiration" loading="lazy"><div class="art-overlay"><p>An ancient library hidden inside a giant tree, warm magical light</p><div><button class="icon-button like-button" aria-label="Like artwork" aria-pressed="false">♡ <span>21</span></button><button class="button button-small remix-button">Remix ↗</button></div></div><span class="art-tag">Fantasy</span></article>
+        <article class="art-card" data-category="scifi" data-prompt="A quiet neon street on a distant planet after rainfall"><img src="https://picsum.photos/seed/avi-neon/520/640" alt="Neon street on a distant planet" loading="lazy"><div class="art-overlay"><p>A quiet neon street on a distant planet after rainfall</p><div><button class="icon-button like-button" aria-label="Like artwork" aria-pressed="false">♡ <span>33</span></button><button class="button button-small remix-button">Remix ↗</button></div></div><span class="art-tag">Sci-Fi</span></article>
+      </div>
+      <p class="empty-state" id="emptyState" hidden>No artwork matches that search. Try another prompt or category.</p>
+      <div class="gallery-bottom"><button class="button button-secondary" id="showAllButton">View all inspiration <span>↓</span></button></div>
+    </section>
+
+    <section class="features-section">
+      <div class="section-wrap"><div class="center-heading"><div class="eyebrow">A PLAYGROUND FOR IDEAS</div><h2>From “what if?” to <span>what’s next.</span></h2><p>Everything you need to turn a spark of inspiration into a creative direction.</p></div>
+        <div class="feature-grid">
+          <article class="feature-card"><div class="feature-icon purple-icon">✦</div><h3>Prompt your imagination</h3><p>Shape a vision with words, references, and little details that make an idea yours.</p><a href="#create">Start with a prompt <span>↗</span></a></article>
+          <article class="feature-card"><div class="feature-icon pink-icon">◇</div><h3>Discover new directions</h3><p>Explore a gallery of styles and concepts to spark the next version of your idea.</p><a href="#gallery">Explore the gallery <span>↗</span></a></article>
+          <article class="feature-card"><div class="feature-icon blue-icon">⤴</div><h3>Remix what inspires you</h3><p>Bring an artwork’s prompt into the creator and make it your own starting point.</p><a href="#gallery">Find inspiration <span>↗</span></a></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-wrap pricing-section" id="pricing">
+      <div class="center-heading"><div class="eyebrow">SIMPLE, CREATIVE FREEDOM</div><h2>Make room for <span>more ideas.</span></h2><p>Choose the space you need to explore. Plans are illustrative until billing is connected.</p></div>
+      <div class="pricing-grid">
+        <article class="price-card"><h3>Starter</h3><p class="price-description">For curious minds getting started.</p><div class="price">Free <small>/ forever</small></div><ul><li>✓ Explore the gallery</li><li>✓ Save favorite inspirations</li><li>✓ Use prompt suggestions</li><li class="dimmed">— Image generation not connected</li></ul><a class="button button-secondary full-button" href="#create">Start exploring</a></article>
+        <article class="price-card featured-price"><div class="popular-label">MOST POPULAR</div><h3>Creator</h3><p class="price-description">For people making ideas happen.</p><div class="price">$12 <small>/ month</small></div><ul><li>✓ Everything in Starter</li><li>✓ Expanded creative workspace</li><li>✓ Prompt remixing tools</li><li>✓ Future generation credits</li></ul><a class="button button-primary full-button" href="#create">Choose Creator</a><p class="price-footnote">Illustrative pricing · Checkout not connected</p></article>
+        <article class="price-card"><h3>Studio</h3><p class="price-description">For ambitious creative projects.</p><div class="price">$29 <small>/ month</small></div><ul><li>✓ Everything in Creator</li><li>✓ Team-ready creative workflow</li><li>✓ Higher future usage limits</li><li>✓ Priority feature access</li></ul><a class="button button-secondary full-button" href="#create">Explore Studio</a></article>
+      </div>
+    </section>
+    <section class="closing-cta section-wrap"><div><div class="eyebrow">YOUR NEXT IDEA STARTS HERE</div><h2>Make something only <span>you can imagine.</span></h2><p>Browse, remix, and follow your curiosity wherever it leads.</p></div><a class="button button-primary" href="#create">Start creating <span>↗</span></a></section>
+  </main>
+
+  <footer class="footer" id="footer"><div class="section-wrap footer-grid">
+    <div class="footer-brand"><a class="brand" href="#top"><span class="brand-mark">A</span><span>ANIVORA <b>BUILD</b></span></a><p>A home for curious minds and ideas that deserve to be seen.</p><div class="social-links"><a href="#footer" aria-label="Instagram">◎</a><a href="#footer" aria-label="X social network">𝕏</a><a href="#footer" aria-label="Pinterest">ℙ</a></div></div>
+    <div class="footer-column"><h4>Discover</h4><a href="#gallery">Explore gallery</a><a href="#gallery" data-footer-category="fantasy">Fantasy art</a><a href="#gallery" data-footer-category="anime">Anime worlds</a></div>
+    <div class="footer-column"><h4>Create</h4><a href="#create">Prompt studio</a><a href="#gallery">Remix inspiration</a><a href="#pricing">Plans & pricing</a></div>
+    <div class="footer-column"><h4>AniVora</h4><a href="#footer">About us</a><a href="#footer">Community</a><a href="mailto:hello@anivora.example">Contact</a></div>
+  </div><div class="section-wrap footer-bottom"><span>© <span id="year"></span> AniVora Build</span><span>Made for imagination <span class="gradient-heart">♥</span></span><span>Images are visual placeholders.</span></div></footer>
+</body>
+</html>
