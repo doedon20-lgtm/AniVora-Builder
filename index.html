@@ -1,240 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>My Website Builder</title>
-  <style>
-    /* Reset and base styles */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f5;
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    /* Sidebar styles */
-    .sidebar {
-      width: 240px;
-      background: linear-gradient(180deg, indigo, purple);
-      display: flex;
-      flex-direction: column;
-      padding-top: 20px;
-      color: white;
-      box-shadow: 2px 0 8px rgba(0,0,0,0.2);
-    }
-
-    .sidebar h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 22px;
-      font-weight: bold;
-    }
-
-    .sidebar button {
-      background-color: #444;
-      color: #fff;
-      border: none;
-      padding: 15px;
-      margin: 10px;
-      text-align: left;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 6px;
-      transition: all 0.3s ease;
-    }
-
-    .sidebar button:hover {
-      background-color: grey;
-      transform: scale(1.05);
-    }
-
-    /* Main content area */
-    .main {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .header {
-      background-color: #6a5acd;
-      color: white;
-      padding: 15px;
-      font-size: 20px;
-      border-bottom: 2px solid grey;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .header span {
-      font-weight: bold;
-    }
-
-    /* Builder workspace */
-    .builder {
-      flex-grow: 1;
-      display: flex;
-      overflow: hidden;
-    }
-
-    /* Editor panel */
-    .editor-panel {
-      width: 40%;
-      background-color: #fff;
-      border-right: 2px solid #ddd;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .editor-panel h3 {
-      margin-bottom: 10px;
-      color: indigo;
-    }
-
-    .editor-panel textarea {
-      width: 100%;
-      height: 200px;
-      border: 2px solid indigo;
-      border-radius: 8px;
-      padding: 10px;
-      font-size: 16px;
-      resize: vertical;
-    }
-
-    /* Drag-and-drop blocks */
-    .blocks {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .block {
-      background-color: #6a5acd;
-      color: white;
-      padding: 10px;
-      border-radius: 6px;
-      cursor: grab;
-      user-select: none;
-      transition: transform 0.2s;
-    }
-
-    .block:active {
-      transform: scale(1.1);
-    }
-
-    /* Preview panel */
-    .preview-panel {
-      flex-grow: 1;
-      background-color: #fafafa;
-      padding: 20px;
-      overflow-y: auto;
-      border-left: 2px solid #ddd;
-    }
-
-    .preview-panel h3 {
-      margin-bottom: 10px;
-      color: purple;
-    }
-
-    .preview {
-      min-height: 400px;
-      border: 2px dashed grey;
-      border-radius: 8px;
-      padding: 20px;
-      background-color: #fff;
-    }
-
-    /* Motion graphics: animated gradient background */
-    @keyframes gradientShift {
-      0% { background: linear-gradient(180deg, indigo, purple); }
-      50% { background: linear-gradient(180deg, purple, grey); }
-      100% { background: linear-gradient(180deg, indigo, purple); }
-    }
-
-    .sidebar {
-      animation: gradientShift 10s infinite alternate;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f6f7fc">
+<title>AniVora Builder — Website Workspace</title>
+<style>
+:root{--ink:#202642;--muted:#78809a;--line:#e6e8f1;--paper:#fff;--canvas:#f6f7fc;--blue:#4777e8;--indigo:#5746c8;--lav:#eeeaff;--shadow:0 12px 34px rgba(35,43,80,.07)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--canvas)}button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #a9baff;outline-offset:2px}
+.app{min-height:100vh;display:grid;grid-template-columns:248px minmax(0,1fr)}
+.sidebar{background:#fff;border-right:1px solid var(--line);padding:22px 15px;display:flex;flex-direction:column;gap:26px;min-height:100vh}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px}.brand-mark{width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,#427be9,#7760df);display:grid;place-items:center;color:white;font-size:20px;font-weight:800;box-shadow:0 7px 18px #7660df38}.brand strong{font-size:17px;letter-spacing:-.5px}.brand small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+.nav-label{font-size:10px;font-weight:800;letter-spacing:1.4px;color:#9aa0b3;padding:0 12px 8px}.nav{display:grid;gap:5px}.nav button{border:0;background:transparent;color:#69718c;border-radius:11px;text-align:left;padding:12px 13px;display:flex;align-items:center;gap:12px;font-size:13px;font-weight:650;transition:.18s}.nav button:hover{background:#f5f6fc;color:var(--ink)}.nav button.active{background:linear-gradient(100deg,#eeedff,#f4f5ff);color:var(--indigo)}.nav .ico{width:20px;text-align:center;font-size:17px}.side-bottom{margin-top:auto;border:1px solid var(--line);border-radius:15px;padding:14px;background:linear-gradient(145deg,#faf9ff,#f4f6ff)}.side-bottom strong{font-size:12px}.side-bottom p{font-size:11px;color:var(--muted);line-height:1.5;margin:7px 0 12px}.small-btn{width:100%;border:1px solid #dedafa;border-radius:9px;background:#fff;color:var(--indigo);padding:9px;font-size:12px;font-weight:700}
+.workspace{min-width:0;display:flex;flex-direction:column}.topbar{height:70px;background:#ffffffdc;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;gap:14px;position:sticky;top:0;z-index:5;backdrop-filter:blur(12px)}.crumb{font-size:13px;color:var(--muted)}.crumb b{color:var(--ink)}.top-actions{display:flex;align-items:center;gap:9px}.status{font-size:11px;color:#23845b;background:#e8f8ef;padding:7px 10px;border-radius:20px;white-space:nowrap}.btn{border:1px solid #dfe3ef;background:white;color:#424b69;padding:10px 14px;border-radius:10px;font-size:12px;font-weight:750;transition:.18s}.btn:hover{transform:translateY(-1px);box-shadow:0 5px 14px #28345d12}.btn.primary{background:linear-gradient(120deg,var(--blue),var(--indigo));border-color:transparent;color:white}.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.page{padding:28px;max-width:1600px;width:100%;margin:0 auto}.page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:24px}.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:1.7px;color:var(--indigo);font-weight:850;margin-bottom:9px}.page h1{font-size:clamp(24px,3vw,34px);letter-spacing:-1.2px;margin:0}.sub{color:var(--muted);font-size:13px;line-height:1.7;margin:9px 0 0;max-width:620px}
+.hero{background:radial-gradient(circle at 90% 0%,#dfe6ff 0,transparent 35%),linear-gradient(120deg,#fff,#f6f4ff);border:1px solid #e4e5f8;border-radius:20px;padding:24px;margin-bottom:22px;box-shadow:var(--shadow)}.hero h2{font-size:18px;margin:0 0 7px}.hero p{font-size:12px;color:var(--muted);margin:0 0 17px}.prompt-row{display:flex;gap:10px;align-items:stretch}.prompt{flex:1;min-height:82px;resize:vertical;border:1px solid #dfe2f2;background:#fff;border-radius:13px;padding:14px;color:var(--ink);font-size:13px;line-height:1.6}.prompt::placeholder{color:#9aa1b6}.prompt-actions{display:flex;flex-direction:column;gap:8px;min-width:150px}.hint{font-size:11px;color:var(--muted);margin-top:12px}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.chip{background:#fff;border:1px solid #e4e6f2;color:#6b7190;border-radius:30px;padding:7px 10px;font-size:11px}.chip:hover{border-color:#b6b0f2;color:var(--indigo)}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin:25px 0 13px}.section-head h2{font-size:15px;margin:0}.section-head span{font-size:11px;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.template{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;text-align:left;transition:.2s;min-width:0}.template:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:#c8c7f2}.thumb{height:126px;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;padding:13px;gap:8px}.thumb span{display:block;height:7px;border-radius:5px;background:#ffffffb8;width:65%}.thumb .wide{height:17px;width:85%;margin-top:10px}.thumb .short{width:40%}.thumb .pill{width:52px;height:17px;border-radius:6px;margin-top:auto}.thumb.agency{background:linear-gradient(140deg,#dfeaff,#a7c0ff)}.thumb.agency span{background:#4566ad55}.thumb.studio{background:linear-gradient(140deg,#e8dcff,#a88fe8)}.thumb.studio span{background:#6748a555}.thumb.store{background:linear-gradient(140deg,#fbe8d6,#f3bba3)}.thumb.store span{background:#a85f4355}.template strong{display:block;font-size:12px;margin:11px 2px 4px}.template small{display:block;color:var(--muted);font-size:11px;margin:0 2px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:17px;box-shadow:var(--shadow);overflow:hidden}.panel-title{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px}.panel-title h2,.panel-title h3{font-size:13px;margin:0}.panel-title p{font-size:11px;color:var(--muted);margin:5px 0 0}.editor-layout{display:grid;grid-template-columns:minmax(230px, .8fr) minmax(0,1.2fr);gap:16px;align-items:stretch}.editor-panel{min-width:0}.editor-inner{padding:17px}.editor-inner label{font-size:11px;font-weight:800;display:block;margin-bottom:8px}.code{width:100%;min-height:350px;resize:vertical;border:1px solid #303650;border-radius:11px;background:#171b2b;color:#dfe6ff;padding:15px;font:12px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;tab-size:2}.block-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}.block-add{border:1px solid var(--line);background:#fbfbff;border-radius:10px;padding:12px;text-align:left;font-size:11px;color:#525b79}.block-add b{display:block;color:var(--indigo);font-size:17px;margin-bottom:5px}.block-add:hover{border-color:#c4bef7;background:#f6f4ff}.preview-wrap{background:#eef0f8;padding:14px;min-width:0}.preview-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;font-size:11px;color:var(--muted);gap:8px}.device-buttons{display:flex;gap:5px}.device-buttons button{border:1px solid #e0e3ee;background:white;border-radius:7px;padding:6px 9px;font-size:11px;color:#626b86}.device-buttons button.active{background:var(--lav);color:var(--indigo);border-color:#d8d0ff}.frame{background:white;border:1px solid #dce0ec;border-radius:10px;overflow:hidden;min-height:400px;box-shadow:0 8px 24px #28345d10}.frame iframe{display:block;width:100%;height:520px;border:0;background:#fff}.frame.mobile{max-width:375px;margin:0 auto}.empty{padding:35px 20px;text-align:center;color:var(--muted);font-size:12px;line-height:1.7}
+.project-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.project{background:#fff;border:1px solid var(--line);border-radius:15px;padding:17px}.project-icon{height:70px;border-radius:10px;background:linear-gradient(135deg,#e5edff,#eee5ff);display:grid;place-items:center;font-size:27px;margin-bottom:13px}.project h3{font-size:13px;margin:0 0 5px;overflow-wrap:anywhere}.project p{font-size:11px;color:var(--muted);margin:0 0 14px}.project-actions{display:flex;gap:7px}.project-actions .btn{flex:1;padding:8px 6px;font-size:11px}
+.notice{border:1px solid #e3e5f2;background:#fff;border-radius:12px;padding:14px;color:var(--muted);font-size:12px;line-height:1.6;margin-top:16px}.notice b{color:var(--ink)}.hidden{display:none!important}.toast{position:fixed;bottom:22px;right:22px;background:#222844;color:white;border-radius:12px;padding:13px 17px;font-size:12px;box-shadow:0 10px 30px #141a3540;z-index:20;max-width:calc(100vw - 32px);animation:rise .2s ease}.toast.error{background:#9f2940}@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.mobile-menu{display:none}
+@media(max-width:1050px){.app{grid-template-columns:205px minmax(0,1fr)}.sidebar{padding-inline:10px}.page{padding:22px}.cards,.project-list{grid-template-columns:repeat(2,minmax(0,1fr))}.editor-layout{grid-template-columns:1fr}.code{min-height:240px}.frame iframe{height:460px}}
+@media(max-width:700px){.app{display:block}.sidebar{position:fixed;z-index:15;left:0;top:0;bottom:0;width:255px;min-height:0;transform:translateX(-105%);transition:transform .22s;box-shadow:10px 0 35px #20264220}.sidebar.open{transform:translateX(0)}.topbar{height:62px;padding:0 14px}.mobile-menu{display:inline-flex}.crumb{font-size:11px}.status{display:none}.top-actions .btn{padding:9px 10px}.page{padding:19px 14px}.page-head{margin-bottom:17px}.page-head>.btn{display:none}.hero{padding:17px}.prompt-row{flex-direction:column}.prompt-actions{flex-direction:row}.prompt-actions .btn{flex:1}.cards,.project-list{grid-template-columns:1fr 1fr;gap:9px}.thumb{height:95px}.template{padding:8px}.section-head{margin-top:20px}.editor-layout{gap:12px}.preview-wrap{padding:9px}.frame iframe{height:420px}.panel-title{padding:13px}.editor-inner{padding:12px}.side-bottom{margin-top:20px}.nav{gap:3px}}
+@media(max-width:390px){.cards,.project-list{grid-template-columns:1fr}.top-actions .btn{font-size:11px}.page h1{font-size:25px}}
+</style>
 </head>
 <body>
-  <!-- Sidebar navigation -->
-  <div class="sidebar">
-    <h2>Builder Menu</h2>
-    <button>My Website</button>
-    <button>Edit Website</button>
-    <button>Pre-view Website</button>
-    <button>Save/Export</button>
-    <button>Create Website</button>
-  </div>
-
-  <!-- Main workspace -->
-  <div class="main">
-    <div class="header">
-      <span>Website Builder Dashboard</span>
-      <span>⚙️ Settings</span>
-    </div>
-
-    <div class="builder">
-      <!-- Editor panel -->
-      <div class="editor-panel">
-        <h3>✏️ Code Editor</h3>
-        <textarea id="editor" placeholder="Type HTML content here..."></textarea>
-
-        <h3>📦 Drag & Drop Blocks</h3>
-        <div class="blocks">
-          <div class="block" draggable="true" data-html="<h1>Welcome to My Site</h1>">Heading</div>
-          <div class="block" draggable="true" data-html="<p>This is a paragraph block.</p>">Paragraph</div>
-          <div class="block" draggable="true" data-html="<button>Click Me</button>">Button</div>
-          <div class="block" draggable="true" data-html="<img src='https://via.placeholder.com/150' alt='Placeholder'>">Image</div>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-mark">A</div><div><strong>AniVora Builder</strong><small>Website workspace</small></div></div>
+    <div><div class="nav-label">WORKSPACE</div><nav class="nav" aria-label="Main navigation">
+      <button class="active" data-view="create"><span class="ico">✦</span>Create website</button>
+      <button data-view="projects"><span class="ico">▦</span>My websites</button>
+      <button data-view="editor"><span class="ico">✎</span>Edit website</button>
+      <button data-view="preview"><span class="ico">◉</span>Preview website</button>
+      <button data-view="hosting"><span class="ico">↗</span>Export & hosting</button>
+    </nav></div>
+    <div><div class="nav-label">PREFERENCES</div><nav class="nav"><button data-view="settings"><span class="ico">⚙</span>Settings</button></nav></div>
+    <div class="side-bottom"><strong>Build something great</strong><p>Start with a template, edit the HTML, then preview and export your website.</p><button class="small-btn" data-view="create">＋ New website</button></div>
+  </aside>
+  <main class="workspace">
+    <header class="topbar"><div style="display:flex;align-items:center;gap:12px"><button class="btn mobile-menu" id="menuBtn" aria-label="Open menu">☰</button><div class="crumb">Workspace <span style="padding:0 6px;color:#b1b6c6">/</span> <b id="breadcrumb">Create website</b></div></div><div class="top-actions"><span class="status">● Saved locally</span><button class="btn" id="saveBtn">Save</button><button class="btn primary" id="exportTop">Export HTML ↗</button></div></header>
+    <div class="page">
+      <section id="view-create" class="view">
+        <div class="page-head"><div><div class="eyebrow">Your ideas, made real</div><h1>What do you want to build?</h1><p class="sub">Describe your website, start from a template, and shape it in your workspace. Your preview updates as you edit.</p></div><button class="btn" data-view="projects">▦ My websites</button></div>
+        <div class="hero"><h2>✦ Create a website with a prompt</h2><p>Tell us what your website should look like and what it needs to do.</p><div class="prompt-row"><textarea class="prompt" id="sitePrompt" placeholder="Example: Create a modern portfolio for a photographer with a gallery, about section, services and contact form..."></textarea><div class="prompt-actions"><button class="btn primary" id="generateBtn">Generate starter ↗</button><button class="btn" id="clearPrompt">Clear prompt</button></div></div><div class="hint">This creates an editable starter page in your browser. AI generation is not connected yet.</div><div class="chips"><button class="chip" data-prompt="A modern personal portfolio with a hero section, projects, about me and contact details">Personal portfolio</button><button class="chip" data-prompt="A clean small business website with services, testimonials, about section and contact information">Business website</button><button class="chip" data-prompt="A stylish online store landing page with featured products, categories and a shopping call to action">Online store</button></div></div>
+        <div class="section-head"><h2>Start with a template</h2><span>Choose a starting point</span></div>
+        <div class="cards">
+          <button class="template" data-template="portfolio"><div class="thumb agency"><span></span><span class="wide"></span><span class="short"></span><span class="pill"></span></div><strong>Personal portfolio</strong><small>Showcase your work and story</small></button>
+          <button class="template" data-template="business"><div class="thumb studio"><span></span><span class="wide"></span><span class="short"></span><span class="pill"></span></div><strong>Creative agency</strong><small>Services, work and contact</small></button>
+          <button class="template" data-template="store"><div class="thumb store"><span></span><span class="wide"></span><span class="short"></span><span class="pill"></span></div><strong>Product landing page</strong><small>Present a product or store</small></button>
         </div>
-      </div>
-
-      <!-- Preview panel -->
-      <div class="preview-panel">
-        <h3>👁️ Live Preview</h3>
-        <div class="preview" id="preview">Your live preview will appear here.</div>
-      </div>
+      </section>
+      <section id="view-projects" class="view hidden">
+        <div class="page-head"><div><div class="eyebrow">Your workspace</div><h1>My websites</h1><p class="sub">Open a saved project to continue editing, or create a fresh website.</p></div><button class="btn primary" data-view="create">＋ New website</button></div>
+        <div id="projectList" class="project-list"></div><div id="noProjects" class="notice"><b>No saved websites yet.</b><br>Create a starter website and press Save. Your projects are stored in this browser on this device.</div>
+      </section>
+      <section id="view-editor" class="view hidden">
+        <div class="page-head"><div><div class="eyebrow">Make it yours</div><h1>Edit website</h1><p class="sub">Edit the HTML directly or add a ready-made block. Changes appear in the preview.</p></div></div>
+        <div class="editor-layout">
+          <div class="panel editor-panel"><div class="panel-title"><div><h2>✎ HTML editor</h2><p id="editingName">Untitled website</p></div><button class="btn" id="formatHint">HTML</button></div><div class="editor-inner"><label for="editor">Website HTML</label><textarea class="code" id="editor" spellcheck="false" aria-label="Website HTML editor" placeholder="Choose a template or create a starter website first..."></textarea><div class="section-head"><h2>Quick blocks</h2><span>Tap to insert</span></div><div class="block-grid"><button class="block-add" data-block="heading"><b>H₁</b>Hero heading</button><button class="block-add" data-block="paragraph"><b>¶</b>Paragraph</button><button class="block-add" data-block="button"><b>▣</b>Call-to-action</button><button class="block-add" data-block="image"><b>▧</b>Image block</button><button class="block-add" data-block="services"><b>▦</b>Services section</button><button class="block-add" data-block="contact"><b>✉</b>Contact section</button></div></div></div>
+          <div class="panel"><div class="panel-title"><div><h2>Live preview</h2><p>Preview of your current HTML</p></div><button class="btn" data-view="preview">Expand ↗</button></div><div class="preview-wrap"><div class="preview-toolbar"><span>● Local preview</span><div class="device-buttons"><button class="active" data-device="desktop">Desktop</button><button data-device="mobile">Mobile</button></div></div><div class="frame" id="editorFrame"><iframe id="previewFrame" title="Website preview" sandbox="allow-forms allow-modals allow-popups allow-same-origin" loading="eager"></iframe></div></div></div>
+        </div>
+      </section>
+      <section id="view-preview" class="view hidden">
+        <div class="page-head"><div><div class="eyebrow">Check every detail</div><h1>Preview website</h1><p class="sub">Review the page at desktop or mobile width before exporting.</p></div><button class="btn primary" data-view="editor">✎ Edit website</button></div>
+        <div class="panel"><div class="panel-title"><div><h2 id="previewName">Untitled website</h2><p>Sandboxed browser preview</p></div><div class="device-buttons"><button class="active" data-device="desktop">Desktop</button><button data-device="mobile">Mobile</button><button id="refreshPreview">↻ Refresh</button></div></div><div class="preview-wrap"><div class="frame" id="fullFrame"><iframe id="fullPreviewFrame" title="Full website preview" sandbox="allow-forms allow-modals allow-popups allow-same-origin"></iframe></div></div></div>
+      </section>
+      <section id="view-hosting" class="view hidden">
+        <div class="page-head"><div><div class="eyebrow">Ready to share?</div><h1>Export & hosting</h1><p class="sub">Download your website files, then publish them using a hosting provider.</p></div></div>
+        <div class="panel"><div class="panel-title"><div><h2>Export your website</h2><p>Download the current HTML as a file</p></div></div><div class="editor-inner"><p style="font-size:13px;line-height:1.8;color:var(--muted);margin-bottom:16px">Export creates a standalone HTML file containing your current page. Images, external fonts and other linked resources may still require an internet connection.</p><button class="btn primary" id="exportMain">↓ Download website HTML</button><div class="notice"><b>Public hosting is not connected yet.</b><br>This workspace does not currently publish a public website URL or connect to a hosting account. Export the file and upload it to a hosting provider to make it public.</div></div></div>
+      </section>
+      <section id="view-settings" class="view hidden">
+        <div class="page-head"><div><div class="eyebrow">Workspace preferences</div><h1>Settings</h1><p class="sub">Manage the current project name and local browser data.</p></div></div>
+        <div class="panel"><div class="panel-title"><div><h2>Project settings</h2><p>These settings apply to the current browser workspace</p></div></div><div class="editor-inner"><label for="projectNameInput">Website name</label><input id="projectNameInput" style="width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;margin-bottom:16px" placeholder="My new website"><button class="btn primary" id="renameBtn">Update website name</button><div class="notice"><b>Local storage</b><br>Saved projects are stored in this browser on this device. Clearing browser site data may remove them. Saving here does not upload your project to an account.</div><div style="margin-top:18px"><button class="btn" id="newBtn">＋ Start a new website</button></div></div></div>
+      </section>
     </div>
-  </div>
-
-  <!-- JavaScript for interactivity -->
-  <script>
-    const editor = document.getElementById("editor");
-    const preview = document.getElementById("preview");
-
-    // Update preview when typing HTML
-    editor.addEventListener("input", () => {
-      preview.innerHTML = editor.value;
-    });
-
-    // Drag-and-drop functionality
-    const blocks = document.querySelectorAll(".block");
-
-    blocks.forEach(block => {
-      block.addEventListener("dragstart", e => {
-        e.dataTransfer.setData("text/html", block.dataset.html);
-      });
-    });
-
-    preview.addEventListener("dragover", e => {
-      e.preventDefault();
-    });
-
-    preview.addEventListener("drop", e => {
-      e.preventDefault();
-      const html = e.dataTransfer.getData("text/html");
-      preview.innerHTML += html;
-      editor.value += "\n" + html;
-    });
-  </script>
+  </main>
+</div>
+<div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+<script>
+(function(){
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const starter={
+portfolio:{name:"Personal Portfolio",prompt:"A personal portfolio website",html:`<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Alex Morgan — Portfolio</title><style>*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:#202642;background:#f7f8fc}header{padding:24px 8%;display:flex;justify-content:space-between;align-items:center;background:white}header a{color:#4e50b8;text-decoration:none;font-weight:bold}main{max-width:1050px;margin:auto;padding:70px 8%}.tag{color:#6154c9;font-weight:bold;font-size:13px}.hero{font-size:clamp(38px,7vw,68px);line-height:1.05;letter-spacing:-2px;margin:15px 0}.lead{max-width:590px;line-height:1.8;color:#68718a}.button{display:inline-block;background:#5a50c9;color:white;padding:14px 20px;border-radius:9px;text-decoration:none;margin-top:18px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;margin-top:40px}.card{padding:22px;background:white;border:1px solid #e4e6f1;border-radius:14px}.card h3{margin-top:0}@media(max-width:500px){main{padding-top:45px}header{padding:18px}}</style></head><body><header><b>Alex Morgan</b><a href="#contact">Let's talk ↗</a></header><main><span class="tag">DESIGNER · CREATOR · PROBLEM SOLVER</span><h1 class="hero">I make digital<br>things feel simple.</h1><p class="lead">I’m a multidisciplinary creative who turns thoughtful ideas into useful, memorable digital experiences. Here are a few things I can help you build.</p><a class="button" href="#work">Explore my work</a><section id="work" class="grid"><article class="card"><h3>Web design</h3><p>Clear, accessible experiences designed around real people.</p></article><article class="card"><h3>Development</h3><p>Responsive websites built with care and attention to detail.</p></article><article class="card"><h3>Creative direction</h3><p>Strong visual systems that give ideas a distinctive voice.</p></article></section><section id="contact" style="margin-top:55px"><h2>Have a project in mind?</h2><p class="lead">Tell me what you're working on and let's make it happen.</p><a class="button" href="mailto:hello@example.com">Get in touch</a></section></main></body></html>`},
+business:{name:"Creative Agency",prompt:"A creative agency website",html:`<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Northstar Creative</title><style>*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#faf9ff;color:#23213a}header{display:flex;justify-content:space-between;align-items:center;padding:23px 7%;background:white}header a{color:#5543bb;text-decoration:none;font-weight:bold}main{padding:75px 8%;max-width:1100px;margin:auto}.label{font-size:12px;letter-spacing:2px;font-weight:bold;color:#6553c8}.hero{font-size:clamp(40px,7vw,76px);line-height:1.03;letter-spacing:-3px;max-width:800px;margin:20px 0}.intro{max-width:560px;color:#77738e;line-height:1.8}.cta{display:inline-block;margin-top:20px;padding:14px 21px;border-radius:9px;background:#5b4bc7;color:white;text-decoration:none}.services{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:15px;margin-top:65px}.service{background:white;border:1px solid #e8e5f5;border-radius:16px;padding:24px}.service span{font-size:25px}.service h3{margin-bottom:8px}.service p{color:#77738e;line-height:1.65;font-size:14px}@media(max-width:500px){main{padding:50px 6%}.hero{letter-spacing:-1.5px}}</style></head><body><header><b>✳ NORTHSTAR</b><a href="#contact">Start a project ↗</a></header><main><span class="label">INDEPENDENT CREATIVE STUDIO</span><h1 class="hero">Big ideas deserve thoughtful design.</h1><p class="intro">We help ambitious teams build brands, websites and digital experiences that move their business forward.</p><a class="cta" href="#contact">Let's work together →</a><section class="services"><article class="service"><span>✳</span><h3>Brand identity</h3><p>Distinctive identities and visual systems made to last.</p></article><article class="service"><span>▧</span><h3>Web experiences</h3><p>Beautiful, responsive websites built for real people.</p></article><article class="service"><span>↗</span><h3>Digital strategy</h3><p>Clear thinking that turns business goals into action.</p></article></section><section id="contact" style="margin-top:60px"><h2>Let's make something meaningful.</h2><p class="intro">Email us at hello@example.com to start a conversation.</p></section></main></body></html>`},
+store:{name:"Product Landing Page",prompt:"A product landing page",html:`<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Forma — Everyday Essentials</title><style>*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:#2c2928;background:#fffaf6}header{padding:22px 7%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee3db}header a{color:#6c4436;text-decoration:none;font-size:13px}.hero{max-width:1100px;margin:auto;padding:75px 8%;display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:center}.eyebrow{font-size:12px;letter-spacing:2px;color:#a2694f;font-weight:bold}.hero h1{font-size:clamp(40px,6vw,68px);line-height:1.02;letter-spacing:-2px;margin:18px 0}.hero p{color:#786d67;line-height:1.8}.btn{display:inline-block;padding:14px 20px;background:#6d483a;color:white;border-radius:8px;text-decoration:none;margin-top:12px}.art{min-height:290px;border-radius:22px;background:linear-gradient(145deg,#f4d9c8,#c98d70);display:grid;place-items:center;font-size:85px}.features{max-width:1000px;margin:auto;padding:20px 8% 65px;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:18px}.features article{padding:20px;background:white;border:1px solid #f0e6df;border-radius:12px}.features p{font-size:13px;line-height:1.6;color:#786d67}@media(max-width:650px){.hero{grid-template-columns:1fr;padding-top:45px}.art{min-height:190px}.hero h1{letter-spacing:-1px}}</style></head><body><header><b>FORMA.</b><a href="#products">Explore collection　 ↗</a></header><main class="hero"><div><span class="eyebrow">MADE FOR EVERYDAY</span><h1>Less noise.<br>More meaning.</h1><p>Thoughtfully designed essentials for the moments that make up your day. Simple forms, considered details, made to last.</p><a class="btn" href="#products">Discover the collection</a></div><div class="art" aria-label="Decorative product illustration">◒</div></main><section id="products" class="features"><article><h3>Considered design</h3><p>Every detail has a purpose. Nothing extra, nothing missing.</p></article><article><h3>Made to last</h3><p>Timeless shapes and dependable materials for everyday use.</p></article><article><h3>Better by design</h3><p>Thoughtful choices from first sketch to final product.</p></article></section></body></html>`}
+};
+let current={name:"Untitled website",html:"",prompt:""};
+const editor=$("#editor"), preview=$("#previewFrame"), fullPreview=$("#fullPreviewFrame");
+let toastTimer;
+function toast(msg,error=false){const t=$("#toast");t.textContent=msg;t.classList.remove("hidden","error");if(error)t.classList.add("error");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.add("hidden"),2800)}
+function setHtml(html){current.html=html;editor.value=html;renderPreview();$("#editingName").textContent=current.name;$("#previewName").textContent=current.name}
+function renderPreview(){const html=editor.value||current.html||"";current.html=html;preview.srcdoc=html||"<html><body style='font-family:Arial;padding:30px;color:#78809a'>Your website preview will appear here. Choose a template to begin.</body></html>";fullPreview.srcdoc=preview.srcdoc}
+function go(view){$$(".view").forEach(v=>v.classList.add("hidden"));const target=$("#view-"+view);if(target)target.classList.remove("hidden");$$(".nav [data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===view));$("#breadcrumb").textContent=({create:"Create website",projects:"My websites",editor:"Edit website",preview:"Preview website",hosting:"Export & hosting",settings:"Settings"})[view]||"Workspace";$("#sidebar").classList.remove("open");if(view==="preview")renderPreview();if(view==="projects")renderProjects();if(view==="settings")$("#projectNameInput").value=current.name}
+$$("[data-view]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.view)));
+$("#menuBtn").addEventListener("click",()=>$("#sidebar").classList.toggle("open"));
+$$("[data-prompt]").forEach(b=>b.addEventListener("click",()=>{$("#sitePrompt").value=b.dataset.prompt}));
+$$("[data-template]").forEach(b=>b.addEventListener("click",()=>loadTemplate(b.dataset.template)));
+function loadTemplate(key){const t=starter[key];if(!t)return;current={name:t.name,html:t.html,prompt:t.prompt};setHtml(t.html);go("editor");toast(t.name+" template loaded. Edit it to make it yours.");}
+function makeFromPrompt(){const p=$("#sitePrompt").value.trim();if(!p){toast("Describe your website first, or choose a template.",true);return}const title=p.replace(/^(create|build|make|design)\s+(me\s+)?(a\s+)?/i,"").split(/[.!?\n]/)[0].trim().slice(0,60);const safe=title.replace(/[<>&"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c]));const html=`<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${safe}</title><style>*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:#202642;background:#f7f8fc}header{display:flex;justify-content:space-between;align-items:center;padding:22px 7%;background:white}header a{color:#5746c8;text-decoration:none}main{max-width:1000px;margin:auto;padding:75px 8%}.eyebrow{font-size:12px;letter-spacing:2px;color:#5746c8;font-weight:bold}.hero{font-size:clamp(38px,7vw,68px);line-height:1.05;letter-spacing:-2px;margin:18px 0}.lead{max-width:620px;color:#737b94;line-height:1.8}.cta{display:inline-block;background:#5746c8;color:white;text-decoration:none;padding:14px 20px;border-radius:9px;margin-top:16px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:45px}.card{background:white;border:1px solid #e4e7f2;border-radius:14px;padding:22px}.card p{color:#737b94;line-height:1.7;font-size:14px}@media(max-width:500px){main{padding-top:48px}}</style></head><body><header><strong>${safe}</strong><a href="#contact">Get in touch ↗</a></header><main><span class="eyebrow">WELCOME — YOUR NEXT CHAPTER STARTS HERE</span><h1 class="hero">${safe}</h1><p class="lead">${p.replace(/[<>&"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c]))}. A thoughtfully designed starting point you can customize in the editor.</p><a class="cta" href="#contact">Let's get started</a><section class="grid"><article class="card"><h3>Made for your goals</h3><p>Shape this section around the most important thing your visitors should know.</p></article><article class="card"><h3>Simple and clear</h3><p>Explain your services, ideas or products in a way people can understand.</p></article><article class="card"><h3>Ready to connect</h3><p>Give visitors a clear next step and make it easy to reach you.</p></article></section><section id="contact" style="margin-top:50px"><h2>Let's talk</h2><p class="lead">Replace this text with your contact details.</p></section></main></body></html>`;current={name:title||"My Website",html,prompt:p};setHtml(html);go("editor");toast("Editable starter created. This is not AI-generated yet.");}
+$("#generateBtn").addEventListener("click",makeFromPrompt);
+$("#clearPrompt").addEventListener("click",()=>$("#sitePrompt").value="");
+$$("[data-block]").forEach(b=>b.addEventListener("click",()=>{const blocks={heading:"<section style='padding:48px 24px'><h1>Your headline goes here</h1></section>",paragraph:"<p style='line-height:1.7'>Write a short paragraph about your website here.</p>",button:"<p><a href='#contact' style='display:inline-block;padding:12px 18px;background:#5746c8;color:white;border-radius:8px;text-decoration:none'>Get started</a></p>",image:"<img src='https://placehold.co/900x420/e9e7ff/5145a6?text=Your+Image' alt='Replace with your image' style='display:block;width:100%;height:auto;border-radius:12px'>",services:"<section style='padding:24px 0'><h2>What we offer</h2><div style='display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px'><article style='padding:18px;border:1px solid #ddd;border-radius:10px'><h3>Service one</h3><p>Describe your service.</p></article><article style='padding:18px;border:1px solid #ddd;border-radius:10px'><h3>Service two</h3><p>Describe your service.</p></article></div></section>",contact:"<section id='contact' style='padding:28px;background:#f3f1ff;border-radius:12px'><h2>Let's talk</h2><p>Email us at hello@example.com</p><a href='mailto:hello@example.com'>Contact us</a></section>"};const code=blocks[b.dataset.block];if(!editor.value.trim()){setHtml("<!DOCTYPE html><html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>My Website</title></head><body style='font-family:Arial,sans-serif;max-width:900px;margin:40px auto;padding:20px'>\n"+code+"\n</body></html>")}else{const end=editor.value.toLowerCase().lastIndexOf("</body>");if(end>=0)editor.value=editor.value.slice(0,end)+ "\n"+code+"\n"+editor.value.slice(end);else editor.value+="\n"+code;}renderPreview();toast("Block added to your HTML.");}));
+editor.addEventListener("input",()=>{current.html=editor.value;renderPreview()});
+function readProjects(){try{return JSON.parse(localStorage.getItem("anivora-builder-projects")||"[]")}catch(e){return []}}
+function saveCurrent(){if(!editor.value.trim()){toast("Choose a template or create a starter first.",true);return}current.html=editor.value;if(!current.name||current.name==="Untitled website"){current.name=prompt("Name this website","My Website")||"My Website"}const items=readProjects();const idx=items.findIndex(p=>p.name===current.name);const project={name:current.name,html:current.html,prompt:current.prompt,updatedAt:new Date().toISOString()};if(idx>=0)items[idx]=project;else items.unshift(project);try{localStorage.setItem("anivora-builder-projects",JSON.stringify(items));$("#editingName").textContent=current.name;$("#previewName").textContent=current.name;renderProjects();toast("Website saved in this browser.");}catch(e){toast("Could not save. Browser storage may be full.",true)}}
+function renderProjects(){const list=$("#projectList"),items=readProjects();list.innerHTML="";$("#noProjects").classList.toggle("hidden",items.length>0);items.forEach((p,i)=>{const card=document.createElement("article");card.className="project";const icon=document.createElement("div");icon.className="project-icon";icon.textContent="✦";const h=document.createElement("h3");h.textContent=p.name||"Untitled website";const d=document.createElement("p");d.textContent="Last saved "+(p.updatedAt?new Date(p.updatedAt).toLocaleString():"");const actions=document.createElement("div");actions.className="project-actions";const open=document.createElement("button");open.className="btn";open.textContent="Open";open.addEventListener("click",()=>{current={name:p.name,html:p.html,prompt:p.prompt||""};setHtml(p.html);go("editor")});const del=document.createElement("button");del.className="btn";del.textContent="Delete";del.addEventListener("click",()=>{if(!confirm("Delete "+p.name+" from this browser?"))return;const latest=readProjects();latest.splice(i,1);localStorage.setItem("anivora-builder-projects",JSON.stringify(latest));renderProjects();toast("Project deleted.")});actions.append(open,del);card.append(icon,h,d,actions);list.append(card)})}
+function exportHtml(){const html=editor.value||current.html;if(!html.trim()){toast("Create or open a website before exporting.",true);return}const blob=new Blob([html],{type:"text/html;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=(current.name||"my-website").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+".html";document.body.append(a);a.click();a.remove();URL.revokeObjectURL(url);toast("HTML file downloaded.");}
+$("#saveBtn").addEventListener("click",saveCurrent);$("#exportTop").addEventListener("click",exportHtml);$("#exportMain").addEventListener("click",exportHtml);$("#refreshPreview").addEventListener("click",()=>{renderPreview();toast("Preview refreshed.")});
+$("#renameBtn").addEventListener("click",()=>{const name=$("#projectNameInput").value.trim();if(!name){toast("Enter a website name.",true);return}const old=current.name;current.name=name;$("#editingName").textContent=name;$("#previewName").textContent=name;const items=readProjects();const found=items.find(p=>p.name===old);if(found){found.name=name;found.html=editor.value;found.updatedAt=new Date().toISOString();localStorage.setItem("anivora-builder-projects",JSON.stringify(items))}toast("Website name updated.")});
+$("#newBtn").addEventListener("click",()=>{if(editor.value.trim()&&!confirm("Start a new website? Save your current work first if needed."))return;current={name:"Untitled website",html:"",prompt:""};setHtml("");$("#sitePrompt").value="";go("create");toast("Ready for a new website.")});
+$$("[data-device]").forEach(b=>b.addEventListener("click",()=>{const device=b.dataset.device;const frameIds=["editorFrame","fullFrame"];frameIds.forEach(id=>{const f=$("#"+id);if(f)f.classList.toggle("mobile",device==="mobile")});$$("[data-device]").forEach(x=>x.classList.toggle("active",x.dataset.device===device))}));
+$("#formatHint").addEventListener("click",()=>toast("Paste or edit valid HTML in the editor."));
+// Load the most recently saved project if available; otherwise start with a useful portfolio template.
+const saved=readProjects();if(saved.length){current={name:saved[0].name,html:saved[0].html,prompt:saved[0].prompt||""};setHtml(current.html)}else{current={name:starter.portfolio.name,html:starter.portfolio.html,prompt:starter.portfolio.prompt};setHtml(starter.portfolio.html)}
+renderProjects();
+})();
+</script>
 </body>
 </html>
