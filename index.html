@@ -178,7 +178,7 @@ footer{text-align:center;color:#656e8a;padding:25px 10px;font-size:11px}
     <h2>⚙ API Settings</h2>
     <p>Use the documented AniVora API generation endpoint.</p>
     <label class="prompt-label" for="apiUrl">Generation endpoint</label>
-    <input id="apiUrl" value="https://anivora-api-two.vercel.app/v1/generate" autocomplete="url">
+    <input id="apiUrl" value="/api/generate" autocomplete="url">
     <div class="row" style="margin-top:10px">
       <div><label class="small" for="maxTokens">Maximum new tokens</label><input id="maxTokens" type="number" value="256" min="32" max="2048"></div>
       <div><label class="small" for="temperature">Temperature</label><input id="temperature" type="number" value="0.7" min="0" max="2" step="0.1"></div>
@@ -197,7 +197,7 @@ footer{text-align:center;color:#656e8a;padding:25px 10px;font-size:11px}
 <script>
 "use strict";
 
-const DEFAULT_API = "https://anivora-api-two.vercel.app/v1/generate";
+const DEFAULT_API = "/api/generate";
 const $ = (id) => document.getElementById(id);
 
 const starterHTML = `<!DOCTYPE html>
@@ -248,7 +248,7 @@ function setAPIStatus(text, ok = false) {
 
 function getSettings() {
   return {
-    endpoint: $("apiUrl").value.trim() || DEFAULT_API,
+    endpoint: DEFAULT_API,
     maxTokens: Math.max(32, Math.min(2048, Number($("maxTokens").value) || 256)),
     temperature: Math.max(0, Math.min(2, Number($("temperature").value) || 0.7))
   };
@@ -256,8 +256,8 @@ function getSettings() {
 
 function saveSettings() {
   const settings = getSettings();
-  if (!/^https?:\/\//i.test(settings.endpoint)) {
-    showMessage("settingsMessage", "Enter a valid HTTP or HTTPS endpoint.", "error");
+  if (settings.endpoint !== DEFAULT_API) {
+    showMessage("settingsMessage", "AniVora Builder uses its secure same-origin /api/generate route.", "error");
     return;
   }
   try {
@@ -272,7 +272,7 @@ function loadSettings() {
   try {
     const saved = JSON.parse(localStorage.getItem("anivora-builder-settings") || "null");
     if (saved) {
-      $("apiUrl").value = saved.endpoint || DEFAULT_API;
+      $("apiUrl").value = DEFAULT_API;
       $("maxTokens").value = saved.maxTokens || 256;
       $("temperature").value = saved.temperature ?? 0.7;
     }
@@ -399,36 +399,29 @@ async function generateWebsite() {
 }
 
 async function checkAPIStatus() {
-  const endpoint = getSettings().endpoint;
-  let origin;
-  try {
-    origin = new URL(endpoint).origin;
-  } catch {
-    showMessage("settingsMessage", "The endpoint URL is invalid.", "error");
-    return;
-  }
-
   $("checkStatus").disabled = true;
-  showMessage("settingsMessage", "Checking the AniVora API root and status endpoint…", "info");
-
+  showMessage("settingsMessage", "Checking AniVora API through the secure Builder server route…", "info");
   try {
-    const results = await Promise.allSettled([
-      fetch(origin + "/", { method: "GET" }),
-      fetch(origin + "/v1/status", { method: "GET" })
-    ]);
-
-    const details = results.map((result, index) => {
-      const name = index === 0 ? "Root" : "/v1/status";
-      if (result.status === "rejected") return name + ": browser could not access it (possibly CORS).";
-      return name + ": HTTP " + result.value.status;
+    const response = await fetch("/api/status", {
+      method: "GET",
+      headers: { "Accept": "application/json" },
+      cache: "no-store"
     });
-
-    const ok = results.some(result => result.status === "fulfilled" && result.value.ok);
-    setAPIStatus(ok ? "API reachable" : "Check connection", ok);
-    showMessage("settingsMessage", details.join("\n") + "\n\nThis checks GET endpoints only; it does not yet prove that generation works. If the browser reports a network/CORS error, the API backend may need a CORS configuration update.", ok ? "success" : "error");
+    const data = await response.json().catch(() => null);
+    if (!response.ok || !data?.success) {
+      throw new Error(data?.error || "Status check returned HTTP " + response.status);
+    }
+    const reachable = data.runtime_reachable === true;
+    setAPIStatus(reachable ? "API reachable" : "Qwen unavailable", reachable);
+    showMessage("settingsMessage",
+      "AniVora API: online (HTTP " + response.status + ")\\nQwen runtime: " +
+      (reachable ? "reachable" : "not reachable") +
+      "\\nGeneration route: /api/generate\\n" +
+      (data.connection_error ? "Connection detail: " + data.connection_error : "No connection error reported."),
+      reachable ? "success" : "error");
   } catch (error) {
     setAPIStatus("Connection issue", false);
-    showMessage("settingsMessage", "Could not check the API from this browser. " + error.message, "error");
+    showMessage("settingsMessage", "Builder server could not check the API. " + (error?.message || error), "error");
   } finally {
     $("checkStatus").disabled = false;
   }
