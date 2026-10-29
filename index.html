@@ -190,6 +190,62 @@ footer{color:#777783}
  #settingsSection .row>div{width:100%}
 }
 
+
+/* Focused prompt and editor experience */
+.generator{position:relative;overflow:hidden}
+.generator:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(#8b6cff,#d0bfff)}
+.generator>div:first-child{font-size:19px!important;letter-spacing:-.3px}
+.generator>p{font-size:14px;margin-top:7px}
+.prompt-label{font-size:13px;color:#555363}
+#prompt{font-size:14px;line-height:1.7;min-height:125px;padding:15px;box-shadow:inset 0 1px 2px #17131e05}
+.prompt-tools .small{max-width:60%;font-size:12px}
+#generate{padding:12px 18px;border-radius:11px}
+.editor-panel{overflow:hidden;transition:all .2s}
+.editor-titlebar{display:flex;align-items:center;justify-content:space-between;padding:16px 17px 13px;background:#fff;border-bottom:1px solid #ececf1}
+.editor-heading{display:flex;align-items:center;gap:11px}
+.editor-symbol{display:grid;place-items:center;width:39px;height:39px;border-radius:12px;background:#f0ecff;color:#7357e8;font:800 15px ui-monospace,monospace}
+.editor-heading strong,.preview-heading-copy strong{display:block;font-size:15px;color:#22212b}
+.editor-heading small,.preview-heading-copy small{display:block;font-size:12px;color:#888793;margin-top:2px}
+.editor-icon-button{font-size:20px;line-height:1;padding:8px 10px;color:#686574}
+.editor-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 13px;background:#f8f8fb;border-bottom:1px solid #e8e8ef}
+.editor-file,.editor-actions{display:flex;align-items:center;gap:8px}
+.editor-file{font:12px ui-monospace,SFMono-Regular,monospace;color:#4d4b59}
+.file-dot{width:8px;height:8px;border-radius:50%;background:#f1a65a}
+.file-type{font:700 10px system-ui;color:#6f54d8;background:#eee9ff;border-radius:5px;padding:3px 6px}
+.editor-actions button{font-size:12px;padding:8px 10px}
+.editor-shell{display:grid;grid-template-columns:48px minmax(0,1fr);min-height:380px;max-height:680px;background:#171821;overflow:hidden}
+.line-gutter{padding:17px 11px 17px 0;text-align:right;white-space:pre;overflow:hidden;user-select:none;background:#171821;color:#686b7b;border-right:1px solid #2b2d3a;font:12px/1.75 ui-monospace,SFMono-Regular,Consolas,monospace}
+#code{display:block;width:100%;min-width:0;min-height:380px;height:100%;max-height:680px;margin:0;padding:17px 16px;border:0;border-radius:0;outline:none;resize:vertical;background:#171821;color:#e5e3f4;caret-color:#b7a1ff;font:12px/1.75 ui-monospace,SFMono-Regular,Consolas,monospace;tab-size:2;white-space:pre;overflow:auto;scrollbar-color:#444456 #171821}
+#code:focus{border:0;box-shadow:inset 2px 0 #8062ef}
+.editor-statusbar{display:flex;justify-content:space-between;gap:8px;padding:7px 13px;background:#22232e;color:#aaaabd;font:11px ui-monospace,SFMono-Regular,monospace}
+.editor-footer-actions{display:flex;align-items:center;gap:12px;padding:12px 14px;background:#fff}
+.editor-footer-actions button{font-size:12px}
+.editor-footer-actions span{font-size:11px;color:#858491}
+.editor-panel.expanded{position:relative;z-index:6;box-shadow:0 16px 55px #2420351f}
+.editor-panel.expanded .editor-shell,.editor-panel.expanded #code{max-height:75vh;height:75vh}
+.preview-panel{overflow:hidden}
+.preview-heading{display:flex;align-items:center;gap:10px;padding:16px;border-bottom:1px solid #eeeef2}
+.preview-heading-icon{display:grid;place-items:center;width:37px;height:37px;border-radius:11px;background:#f0ecff;color:#7456e7;font-size:21px}
+.preview-heading-copy{flex:1}
+.preview-live{display:flex;align-items:center;gap:6px;font-size:9px;font-weight:800;letter-spacing:1px;color:#16865d;background:#eaf8f1;border-radius:20px;padding:6px 8px}
+.preview-live span{width:6px;height:6px;border-radius:50%;background:#20ad75}
+.preview-tools{padding:10px 13px;background:#fafafd;border-bottom:1px solid #eeeef2}
+.preview-tools button{font-size:11px;padding:7px 9px}
+.preview-panel #preview{height:480px;border:0;border-radius:0}
+@media(max-width:560px){
+ .generator>div:first-child{font-size:17px!important}
+ .prompt-tools .small{max-width:none}
+ .editor-titlebar{padding:13px}
+ .editor-toolbar{align-items:flex-start;flex-direction:column}
+ .editor-actions{width:100%}
+ .editor-actions button{flex:1}
+ .editor-shell{grid-template-columns:35px minmax(0,1fr);min-height:310px}
+ #code{min-height:310px;padding:13px 10px;font-size:11px}
+ .line-gutter{padding:13px 7px 13px 0;font-size:11px}
+ .editor-footer-actions{justify-content:space-between;align-items:flex-start;flex-wrap:wrap}
+ .preview-panel #preview{height:380px}
+}
+
 </style>
 <link rel="stylesheet" href="/styles.css">
 </head>
@@ -247,19 +303,36 @@ footer{color:#777783}
     </div>
 
     <div class="workspace">
-      <section class="panel">
-        <div class="panel-head"><div><strong>Code Editor</strong><br><small id="codeLanguage">HTML document</small></div><div class="tabs"><button class="active" data-code="html">HTML</button></div></div>
-        <div class="panel-body">
-          <textarea id="code" spellcheck="false" aria-label="Website HTML code"></textarea>
-          <div class="row" style="margin-top:9px">
-            <button id="updatePreview" class="primary">Update Preview</button>
-            <button id="download">Export HTML</button>
+      <section class="panel editor-panel" id="editorPanel">
+        <div class="editor-titlebar">
+          <div class="editor-heading">
+            <span class="editor-symbol">{"</>"}</span>
+            <div><strong>Your code</strong><small id="codeLanguage">Edit your website's HTML</small></div>
+          </div>
+          <button id="expandEditor" class="editor-icon-button" type="button" aria-label="Expand editor" title="Expand editor">⤢</button>
+        </div>
+        <div class="editor-toolbar">
+          <div class="editor-file"><span class="file-dot"></span><span>index.html</span><span class="file-type">HTML</span></div>
+          <div class="editor-actions">
+            <button id="copyCode" type="button">Copy code</button>
+            <button id="updatePreview" class="primary" type="button">▶ Run preview</button>
           </div>
         </div>
+        <div class="editor-shell">
+          <div class="line-gutter" id="lineGutter" aria-hidden="true">1</div>
+          <textarea id="code" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off" aria-label="Website HTML code" aria-describedby="editorHelp"></textarea>
+        </div>
+        <div class="editor-statusbar"><span id="editorHelp">HTML · Edit the code, then run preview</span><span id="editorStats">1 line</span></div>
+        <div class="editor-footer-actions"><button id="download" type="button">↓ Export HTML</button><span>Changes appear in preview when you run it.</span></div>
       </section>
 
-      <section class="panel">
-        <div class="panel-head"><div><strong>Live Preview</strong><br><small>Your website appears here</small></div><div class="preview-tools"><button id="refresh">↻ Refresh</button><button id="openPreview">↗ Open</button></div></div>
+      <section class="panel preview-panel">
+        <div class="preview-heading">
+          <div class="preview-heading-icon">◉</div>
+          <div class="preview-heading-copy"><strong>Live preview</strong><small>Your website, rendered in real time</small></div>
+          <span class="preview-live"><span></span> PREVIEW</span>
+        </div>
+        <div class="preview-tools"><button id="refresh" type="button">↻ Refresh</button><button id="openPreview" type="button">↗ Open in new view</button></div>
         <iframe id="preview" title="Generated website preview" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
       </section>
     </div>
@@ -391,9 +464,17 @@ function loadSettings() {
   }
 }
 
+function syncEditorStats() {
+  const editor = $("code");
+  const lines = editor.value.split("\n").length;
+  $("lineGutter").textContent = Array.from({length: lines}, (_, i) => i + 1).join("\n");
+  $("editorStats").textContent = lines + (lines === 1 ? " line" : " lines") + " · " + editor.value.length + " chars";
+  $("lineGutter").scrollTop = editor.scrollTop;
+}
 function updatePreview() {
   currentHTML = $("code").value;
   $("preview").srcdoc = currentHTML;
+  syncEditorStats();
 }
 
 function extractGeneratedText(data) {
@@ -692,6 +773,36 @@ $("openPreview").addEventListener("click", () => {
 
 loadSettings();
 $("code").value = starterHTML;
+$("code").addEventListener("input", syncEditorStats);
+$("code").addEventListener("scroll", () => { $("lineGutter").scrollTop = $("code").scrollTop; });
+$("code").addEventListener("keydown", (event) => {
+  if (event.key === "Tab") {
+    event.preventDefault();
+    const start = event.target.selectionStart;
+    const end = event.target.selectionEnd;
+    event.target.setRangeText("  ", start, end, "end");
+    syncEditorStats();
+  }
+});
+$("copyCode").addEventListener("click", async () => {
+  const button = $("copyCode");
+  try {
+    await navigator.clipboard.writeText($("code").value);
+    button.textContent = "Copied!";
+  } catch (error) {
+    $("code").focus();
+    $("code").select();
+    try { document.execCommand("copy"); button.textContent = "Copied!"; }
+    catch (copyError) { button.textContent = "Select and copy"; }
+  }
+  setTimeout(() => { button.textContent = "Copy code"; }, 1600);
+});
+$("expandEditor").addEventListener("click", () => {
+  const panel = $("editorPanel");
+  const expanded = panel.classList.toggle("expanded");
+  $("expandEditor").textContent = expanded ? "⤡" : "⤢";
+  $("expandEditor").setAttribute("aria-label", expanded ? "Restore editor size" : "Expand editor");
+});
 updatePreview();
 renderProjects();
 
