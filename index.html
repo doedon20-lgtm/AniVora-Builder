@@ -424,34 +424,7 @@ footer{color:#777783}
 const DEFAULT_API = "/api/generate";
 const $ = (id) => document.getElementById(id);
 
-const starterHTML = `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>My New Website</title>
-<style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:#172033}
-nav{padding:20px 8%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee}
-nav a{color:#6650d9;text-decoration:none;font-weight:bold}
-.hero{padding:85px 8%;background:linear-gradient(130deg,#f3efff,#e5faff);text-align:center}
-h1{font-size:clamp(32px,6vw,60px);line-height:1.1;margin:0 auto 20px;max-width:800px}
-p{line-height:1.7;color:#5d6678}
-.hero p{max-width:600px;margin:0 auto 25px}
-.btn{display:inline-block;padding:13px 22px;background:#7254e8;color:white;border-radius:8px;text-decoration:none}
-.cards{padding:55px 8%;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:18px}
-.card{border:1px solid #e6e8ef;border-radius:14px;padding:22px}
-.card h2{font-size:19px}
-footer{padding:28px;text-align:center;background:#111827;color:white}
-</style>
-</head>
-<body>
-<nav><strong>My Website</strong><a href="#contact">Contact</a></nav>
-<section class="hero"><h1>Your next big idea starts here.</h1><p>Edit this starter website using the AniVora Builder code editor, or describe your own idea above.</p><a class="btn" href="#features">Explore features</a></section>
-<section class="cards" id="features"><article class="card"><h2>Beautiful design</h2><p>A clean, responsive layout that adapts to different screens.</p></article><article class="card"><h2>Made for you</h2><p>Replace this text with your own products, services, or story.</p></article><article class="card"><h2>Get started</h2><p>Customize the design and export the HTML when ready.</p></article></section>
-<footer id="contact">Contact · Your business · 2026</footer>
-</body>
-</html>`;
+const starterHTML = "";
 
 let currentHTML = starterHTML;
 let animationPaused = false;
