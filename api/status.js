@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ success: false, error: "Use GET to check API status." });
   }
 
-  const apiUrl = (process.env.ANIVORA_API_URL || "https://anivora-api-two.vercel.app").replace(/\\/+$/, "");
+  const apiUrl = (process.env.ANIVORA_API_URL || "https://anivora-api-two.vercel.app").replace(/\/+$/, "");
   try {
     const response = await fetch(apiUrl + "/v1/status", {
       method: "GET",
@@ -17,10 +17,7 @@ export default async function handler(req, res) {
     try { data = raw ? JSON.parse(raw) : null; } catch (_) { data = null; }
 
     if (!response.ok) {
-      return res.status(502).json({
-        success: false,
-        error: "AniVora API returned HTTP " + response.status + "."
-      });
+      return res.status(502).json({ success: false, error: "AniVora API returned HTTP " + response.status + "." });
     }
     if (!data || typeof data !== "object") {
       return res.status(502).json({ success: false, error: "AniVora API returned an invalid status response." });
