@@ -6,18 +6,18 @@
 <meta name="theme-color" content="#f7f7fc">
 <title>AniVora Builder — AI Creation Studio</title>
 <style>
-:root{--bg:#080a12;--panel:#10131f;--panel2:#171b2b;--line:#292e43;--text:#f4f5ff;--muted:#929ab5;--purple:#9167ff;--cyan:#46e5f5;--green:#6cf0b4;--red:#ff758c}
+:root{--bg:#f3f5fb;--panel:#fff;--panel2:#eef1fb;--line:#dce2f0;--text:#202b49;--muted:#68738d;--purple:#a99af5;--cyan:#3977d5;--green:#16865b;--red:#d94c65}
 *{box-sizing:border-box}
-body{margin:0;background:radial-gradient(ellipse at 70% -10%,#22204a 0,transparent 42%),var(--bg);color:var(--text);font:14px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+body{margin:0;background:linear-gradient(135deg,#f4f6fc 0%,#edf0fb 48%,#e9edfa 100%);color:var(--text);font:14px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
 button,input,textarea,select{font:inherit}
 button{cursor:pointer;border:1px solid var(--line);border-radius:9px;padding:10px 13px;color:var(--text);background:var(--panel2)}
 button:hover{border-color:var(--purple)}
 button:disabled{opacity:.55;cursor:wait}
-input,textarea,select{width:100%;color:var(--text);background:#090c16;border:1px solid var(--line);border-radius:9px;padding:11px;outline:none}
+input,textarea,select{width:100%;color:var(--text);background:#f7f8fd;border:1px solid var(--line);border-radius:9px;padding:11px;outline:none}
 input:focus,textarea:focus{border-color:var(--purple)}
 textarea{resize:vertical}
 a{color:var(--cyan)}
-.topbar{height:65px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);background:#090b14ed;position:sticky;top:0;z-index:5}
+.topbar{height:65px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);background:#ffffffee;position:sticky;top:0;z-index:5}
 .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;letter-spacing:-.5px}
 .logo{width:35px;height:35px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,var(--purple),var(--cyan));color:#080a12;font-weight:950;font-size:20px}
 .status{font-size:11px;color:var(--green);display:flex;align-items:center;gap:6px}
@@ -26,10 +26,10 @@ a{color:var(--cyan)}
 .primary{background:linear-gradient(110deg,#8058f5,#a56bff);border:0;color:white;font-weight:750}
 .secondary{background:transparent}
 .layout{display:grid;grid-template-columns:225px minmax(0,1fr);min-height:calc(100vh - 65px)}
-.sidebar{padding:20px 13px;border-right:1px solid var(--line);background:#0c0f19}
+.sidebar{padding:20px 13px;border-right:1px solid var(--line);background:#f0f2fa}
 .nav-label{color:#66708f;font-size:10px;font-weight:800;letter-spacing:1.6px;padding:12px 10px 7px}
 .nav{display:flex;align-items:center;gap:10px;width:100%;background:transparent;border-color:transparent;text-align:left;color:#aeb5cc;margin:2px 0}
-.nav.active{background:#28203f;color:white;border-color:#4a3b71}
+.nav.active{background:#e4e0fb;color:#30356f;border-color:#b8acf4}
 .side-card{margin-top:25px;padding:14px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(150deg,#19182e,#10131f)}
 .side-card p{color:var(--muted);font-size:12px}
 main{min-width:0;padding:26px;max-width:1600px;width:100%;margin:0 auto}
@@ -264,11 +264,13 @@ footer{color:#777783}
 
 <div class="layout">
 <aside class="sidebar">
-  <div class="nav-label">WORKSPACE</div>
-  <button class="nav active" data-section="builder">✦ &nbsp; AI Builder</button>
-  <button class="nav" data-section="videoStudio">▶ &nbsp; Video Studio</button>
-  <button class="nav" data-section="projectsSection">▤ &nbsp; My Projects</button>
-  <button class="nav" data-section="sceneSection">◈ &nbsp; 3D Scene</button>
+  <div class="nav-label">WEBSITE WORKSPACE</div>
+  <button class="nav active" data-section="builder">✦ &nbsp; Create website</button>
+  <button class="nav" data-section="projectsSection">▤ &nbsp; My website</button>
+  <button class="nav" data-section="editorPanel">⌘ &nbsp; Edit website</button>
+  <button class="nav" data-section="previewWebsite">◉ &nbsp; Pre-view website</button>
+  <button class="nav" data-section="hostingSection">↗ &nbsp; Host website</button>
+  <div class="nav-label" style="margin-top:18px">SETTINGS</div>
   <button class="nav" data-section="settingsSection">⚙ &nbsp; API Settings</button>
   <div class="side-card">
     <div style="font-weight:750">Your creation space</div>
@@ -331,7 +333,7 @@ footer{color:#777783}
         <div class="editor-footer-actions"><button id="download" type="button">↓ Export HTML</button><span>Changes appear in preview when you run it.</span></div>
       </section>
 
-      <section class="panel preview-panel">
+      <section class="panel preview-panel" id="previewWebsite">
         <div class="preview-heading">
           <div class="preview-heading-icon">◉</div>
           <div class="preview-heading-copy"><strong>Live preview</strong><small>Your website, rendered in real time</small></div>
@@ -414,7 +416,8 @@ footer{color:#777783}
     <div id="settingsMessage" class="message info">No API key is embedded in this page. If your deployment requires an API key, use the authentication method configured by your backend.</div>
   </section>
 
-  <footer>AniVora Builder · Create, edit, preview and export · Early development</footer>
+  <section id="hostingSection" class="section" style="margin-top:17px"><div class="eyebrow">PUBLISH YOUR WEBSITE</div><h2>Host website</h2><p>Your website is saved in My website on this device. Hosting needs a connected deployment provider before a public URL can be created.</p><div class="row" style="margin-top:12px"><button id="exportForHosting" class="primary">↓ Export website HTML</button><span class="small">Public hosting is not connected yet.</span></div><div id="hostingMessage" class="message info">Export your current website here. Publishing will be enabled when a hosting provider is connected.</div></section>
+  <footer>AniVora Builder · Create, edit, preview and export</footer>
 </main>
 </div>
 
@@ -588,8 +591,12 @@ async function generateWebsite() {
     $("code").value = html;
     currentHTML = html;
     updatePreview();
+    const projectName = prompt.trim().slice(0, 48) || "Untitled Website";
+    const savedProjects = readProjects();
+    savedProjects.unshift({name: projectName, html, updatedAt: new Date().toISOString()});
+    try { localStorage.setItem("anivora-builder-projects", JSON.stringify(savedProjects)); renderProjects(); } catch (storageError) { console.warn("Could not automatically save generated website.", storageError); }
     setAPIStatus("Generation connected", true);
-    showMessage("generationMessage", "Website generated successfully. You can edit the HTML, update the preview, save the project, or export it.", "success");
+    showMessage("generationMessage", "Website generated successfully and added to My website.", "success");
   } catch (error) {
     let message = error && error.message ? error.message : String(error);
     if (error.name === "AbortError") message = "The generation request timed out. The model may be taking too long to respond.";
@@ -746,10 +753,15 @@ document.querySelectorAll("[data-prompt]").forEach(button => {
 document.querySelectorAll("[data-section]").forEach(button => {
   button.addEventListener("click", () => {
     const target = $(button.dataset.section);
-    if (target) target.scrollIntoView({ behavior: "smooth" });
+    if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
     document.querySelectorAll("[data-section]").forEach(item => item.classList.remove("active"));
     button.classList.add("active");
   });
+});
+$("exportForHosting").addEventListener("click", () => {
+  if (!$("code").value.trim()) { showMessage("hostingMessage", "Generate or open a website before exporting.", "error"); return; }
+  downloadHTML();
+  showMessage("hostingMessage", "HTML export prepared. Connect a hosting provider to publish a public URL.", "success");
 });
 
 $("generate").addEventListener("click", generateWebsite);
